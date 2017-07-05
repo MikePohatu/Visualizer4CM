@@ -1,0 +1,24 @@
+﻿<UserControl x:Class="CollectionViewer.View.CollectionBlock"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CollectionViewer.View"
+             mc:Ignorable="d" 
+             d:DesignHeight="60" d:DesignWidth="200"
+             SizeChanged="OnUpdated" LayoutUpdated="OnUpdated">
+    <Grid>
+        <StackPanel>
+            <TextBox x:Name="nametb"
+                 Margin="5,1,5,1" 
+                 BorderThickness="1" 
+                 Padding="7,5,7,5" HorizontalContentAlignment="Left" VerticalAlignment="Top"
+                 Text="{Binding Name}"/>
+            <TextBox x:Name="idtb"
+                 Margin="5,1,5,1" 
+                 BorderThickness="1" 
+                 Padding="7,5,7,5" HorizontalContentAlignment="Left" VerticalAlignment="Top"
+                 Text="{Binding ID}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>
