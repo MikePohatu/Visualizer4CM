@@ -59,7 +59,7 @@ namespace model
         //register a child collection for its limiting collection. store it in pending if limiting isn't added yet
         public SccmCollection GetCollection(string limitingid)
         {
-            if (string.IsNullOrWhiteSpace(limitingid))
+            if (!string.IsNullOrWhiteSpace(limitingid))
             {
                 SccmCollection outval;
                 bool ret = this._collections.TryGetValue(limitingid, out outval);

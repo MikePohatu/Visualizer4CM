@@ -14,18 +14,17 @@ namespace model
         public CollectionLibrary GetCollectionLibrary(WqlConnectionManager connection, string siteCode)
         {
             try
-            { 
+            {
                 // This query selects all collections
-                string query = "select Name,CollectionID,LimitToCollectionID,Comment from 'SMS_Collection" + siteCode + "'";
+                string query = "select * from SMS_Collection";
                 CollectionLibrary library = new CollectionLibrary();
 
                 // Run query
-                using (IResultObject listOfResources = connection.QueryProcessor.ExecuteQuery(query))
-                {
+                using (IResultObject results = connection.QueryProcessor.ExecuteQuery(query))
+                { 
                     // Enumerate through the collection of objects returned by the query.
-                    foreach (IResultObject resource in listOfResources)
+                    foreach (IResultObject resource in results)
                     {
-
                         SccmCollection collection = new SccmCollection();
                         collection.ID = resource["CollectionID"].StringValue;
                         collection.Name = resource["Name"].StringValue;
