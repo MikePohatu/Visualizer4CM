@@ -7,7 +7,7 @@ using System.Diagnostics;
 using Microsoft.ConfigurationManagement.ManagementProvider;
 using Microsoft.ConfigurationManagement.ManagementProvider.WqlQueryEngine;
 
-namespace CollectionViewer
+namespace model
 {
     public class SccmConnector
     {

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace CollectionViewer
+namespace model
 {
     public class ViewModelBase : INotifyPropertyChanged
     {

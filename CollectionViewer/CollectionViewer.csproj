@@ -35,12 +35,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AdminUI.WqlQueryEngine">
-      <HintPath>..\AdminUI.WqlQueryEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.ConfigurationManagement.ManagementProvider">
-      <HintPath>..\Microsoft.ConfigurationManagement.ManagementProvider.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -61,13 +55,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="CollectionLibrary.cs" />
-    <Compile Include="SccmConnector.cs" />
     <Compile Include="View\CollectionBlock.xaml.cs">
       <DependentUpon>CollectionBlock.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SccmCollection.cs" />
-    <Compile Include="ViewModelBase.cs" />
     <Compile Include="View\XmlStringConverter.cs" />
     <Page Include="View\CollectionBlock.xaml">
       <SubType>Designer</SubType>
@@ -112,6 +102,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\model\model.csproj">
+      <Project>{4984f353-541c-4ab7-ae8f-c22fc4b52ff1}</Project>
+      <Name>model</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

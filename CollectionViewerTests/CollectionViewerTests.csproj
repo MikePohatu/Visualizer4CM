@@ -45,6 +45,7 @@
       <HintPath>..\packages\NUnit.3.7.1\lib\net45\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
@@ -73,6 +74,10 @@
     <ProjectReference Include="..\CollectionViewer\CollectionViewer.csproj">
       <Project>{92b1dafe-de3d-4faa-b82c-16d51a9501ec}</Project>
       <Name>CollectionViewer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\model\model.csproj">
+      <Project>{4984f353-541c-4ab7-ae8f-c22fc4b52ff1}</Project>
+      <Name>model</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>
