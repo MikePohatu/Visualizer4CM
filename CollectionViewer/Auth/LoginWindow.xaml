@@ -1,0 +1,49 @@
+﻿<Window x:Class="CollectionViewer.Auth.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CollectionViewer.Auth"
+        mc:Ignorable="d"
+        Title="Login" Height="200" Width="300">
+    <Window.Resources>
+        <ResourceDictionary>
+            <Style x:Key="BaseControlStyle" TargetType="{x:Type Control}">
+                <Setter Property="Control.Padding" Value="2"/>
+                <Setter Property="Control.Margin" Value="2"/>
+            </Style>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2" Grid.Row="0">
+            <Label x:Name="serverlabel" Content="{Binding ServerLabel}" Width="100" Style="{StaticResource BaseControlStyle}"/>
+            <TextBox x:Name="servertb" Text="{Binding Server}" Width="185" Style="{StaticResource BaseControlStyle}"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2" Grid.Row="1">
+            <Label x:Name="sitelabel" Content="{Binding SiteLabel}" Width="100" Style="{StaticResource BaseControlStyle}"/>
+            <TextBox x:Name="sitetb" Text="{Binding Site}" Width="185" Style="{StaticResource BaseControlStyle}"/>
+        </StackPanel>
+        <StackPanel Grid.Column="0" Margin="5" Grid.Row="2">
+            <Label x:Name="userlabel" Content="{Binding UsernameLabel}" Style="{StaticResource BaseControlStyle}"/>
+            <Label x:Name="pwlabel"  Content="{Binding PasswordLabel}" Style="{StaticResource BaseControlStyle}"/>
+            <Label x:Name="domainlabel" Content="{Binding DomainLabel}" Style="{StaticResource BaseControlStyle}"/>
+            <Label x:Name="passthroughlabel" Content="{Binding PassThroughLabel}" Style="{StaticResource BaseControlStyle}"/>
+        </StackPanel>
+        <StackPanel Grid.Column="1" Margin="5" Grid.Row="2">
+            <TextBox x:Name="usertb" Text="{Binding Username}" Style="{StaticResource BaseControlStyle}"/>
+            <PasswordBox x:Name="pwdbx" Style="{StaticResource BaseControlStyle}"/>
+            <TextBox x:Name="domaintb" Text="{Binding Domain}" Style="{StaticResource BaseControlStyle}"/>
+            <CheckBox x:Name="passthroughcb" IsChecked="{Binding PassThrough}" HorizontalAlignment="Left" Style="{StaticResource BaseControlStyle}"/>
+            <Button x:Name="okbtn" Content="{Binding OkButtonText}" Style="{StaticResource BaseControlStyle}"/>
+        </StackPanel>
+    </Grid>
+</Window>

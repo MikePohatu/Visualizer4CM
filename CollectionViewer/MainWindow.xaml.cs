@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Msagl.Drawing;
 using model;
+using CollectionViewer.Auth;
 
 namespace CollectionViewer
 {
@@ -30,13 +31,17 @@ namespace CollectionViewer
 
         private void Start()
         {
-            SccmConnector _connector = new SccmConnector();
+            SccmConnector connector;
+            LoginViewModel login = new LoginViewModel();
+            if (login.PassThrough == true) { connector = new SccmConnector("syscenter03.home.local","001"); }
+            else { connector = new SccmConnector(login.Username, login.Password, login.Domain, login.Server, "001"); }
+            
             MsaglHelpers.ConfigureGViewer(DeviceColViewer);
             MsaglHelpers.ConfigureGViewer(UserColViewer);
 
             Graph devgraph = new Graph("graph");
             //The easiest way to build a graph is to create the edges of the graph like in the example below.
-            foreach (SccmCollection col in _connector.DeviceCollectionLibrary.GetAllCollections())
+            foreach (SccmCollection col in connector.DeviceCollectionLibrary.GetAllCollections())
             {
                 Node newnode = new Node(col.ID);
                 MsaglHelpers.ConfigureNode(newnode, col);
@@ -50,7 +55,7 @@ namespace CollectionViewer
             this.DeviceColViewer.Graph = devgraph;
             Graph usergraph = new Graph("graph");
             //The easiest way to build a graph is to create the edges of the graph like in the example below.
-            foreach (SccmCollection col in _connector.UserCollectionLibrary.GetAllCollections())
+            foreach (SccmCollection col in connector.UserCollectionLibrary.GetAllCollections())
             {
                 Node newnode = new Node(col.ID);
                 MsaglHelpers.ConfigureNode(newnode, col);

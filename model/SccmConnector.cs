@@ -18,21 +18,20 @@ namespace model
         public CollectionLibrary DeviceCollectionLibrary { get { return this._devlibrary; } }
         public CollectionLibrary UserCollectionLibrary { get { return this._userlibrary; } }
 
-        public SccmConnector()
+        public SccmConnector(string authuser, string authpw, string authdomain, string server, string site)
         {
-            string configfile = @"c:\testauth.xml";
-
-            XElement x;
-
-            x = XmlHandler.Read(configfile);
-            string authpw = XmlHandler.GetStringFromXElement(x, "Password", null);
-            string authuser = XmlHandler.GetStringFromXElement(x, "User", null);
-            string authdomain = XmlHandler.GetStringFromXElement(x, "Domain", null);
-
             this._connection = new WqlConnectionManager();
-            this._connection.Connect("syscenter03.home.local", authdomain + "\\" + authuser, authpw);
-            this._devlibrary = this.GetDeviceCollectionLibrary(_connection, "001");
+            this._connection.Connect(server, authdomain + "\\" + authuser, authpw);
+            this._devlibrary = this.GetDeviceCollectionLibrary(_connection, site);
             this._userlibrary = this.GetUserCollectionLibrary(_connection, "001");
+        }
+
+        public SccmConnector(string server, string site)
+        {
+            this._connection = new WqlConnectionManager();
+            this._connection.Connect(server);
+            this._devlibrary = this.GetDeviceCollectionLibrary(_connection, site);
+            this._userlibrary = this.GetUserCollectionLibrary(_connection, site);
         }
 
         public CollectionLibrary GetDeviceCollectionLibrary(WqlConnectionManager connection, string siteCode)

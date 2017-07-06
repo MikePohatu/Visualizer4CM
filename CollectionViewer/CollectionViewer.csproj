@@ -68,11 +68,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Auth\LoginViewModel.cs" />
+    <Compile Include="Auth\LoginWindow.xaml.cs">
+      <DependentUpon>LoginWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MsaglHelpers.cs" />
     <Compile Include="View\CollectionBlock.xaml.cs">
       <DependentUpon>CollectionBlock.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\XmlStringConverter.cs" />
+    <Page Include="Auth\LoginWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\CollectionBlock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
