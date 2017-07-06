@@ -31,6 +31,8 @@ namespace CollectionViewer
         private void Start()
         {
             SccmConnector _connector = new SccmConnector();
+            MsaglHelpers.ConfigureGViewer(DeviceColViewer);
+            MsaglHelpers.ConfigureGViewer(UserColViewer);
 
             Graph devgraph = new Graph("graph");
             //The easiest way to build a graph is to create the edges of the graph like in the example below.
@@ -46,7 +48,6 @@ namespace CollectionViewer
                 }
             }
             this.DeviceColViewer.Graph = devgraph;
-
             Graph usergraph = new Graph("graph");
             //The easiest way to build a graph is to create the edges of the graph like in the example below.
             foreach (SccmCollection col in _connector.UserCollectionLibrary.GetAllCollections())

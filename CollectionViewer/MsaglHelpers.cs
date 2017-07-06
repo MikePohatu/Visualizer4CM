@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Msagl.Drawing;
+using Microsoft.Msagl.GraphViewerGdi;
 using model;
 
 namespace CollectionViewer
@@ -22,6 +23,14 @@ namespace CollectionViewer
             a.Attr.LineWidth = 2;
 
             a.UserData = col;
+        }
+
+        public static void ConfigureGViewer(GViewer viewer )
+        {
+            viewer.EdgeInsertButtonVisible = false;
+            viewer.NavigationVisible = false;
+            viewer.UndoRedoButtonsVisible = false;
+            //viewer.ToolBarIsVisible = false;
         }
     }
 }
