@@ -11,28 +11,37 @@ namespace model
 {
     public class SccmConnector
     {
-        private WqlConnectionManager _connection;
+        private WqlConnectionManager _connection = new WqlConnectionManager();
         private CollectionLibrary _devlibrary;
         private CollectionLibrary _userlibrary;
 
         public CollectionLibrary DeviceCollectionLibrary { get { return this._devlibrary; } }
         public CollectionLibrary UserCollectionLibrary { get { return this._userlibrary; } }
 
-        public SccmConnector(string authuser, string authpw, string authdomain, string server, string site)
+        public bool Connect(string server)
         {
-            this._connection = new WqlConnectionManager();
-            this._connection.Connect(server, authdomain + "\\" + authuser, authpw);
-            this._devlibrary = this.GetDeviceCollectionLibrary(_connection, site);
-            this._userlibrary = this.GetUserCollectionLibrary(_connection, "001");
+            try { this._connection?.Connect(server); }
+            catch { return false; }
+            return true;
         }
 
-        public SccmConnector(string server, string site)
+        public bool Connect(string authuser, string authpw, string authdomain, string server)
         {
-            this._connection = new WqlConnectionManager();
-            this._connection.Connect(server);
-            this._devlibrary = this.GetDeviceCollectionLibrary(_connection, site);
-            this._userlibrary = this.GetUserCollectionLibrary(_connection, site);
+            try { this._connection?.Connect(server, authdomain + "\\" + authuser, authpw); }
+            catch { return false; }
+            return true;
         }
+
+        public void Query(string site)
+        {
+            try
+            {
+                this._devlibrary = this.GetDeviceCollectionLibrary(_connection, site);
+                this._userlibrary = this.GetUserCollectionLibrary(_connection, site);
+            }
+            catch { return; }
+        }
+
 
         public CollectionLibrary GetDeviceCollectionLibrary(WqlConnectionManager connection, string siteCode)
         {

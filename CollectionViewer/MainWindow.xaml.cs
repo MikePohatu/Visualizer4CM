@@ -31,11 +31,12 @@ namespace CollectionViewer
 
         private void Start()
         {
-            SccmConnector connector;
+            SccmConnector connector = new SccmConnector();
             LoginViewModel login = new LoginViewModel();
-            if (login.PassThrough == true) { connector = new SccmConnector("syscenter03.home.local","001"); }
-            else { connector = new SccmConnector(login.Username, login.Password, login.Domain, login.Server, "001"); }
-            
+            if (login.PassThrough == true) { connector.Connect(login.Server); }
+            else { connector.Connect(login.Username, login.Password, login.Domain, login.Server); }
+            connector.Query("001");
+
             MsaglHelpers.ConfigureGViewer(DeviceColViewer);
             MsaglHelpers.ConfigureGViewer(UserColViewer);
 
@@ -67,6 +68,11 @@ namespace CollectionViewer
                 }
             }
             this.UserColViewer.Graph = usergraph;
+        }
+
+        public void OnLoginOkButtonPress(object o, EventArgs e)
+        {
+            
         }
     }
 }
