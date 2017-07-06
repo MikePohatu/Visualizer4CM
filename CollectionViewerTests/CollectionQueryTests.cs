@@ -29,7 +29,7 @@ namespace CollectionViewerTests
             WqlConnectionManager connection = new WqlConnectionManager();
             connection.Connect("syscenter03.home.local", authdomain + "\\" + authuser, authpw);
             SccmConnector connector = new SccmConnector();
-            CollectionLibrary library = connector.GetCollectionLibrary(connection,"001");
+            CollectionLibrary library = connector.GetDeviceCollectionLibrary(connection,"001");
             return library?.GetCollection(collectionid)?.LimitingCollectionID;
         }
 

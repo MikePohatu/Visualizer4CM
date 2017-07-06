@@ -8,8 +8,21 @@
         mc:Ignorable="d"
         Title="Collection Tree View" Height="350" Width="525">
     <Grid>
-        <WindowsFormsHost Name="windowsFormsHost1" Margin="0,34,0,0">
-            <gv:GViewer x:Name="gViewer"></gv:GViewer>
-        </WindowsFormsHost>
+        <TabControl>
+            <TabItem Header="Device Collections">
+                <Grid>
+                    <WindowsFormsHost Name="windowsFormsHostDevice" Margin="0,0,0,0">
+                        <gv:GViewer x:Name="DeviceColViewer"></gv:GViewer>
+                    </WindowsFormsHost>
+                </Grid>
+            </TabItem>
+            <TabItem Header="User Collections">
+                <Grid>
+                    <WindowsFormsHost Name="windowsFormsHostUser" Margin="0,0,0,0">
+                        <gv:GViewer x:Name="UserColViewer"></gv:GViewer>
+                    </WindowsFormsHost>
+                </Grid>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>

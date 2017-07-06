@@ -32,20 +32,35 @@ namespace CollectionViewer
         {
             SccmConnector _connector = new SccmConnector();
 
-            Graph graph = new Graph("graph");
+            Graph devgraph = new Graph("graph");
             //The easiest way to build a graph is to create the edges of the graph like in the example below.
-            foreach (SccmCollection col in _connector.Library.GetAllCollections())
+            foreach (SccmCollection col in _connector.DeviceCollectionLibrary.GetAllCollections())
             {
                 Node newnode = new Node(col.ID);
                 MsaglHelpers.ConfigureNode(newnode, col);
-                graph.AddNode(newnode);
+                devgraph.AddNode(newnode);
 
                 if ((string.IsNullOrWhiteSpace(col.ID) == false) && (string.IsNullOrWhiteSpace(col.LimitingCollectionID) == false))
                 {
-                    graph.AddEdge(col.ID, col.LimitingCollectionID); 
+                    devgraph.AddEdge(col.LimitingCollectionID, col.ID); 
                 }
             }
-            this.gViewer.Graph = graph;
+            this.DeviceColViewer.Graph = devgraph;
+
+            Graph usergraph = new Graph("graph");
+            //The easiest way to build a graph is to create the edges of the graph like in the example below.
+            foreach (SccmCollection col in _connector.UserCollectionLibrary.GetAllCollections())
+            {
+                Node newnode = new Node(col.ID);
+                MsaglHelpers.ConfigureNode(newnode, col);
+                usergraph.AddNode(newnode);
+
+                if ((string.IsNullOrWhiteSpace(col.ID) == false) && (string.IsNullOrWhiteSpace(col.LimitingCollectionID) == false))
+                {
+                    usergraph.AddEdge(col.LimitingCollectionID, col.ID);
+                }
+            }
+            this.UserColViewer.Graph = usergraph;
         }
     }
 }

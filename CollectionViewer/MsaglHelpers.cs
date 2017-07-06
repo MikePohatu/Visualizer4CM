@@ -15,6 +15,8 @@ namespace CollectionViewer
             a.Attr.Shape = Shape.Box;
             a.Attr.XRadius = 3;
             a.Attr.YRadius = 3;
+            a.Attr.Padding = 3;
+            a.Attr.LabelMargin = 5;
             a.LabelText = col.Name;
             //a.Attr.FillColor = Color.Green;
             a.Attr.LineWidth = 2;
