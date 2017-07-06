@@ -68,5 +68,16 @@ namespace model
             }
             else { return null; }
         }
+
+        public List<SccmCollection> GetAllCollections()
+        {
+            List<SccmCollection> collections = new List<SccmCollection>();
+            foreach (SccmCollection col in this._collections.Values)
+            {
+                collections.Add(col);
+            }
+            return collections;
+        }
+
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Xml.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
@@ -11,6 +11,27 @@ namespace model
 {
     public class SccmConnector
     {
+        private WqlConnectionManager _connection;
+        private CollectionLibrary _library;
+
+        public CollectionLibrary Library { get { return this._library; } }
+
+        public SccmConnector()
+        {
+            string configfile = @"c:\testauth.xml";
+
+            XElement x;
+
+            x = XmlHandler.Read(configfile);
+            string authpw = XmlHandler.GetStringFromXElement(x, "Password", null);
+            string authuser = XmlHandler.GetStringFromXElement(x, "User", null);
+            string authdomain = XmlHandler.GetStringFromXElement(x, "Domain", null);
+
+            this._connection = new WqlConnectionManager();
+            this._connection.Connect("syscenter03.home.local", authdomain + "\\" + authuser, authpw);
+            this._library = this.GetCollectionLibrary(_connection, "001");
+        }
+
         public CollectionLibrary GetCollectionLibrary(WqlConnectionManager connection, string siteCode)
         {
             try

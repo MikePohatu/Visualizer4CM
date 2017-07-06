@@ -51,6 +51,7 @@
     <Compile Include="SccmCollection.cs" />
     <Compile Include="SccmConnector.cs" />
     <Compile Include="ViewModelBase.cs" />
+    <Compile Include="XmlHandler.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

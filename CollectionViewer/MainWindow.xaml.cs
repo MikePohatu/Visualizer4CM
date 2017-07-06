@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Xml.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Msagl.Drawing;
+using model;
 
 namespace CollectionViewer
 {
@@ -23,6 +25,20 @@ namespace CollectionViewer
         public MainWindow()
         {
             InitializeComponent();
+            this.Start();
+        }
+
+        private void Start()
+        {
+            SccmConnector _connector = new SccmConnector();
+
+            Graph graph = new Graph("graph");
+            //The easiest way to build a graph is to create the edges of the graph like in the example below.
+            foreach (SccmCollection col in _connector.Library.GetAllCollections())
+            {
+                graph.AddEdge(col.ID, col.LimitingCollectionID);
+            }
+            this.gViewer.Graph = graph;
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.IO;
 using System.Xml.Linq;
 
-namespace CollectionViewerTests
+namespace model
 {
     public static class XmlHandler
     {
