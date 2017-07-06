@@ -68,6 +68,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="MsaglHelpers.cs" />
     <Compile Include="View\CollectionBlock.xaml.cs">
       <DependentUpon>CollectionBlock.xaml</DependentUpon>
     </Compile>

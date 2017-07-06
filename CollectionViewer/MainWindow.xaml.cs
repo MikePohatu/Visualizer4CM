@@ -36,7 +36,14 @@ namespace CollectionViewer
             //The easiest way to build a graph is to create the edges of the graph like in the example below.
             foreach (SccmCollection col in _connector.Library.GetAllCollections())
             {
-                graph.AddEdge(col.ID, col.LimitingCollectionID);
+                Node newnode = new Node(col.ID);
+                MsaglHelpers.ConfigureNode(newnode, col);
+                graph.AddNode(newnode);
+
+                if ((string.IsNullOrWhiteSpace(col.ID) == false) && (string.IsNullOrWhiteSpace(col.LimitingCollectionID) == false))
+                {
+                    graph.AddEdge(col.ID, col.LimitingCollectionID); 
+                }
             }
             this.gViewer.Graph = graph;
         }
