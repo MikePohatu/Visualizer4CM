@@ -1,11 +1,5 @@
 ﻿using System;
 using Microsoft.Win32;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Security;
-using model;
 
 namespace model
 {
@@ -25,6 +19,7 @@ namespace model
         private string _site;
         private string _pwlabel;
         private string _tooltipmessage;
+        private string _notifymessage;
 
         public LoginViewModel()
         {
@@ -40,8 +35,17 @@ namespace model
                 this.OnPropertyChanged(this, "ToolTipMessage");
             }
         }
-
+        public string NotifyMessage
+        {
+            get { return this._notifymessage; }
+            set
+            {
+                this._notifymessage = value;
+                this.OnPropertyChanged(this, "NotifyMessage");
+            }
+        }
         public string DeniedMessage { get; set; }
+        public string TooltipDefaultMessage { get; set; }
 
         public bool PassThrough
         {
@@ -177,6 +181,7 @@ namespace model
             this.Username = Environment.UserName;
             this.Domain = Environment.UserDomainName;
             this.DeniedMessage = "Connection failed";
+            this.ToolTipMessage = "Please enter connection details";
             this.DomainLabel = "Domain:";
             this.ServerLabel = "Server:";
             this.PasswordLabel = "Password:";

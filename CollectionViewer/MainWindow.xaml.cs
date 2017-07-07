@@ -99,12 +99,12 @@ namespace CollectionViewer
 
             if (connected == false)
             {
-                loginviewmodel.ToolTipMessage = loginviewmodel.DeniedMessage;
+                loginviewmodel.NotifyMessage = loginviewmodel.DeniedMessage;
                 tt.IsOpen = true;
             }
             else
             {
-                loginviewmodel.ToolTipMessage = string.Empty;
+                loginviewmodel.NotifyMessage = null;
                 tt.IsOpen = false;
             }
 
