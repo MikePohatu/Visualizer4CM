@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Security;
 using model;
 
-namespace CollectionViewer.Auth
+namespace model
 {
     public class LoginViewModel: ViewModelBase
     {
@@ -18,19 +18,29 @@ namespace CollectionViewer.Auth
         private string _domainlabel;
         private string _serverlabel;
         private string _passthroughlabel;
-        private string _okbuttonlabel;
+        private string _okbuttontext;
+        private string _cancelbuttontext;
         private string _sitelabel;
         private string _site;
         private string _pwlabel;
-        private LoginWindow _loginwindow;
+        private string _tooltipmessage;
 
         public LoginViewModel()
         {
             this.SetDefaults();
-            this._loginwindow = new LoginWindow();
-            this._loginwindow.DataContext = this;
-            this._loginwindow.ShowDialog();
         }
+
+        public string ToolTipMessage
+        {
+            get { return this._tooltipmessage; }
+            set
+            {
+                this._tooltipmessage = value;
+                this.OnPropertyChanged(this, "ToolTipMessage");
+            }
+        }
+
+        public string DeniedMessage { get; set; }
 
         public bool PassThrough
         {
@@ -131,16 +141,24 @@ namespace CollectionViewer.Auth
 
         public string OkButtonText
         {
-            get { return this._okbuttonlabel; }
+            get { return this._okbuttontext; }
             set
             {
-                this._okbuttonlabel = value;
+                this._okbuttontext = value;
                 this.OnPropertyChanged(this, "OkButtonText");
             }
         }
 
-        public SecureString SecurePassword { get { return this._loginwindow.pwdbx.SecurePassword; } }
-        public string Password { get { return this._loginwindow.pwdbx.Password; } }
+        public string CancelButtonText
+        {
+            get { return this._cancelbuttontext; }
+            set
+            {
+                this._cancelbuttontext = value;
+                this.OnPropertyChanged(this, "CancelButtonText");
+            }
+        }
+
         public string PasswordLabel
         {
             get { return this._pwlabel; }
@@ -150,16 +168,19 @@ namespace CollectionViewer.Auth
                 this.OnPropertyChanged(this, "PasswordLabel");
             }
         }
+
         private void SetDefaults()
         {
             this.Username = Environment.UserName;
             this.Domain = Environment.UserDomainName;
+            this.DeniedMessage = "Connection failed";
             this.DomainLabel = "Domain:";
             this.ServerLabel = "Server:";
             this.PasswordLabel = "Password:";
             this.UsernameLabel = "Username:";
             this.PassThroughLabel = "Use current user:";
             this.OkButtonText = "OK";
+            this.CancelButtonText = "Cancel";
             this.SiteLabel = "Site:";
             this.PassThrough = true;
         }

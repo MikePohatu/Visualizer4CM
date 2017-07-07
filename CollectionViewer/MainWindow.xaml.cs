@@ -32,47 +32,82 @@ namespace CollectionViewer
         private void Start()
         {
             SccmConnector connector = new SccmConnector();
-            LoginViewModel login = new LoginViewModel();
-            if (login.PassThrough == true) { connector.Connect(login.Server); }
-            else { connector.Connect(login.Username, login.Password, login.Domain, login.Server); }
-            connector.Query("001");
+            LoginViewModel loginviewmodel = new LoginViewModel();
+            LoginWindow loginwindow = new LoginWindow();
 
-            MsaglHelpers.ConfigureGViewer(DeviceColViewer);
-            MsaglHelpers.ConfigureGViewer(UserColViewer);
+            loginwindow.DataContext = loginviewmodel;
 
-            Graph devgraph = new Graph("graph");
-            //The easiest way to build a graph is to create the edges of the graph like in the example below.
-            foreach (SccmCollection col in connector.DeviceCollectionLibrary.GetAllCollections())
-            {
-                Node newnode = new Node(col.ID);
-                MsaglHelpers.ConfigureNode(newnode, col);
-                devgraph.AddNode(newnode);
+            loginwindow.cancelbtn.Click += (sender, e) => {
+                loginwindow.Close();
+                this.Close();
+            };
 
-                if ((string.IsNullOrWhiteSpace(col.ID) == false) && (string.IsNullOrWhiteSpace(col.LimitingCollectionID) == false))
+            loginwindow.okbtn.Click += (sender, e) => {
+                bool connected = this.TryConnect(connector, loginviewmodel, loginwindow);
+                if (connected == true)
                 {
-                    devgraph.AddEdge(col.LimitingCollectionID, col.ID); 
-                }
-            }
-            this.DeviceColViewer.Graph = devgraph;
-            Graph usergraph = new Graph("graph");
-            //The easiest way to build a graph is to create the edges of the graph like in the example below.
-            foreach (SccmCollection col in connector.UserCollectionLibrary.GetAllCollections())
-            {
-                Node newnode = new Node(col.ID);
-                MsaglHelpers.ConfigureNode(newnode, col);
-                usergraph.AddNode(newnode);
+                    connector.Query(loginviewmodel.Site);
 
-                if ((string.IsNullOrWhiteSpace(col.ID) == false) && (string.IsNullOrWhiteSpace(col.LimitingCollectionID) == false))
-                {
-                    usergraph.AddEdge(col.LimitingCollectionID, col.ID);
+                    MsaglHelpers.ConfigureGViewer(DeviceColViewer);
+                    MsaglHelpers.ConfigureGViewer(UserColViewer);
+
+                    Graph devgraph = new Graph("graph");
+                    //The easiest way to build a graph is to create the edges of the graph like in the example below.
+                    foreach (SccmCollection col in connector.DeviceCollectionLibrary.GetAllCollections())
+                    {
+                        Node newnode = new Node(col.ID);
+                        MsaglHelpers.ConfigureNode(newnode, col);
+                        devgraph.AddNode(newnode);
+
+                        if ((string.IsNullOrWhiteSpace(col.ID) == false) && (string.IsNullOrWhiteSpace(col.LimitingCollectionID) == false))
+                        {
+                            devgraph.AddEdge(col.LimitingCollectionID, col.ID);
+                        }
+                    }
+                    this.DeviceColViewer.Graph = devgraph;
+                    Graph usergraph = new Graph("graph");
+                    //The easiest way to build a graph is to create the edges of the graph like in the example below.
+                    foreach (SccmCollection col in connector.UserCollectionLibrary.GetAllCollections())
+                    {
+                        Node newnode = new Node(col.ID);
+                        MsaglHelpers.ConfigureNode(newnode, col);
+                        usergraph.AddNode(newnode);
+
+                        if ((string.IsNullOrWhiteSpace(col.ID) == false) && (string.IsNullOrWhiteSpace(col.LimitingCollectionID) == false))
+                        {
+                            usergraph.AddEdge(col.LimitingCollectionID, col.ID);
+                        }
+                    }
+                    this.UserColViewer.Graph = usergraph;
+                    loginwindow.Close();
                 }
-            }
-            this.UserColViewer.Graph = usergraph;
+            };
+
+            loginwindow.ShowDialog();
+            
         }
 
-        public void OnLoginOkButtonPress(object o, EventArgs e)
+        public bool TryConnect(SccmConnector connector, LoginViewModel loginviewmodel, LoginWindow loginwindow)
         {
-            
+            bool connected = false;
+
+            if (loginviewmodel.PassThrough == true) { connected = connector.Connect(loginviewmodel.Server); }
+            else { connected = connector.Connect(loginviewmodel.Username, loginwindow.pwdbx.Password, loginviewmodel.Domain, loginviewmodel.Server); }
+
+            ToolTip tt = (ToolTip)loginwindow.maingrid.ToolTip;
+
+            if (connected == false)
+            {
+                loginviewmodel.ToolTipMessage = loginviewmodel.DeniedMessage;
+                tt.IsOpen = true;
+            }
+            else
+            {
+                loginviewmodel.ToolTipMessage = string.Empty;
+                tt.IsOpen = false;
+            }
+
+            return connected;
         }
     }
 }
