@@ -46,6 +46,7 @@ namespace CollectionViewer
                 bool connected = this.TryConnect(connector, loginviewmodel, loginwindow);
                 if (connected == true)
                 {
+                    loginwindow.Close();
                     connector.Query(loginviewmodel.Site);
 
                     MsaglHelpers.ConfigureGViewer(DeviceColViewer);
@@ -79,7 +80,7 @@ namespace CollectionViewer
                         }
                     }
                     this.UserColViewer.Graph = usergraph;
-                    loginwindow.Close();
+                    
                 }
             };
 
