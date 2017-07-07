@@ -12,11 +12,23 @@
                 <Setter Property="Control.Padding" Value="2"/>
                 <Setter Property="Control.Margin" Value="2"/>
             </Style>
+            <Style x:Key="LoginControlStyle" TargetType="{x:Type Control}">
+                <Setter Property="Control.Padding" Value="2"/>
+                <Setter Property="Control.Margin" Value="2"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding PassThrough}" Value="True">
+                        <Setter Property="Control.IsEnabled" Value="False" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding PassThrough}" Value="False">
+                        <Setter Property="Control.IsEnabled" Value="True" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
         </ResourceDictionary>
     </Window.Resources>
     <Grid x:Name="maingrid">
         <Grid.ToolTip>
-            <ToolTip Content="{Binding ToolTipMessage}"></ToolTip>
+            <ToolTip Content="{Binding ToolTipMessage}" IsOpen="False"></ToolTip>
         </Grid.ToolTip>
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
@@ -46,9 +58,9 @@
             
         </StackPanel>
         <StackPanel Grid.Column="1" Margin="5" Grid.Row="3">
-            <TextBox x:Name="usertb" Text="{Binding Username}" Style="{StaticResource BaseControlStyle}"/>
-            <PasswordBox x:Name="pwdbx" Style="{StaticResource BaseControlStyle}"/>
-            <TextBox x:Name="domaintb" Text="{Binding Domain}" Style="{StaticResource BaseControlStyle}"/>
+            <TextBox x:Name="usertb" Text="{Binding Username}" Style="{StaticResource LoginControlStyle}"/>
+            <PasswordBox x:Name="pwdbx" Style="{StaticResource LoginControlStyle}"/>
+            <TextBox x:Name="domaintb" Text="{Binding Domain}" Style="{StaticResource LoginControlStyle}"/>
             <CheckBox x:Name="passthroughcb" IsChecked="{Binding PassThrough}" HorizontalAlignment="Left" Style="{StaticResource BaseControlStyle}"/>
             
         </StackPanel>
