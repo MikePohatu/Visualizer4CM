@@ -1,0 +1,8 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_CURRENT_USER\Software\Microsoft\ConfigMgr10\AdminUI\MRU\1]
+"ServerName"="wn0ntsccmpri02.ad.ccdhb.health.nz"
+"SiteCode"="AD0"
+"SiteName"="3DHB Primary Site"
+"DomainName"=""
+

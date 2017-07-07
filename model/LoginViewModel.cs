@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Win32;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -171,6 +172,8 @@ namespace model
 
         private void SetDefaults()
         {
+            this.Server = (string)Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\ConfigMgr10\AdminUI\MRU\1", "ServerName", null);
+            this.Site = (string)Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\ConfigMgr10\AdminUI\MRU\1", "SiteCode", null);
             this.Username = Environment.UserName;
             this.Domain = Environment.UserDomainName;
             this.DeniedMessage = "Connection failed";
@@ -181,7 +184,7 @@ namespace model
             this.PassThroughLabel = "Use current user:";
             this.OkButtonText = "OK";
             this.CancelButtonText = "Cancel";
-            this.SiteLabel = "Site:";
+            this.SiteLabel = "Site code:";
             this.PassThrough = true;
         }
     }

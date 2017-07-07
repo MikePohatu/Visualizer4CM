@@ -110,5 +110,10 @@ namespace CollectionViewer
 
             return connected;
         }
+
+        private void OnSearchButtonPressed(object sender, MouseButtonEventArgs e)
+        {
+
+        }
     }
 }
