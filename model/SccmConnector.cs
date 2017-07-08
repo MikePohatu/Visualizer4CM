@@ -36,8 +36,8 @@ namespace model
         {
             try
             {
-                this._devlibrary = this.GetDeviceCollectionLibrary(_connection, site);
-                this._userlibrary = this.GetUserCollectionLibrary(_connection, site);
+                this._devlibrary = this.GetDeviceCollectionLibrary(this._connection, site);
+                this._userlibrary = this.GetUserCollectionLibrary(this._connection, site);
             }
             catch { return; }
         }

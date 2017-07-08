@@ -18,7 +18,7 @@ namespace CollectionViewer
             a.Attr.YRadius = 3;
             a.Attr.Padding = 3;
             a.Attr.LabelMargin = 5;
-            a.LabelText = col.Name;
+            a.LabelText = col.Name + Environment.NewLine + col.ID;
             //a.Attr.FillColor = Color.Green;
             a.Attr.LineWidth = 2;
 

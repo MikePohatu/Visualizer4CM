@@ -36,7 +36,7 @@ namespace model
         //register a child collection for its limiting collection. store it in pending if limiting isn't added yet
         public void RegisterChildCollection(string limitingid, SccmCollection child)
         {
-            if (string.IsNullOrWhiteSpace(limitingid))
+            if (!string.IsNullOrWhiteSpace(limitingid))
             {
                 SccmCollection outval;
                 bool ret = this._collections.TryGetValue(limitingid, out outval);
@@ -57,12 +57,12 @@ namespace model
         }
 
         //register a child collection for its limiting collection. store it in pending if limiting isn't added yet
-        public SccmCollection GetCollection(string limitingid)
+        public SccmCollection GetCollection(string collectionid)
         {
-            if (!string.IsNullOrWhiteSpace(limitingid))
+            if (!string.IsNullOrWhiteSpace(collectionid))
             {
                 SccmCollection outval;
-                bool ret = this._collections.TryGetValue(limitingid, out outval);
+                bool ret = this._collections.TryGetValue(collectionid, out outval);
                 if (ret == true) { return outval; }
                 else { return null; }
             }

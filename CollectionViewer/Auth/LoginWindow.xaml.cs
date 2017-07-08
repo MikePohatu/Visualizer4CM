@@ -23,5 +23,11 @@ namespace CollectionViewer.Auth
         {
             InitializeComponent();
         }
+
+        private void OnTextBoxFocused(object sender, RoutedEventArgs e)
+        {
+            TextBox tb = (TextBox)sender;
+            tb.SelectAll();
+        }
     }
 }

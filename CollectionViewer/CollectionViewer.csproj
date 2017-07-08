@@ -71,6 +71,7 @@
     <Compile Include="Auth\LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CollectionNode.cs" />
     <Compile Include="MsaglHelpers.cs" />
     <Compile Include="View\CollectionBlock.xaml.cs">
       <DependentUpon>CollectionBlock.xaml</DependentUpon>

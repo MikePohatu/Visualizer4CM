@@ -11,6 +11,7 @@ namespace model
         private string _name;
         private string _id;
         private string _comment;
+        private bool _ishighlighted;
 
         public string LimitingCollectionID { get; set; }
         public SccmCollection LimitingCollection { get; set; }
@@ -41,6 +42,15 @@ namespace model
                 this.OnPropertyChanged(this, "ID");
             }
         }
+        public bool IsHighlighted
+        {
+            get { return this._ishighlighted; }
+            set
+            {
+                this._ishighlighted = value;
+                this.OnPropertyChanged(this, "IsHighlighted");
+            }
+        }
 
         public SccmCollection() { }
 
@@ -48,7 +58,26 @@ namespace model
         {
             this._name = name;
             this._id = id;
-            this.LimitingCollectionID = limitingcollectionid;         
+            this.LimitingCollectionID = limitingcollectionid;
+            this.IsHighlighted = false;       
+        }
+
+        public List<SccmCollection> HighlightCollectionPath()
+        {
+            this.IsHighlighted = true;
+            List<SccmCollection> highlightedcols;
+
+            if (this.LimitingCollection != null)
+            {
+                highlightedcols = this.LimitingCollection.HighlightCollectionPath();
+                highlightedcols.Add(this);
+            }
+            else
+            {
+                highlightedcols = new List<SccmCollection>();
+                highlightedcols.Add(this);
+            }
+            return highlightedcols;
         }
     }
 }

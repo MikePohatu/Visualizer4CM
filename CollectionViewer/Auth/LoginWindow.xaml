@@ -45,11 +45,11 @@
         <TextBox Background="DarkGray" Text="Login" Grid.ColumnSpan="2" Padding="2" Margin="0" />
         <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2" Grid.Row="1">
             <Label x:Name="serverlabel" Content="{Binding ServerLabel}" Width="100" Style="{StaticResource BaseControlStyle}"/>
-            <TextBox x:Name="servertb" Text="{Binding Server}" Width="185" Style="{StaticResource BaseControlStyle}"/>
+            <TextBox x:Name="servertb" Text="{Binding Server}" Width="185" Style="{StaticResource BaseControlStyle}" GotFocus="OnTextBoxFocused"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2" Grid.Row="2">
             <Label x:Name="sitelabel" Content="{Binding SiteLabel}" Width="100" Style="{StaticResource BaseControlStyle}"/>
-            <TextBox x:Name="sitetb" Text="{Binding Site}" Width="185" Style="{StaticResource BaseControlStyle}"/>
+            <TextBox x:Name="sitetb" Text="{Binding Site}" Width="185" Style="{StaticResource BaseControlStyle}" GotFocus="OnTextBoxFocused"/>
         </StackPanel>
         <StackPanel Grid.Column="0" Margin="5" Grid.Row="3">
             <Label x:Name="userlabel" Content="{Binding UsernameLabel}" Style="{StaticResource BaseControlStyle}"/>
@@ -59,9 +59,9 @@
             
         </StackPanel>
         <StackPanel Grid.Column="1" Margin="5" Grid.Row="3">
-            <TextBox x:Name="usertb" Text="{Binding Username}" Style="{StaticResource LoginControlStyle}"/>
+            <TextBox x:Name="usertb" Text="{Binding Username}" Style="{StaticResource LoginControlStyle}" GotFocus="OnTextBoxFocused"/>
             <PasswordBox x:Name="pwdbx" Style="{StaticResource LoginControlStyle}"/>
-            <TextBox x:Name="domaintb" Text="{Binding Domain}" Style="{StaticResource LoginControlStyle}"/>
+            <TextBox x:Name="domaintb" Text="{Binding Domain}" Style="{StaticResource LoginControlStyle}" GotFocus="OnTextBoxFocused"/>
             <CheckBox x:Name="passthroughcb" IsChecked="{Binding PassThrough}" HorizontalAlignment="Left" Style="{StaticResource BaseControlStyle}"/>
             
         </StackPanel>

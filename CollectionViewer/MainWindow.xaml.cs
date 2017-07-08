@@ -23,6 +23,10 @@ namespace CollectionViewer
     /// </summary>
     public partial class MainWindow : Window
     {
+        private CollectionLibrary _devlibrary;
+        private CollectionLibrary _userlibrary;
+        private List<SccmCollection> _highlightedcollections;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -53,10 +57,11 @@ namespace CollectionViewer
                     MsaglHelpers.ConfigureGViewer(UserColViewer);
 
                     Graph devgraph = new Graph("graph");
-                    //The easiest way to build a graph is to create the edges of the graph like in the example below.
-                    foreach (SccmCollection col in connector.DeviceCollectionLibrary.GetAllCollections())
+
+                    this._devlibrary = connector.DeviceCollectionLibrary;
+                    foreach (SccmCollection col in this._devlibrary.GetAllCollections())
                     {
-                        Node newnode = new Node(col.ID);
+                        CollectionNode newnode = new CollectionNode(col.ID, col);
                         MsaglHelpers.ConfigureNode(newnode, col);
                         devgraph.AddNode(newnode);
 
@@ -67,10 +72,11 @@ namespace CollectionViewer
                     }
                     this.DeviceColViewer.Graph = devgraph;
                     Graph usergraph = new Graph("graph");
-                    //The easiest way to build a graph is to create the edges of the graph like in the example below.
-                    foreach (SccmCollection col in connector.UserCollectionLibrary.GetAllCollections())
+
+                    this._userlibrary = connector.DeviceCollectionLibrary;
+                    foreach (SccmCollection col in this._userlibrary.GetAllCollections())
                     {
-                        Node newnode = new Node(col.ID);
+                        CollectionNode newnode = new CollectionNode(col.ID, col);
                         MsaglHelpers.ConfigureNode(newnode, col);
                         usergraph.AddNode(newnode);
 
@@ -111,9 +117,31 @@ namespace CollectionViewer
             return connected;
         }
 
-        private void OnSearchButtonPressed(object sender, MouseButtonEventArgs e)
+        private void OnFindButtonPressed(object sender, RoutedEventArgs e)
         {
+            this.FindCollectionID(this.searchcoltb.Text);
+        }
 
+        private void OnTextBoxFocused(object sender, RoutedEventArgs e)
+        {
+            TextBox tb = (TextBox)sender;
+            tb.SelectAll();
+        }
+
+        private void FindCollectionID(string collectionid)
+        {
+            if (this._highlightedcollections != null) {
+                foreach (SccmCollection hlcol in this._highlightedcollections) { hlcol.IsHighlighted = false; }
+                this._highlightedcollections.Clear();
+            }
+
+            SccmCollection col = this._devlibrary.GetCollection(collectionid);
+            if (col == null ) { col = this._userlibrary.GetCollection(collectionid); }
+            if (col != null)
+            {
+                this._highlightedcollections = col.HighlightCollectionPath();
+            }
+            //this.UserColViewer.
         }
     }
 }
