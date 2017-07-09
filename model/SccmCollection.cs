@@ -1,20 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace model
 {
     public class SccmCollection: ViewModelBase
     {
-        private string _name;
-        private string _id;
-        private string _comment;
-        private bool _ishighlighted;
-
         public string LimitingCollectionID { get; set; }
         public SccmCollection LimitingCollection { get; set; }
+
+        private string _comment;
         public string Comment
         {
             get { return this._comment; }
@@ -24,6 +17,8 @@ namespace model
                 this.OnPropertyChanged(this, "Comment");
             }
         }
+
+        private string _name;
         public string Name
         {
             get { return this._name; }
@@ -33,6 +28,8 @@ namespace model
                 this.OnPropertyChanged(this, "Name");
             }
         }
+
+        private string _id;
         public string ID
         {
             get { return this._id; }
@@ -42,6 +39,8 @@ namespace model
                 this.OnPropertyChanged(this, "ID");
             }
         }
+
+        private bool _ishighlighted;
         public bool IsHighlighted
         {
             get { return this._ishighlighted; }
@@ -49,6 +48,17 @@ namespace model
             {
                 this._ishighlighted = value;
                 this.OnPropertyChanged(this, "IsHighlighted");
+            }
+        }
+
+        private bool _ismemberpresent;
+        public bool IsMemberPresent
+        {
+            get { return this._ismemberpresent; }
+            set
+            {
+                this._ismemberpresent = value;
+                this.OnPropertyChanged(this, "IsMemberPresent");
             }
         }
 

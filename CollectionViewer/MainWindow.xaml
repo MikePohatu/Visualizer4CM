@@ -21,18 +21,18 @@
             <RowDefinition Height="33"/>
         </Grid.RowDefinitions>
         <DockPanel  Grid.Row="0">
-            <TabControl>
-                <TabItem Header="Device Collections">
+            <TabControl x:Name="maintabctrl">
+                <TabItem x:Name="devtab" Header="Device Collections">
                     <Grid>
                         <WindowsFormsHost Name="windowsFormsHostDevice" Margin="0,0,0,0">
-                            <gv:GViewer x:Name="DeviceColViewer"></gv:GViewer>
+                            <gv:GViewer x:Name="deviceColViewer"></gv:GViewer>
                         </WindowsFormsHost>
                     </Grid>
                 </TabItem>
-                <TabItem Header="User Collections">
+                <TabItem x:Name="usertab" Header="User Collections">
                     <Grid>
                         <WindowsFormsHost Name="windowsFormsHostUser" Margin="0,0,0,0">
-                            <gv:GViewer x:Name="UserColViewer"></gv:GViewer>
+                            <gv:GViewer x:Name="userColViewer"></gv:GViewer>
                         </WindowsFormsHost>
                     </Grid>
                 </TabItem>
@@ -44,6 +44,7 @@
             <Label Content="Device:" Width="Auto" Style="{StaticResource BaseControlStyle}"/>
             <TextBox x:Name="searchdevtb" Width="120" GotFocus="OnTextBoxFocused" Style="{StaticResource BaseControlStyle}"/>
             <Button x:Name="searchbtn" Width="50" Content="Find"  Style="{StaticResource BaseControlStyle}" Click="OnFindButtonPressed"/>
+            <Label x:Name="notifylbl"  Style="{StaticResource BaseControlStyle}" Foreground="Blue"/>
         </StackPanel>
     </Grid>
 </Window>

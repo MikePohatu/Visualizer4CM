@@ -38,6 +38,7 @@ namespace CollectionViewer
         private void Start()
         {
             this._connector = new SccmConnector();
+            this._highlightedcollections = new List<SccmCollection>();
             LoginViewModel loginviewmodel = new LoginViewModel();
             LoginWindow loginwindow = new LoginWindow();
 
@@ -98,45 +99,62 @@ namespace CollectionViewer
 
         private void FindCollectionID(string collectionid)
         {
-            if (this._highlightedcollections != null) {
-                foreach (SccmCollection hlcol in this._highlightedcollections) { hlcol.IsHighlighted = false; }
-                this._highlightedcollections.Clear();
-            }
-            if (string.IsNullOrWhiteSpace(collectionid) == true) { this.BuildTreeAllCollections(this._connector); }
-            else { this.BuildTreeCollectionPath(this._connector, collectionid); }
+            this.ClearHighlightedCollections();
 
-                //SccmCollection col = this._devlibrary.GetCollection(collectionid);
-                //if (col == null ) { col = this._userlibrary.GetCollection(collectionid); }
-                //if (col != null)
-                //{
-                //    this._highlightedcollections = col.HighlightCollectionPathList();
-                //}
+            if (string.IsNullOrWhiteSpace(collectionid) == false)
+            {
+                SccmCollection col = this._devlibrary.GetCollection(collectionid);
+                if (col != null)
+                {
+                    //workaround for nodes not redrawing on update. Swap to other tab then back
+                    this.maintabctrl.SelectedItem = this.usertab;
+                    this.maintabctrl.SelectedItem = this.devtab;
+                }
+                else
+                {
+                    col = this._userlibrary.GetCollection(collectionid);
+                    if (col != null )
+                    {
+                        //workaround for nodes not redrawing on update. Swap to other tab then back
+                        this.maintabctrl.SelectedItem = this.devtab;
+                        this.maintabctrl.SelectedItem = this.usertab;
+                    }
+                }
+
+                if (col != null)
+                {
+                    this._highlightedcollections = col.HighlightCollectionPathList();
+                }
+            }
+            this.UpdateLayout();
         }
 
         private void BuildTreeAllCollections(SccmConnector connector)
         {
-            MsaglHelpers.ConfigureGViewer(DeviceColViewer);
-            MsaglHelpers.ConfigureGViewer(UserColViewer);
+            MsaglHelpers.ConfigureGViewer(deviceColViewer);
+            MsaglHelpers.ConfigureGViewer(userColViewer);
 
             //build the device graph
             Graph devgraph = new Graph("devgraph");
 
             this._devlibrary = connector.DeviceCollectionLibrary;
             this.BuildGraph(devgraph, this._devlibrary.GetAllCollections());
-            this.DeviceColViewer.Graph = devgraph;
+            this.deviceColViewer.Graph = devgraph;
 
             //build the user graph
             Graph usergraph = new Graph("usergraph");
 
             this._userlibrary = connector.UserCollectionLibrary;
             this.BuildGraph(usergraph, this._userlibrary.GetAllCollections());
-            this.UserColViewer.Graph = usergraph;
+            this.userColViewer.Graph = usergraph;
         }
 
         private void BuildTreeCollectionPath(SccmConnector connector, string collectionid)
         {
-            MsaglHelpers.ConfigureGViewer(DeviceColViewer);
-            MsaglHelpers.ConfigureGViewer(UserColViewer);
+            this.ClearHighlightedCollections();
+
+            MsaglHelpers.ConfigureGViewer(deviceColViewer);
+            MsaglHelpers.ConfigureGViewer(userColViewer);
             SccmCollection searchcol;
 
             //build the device graph
@@ -146,8 +164,8 @@ namespace CollectionViewer
             if (searchcol != null)
             {
                 BuildGraph(devgraph, searchcol.GetCollectionPathList());
-            }
-            this.DeviceColViewer.Graph = devgraph;
+                this.HighlightCollection(searchcol);
+            }           
 
             //build the user graph
             Graph usergraph = new Graph("usergraph");
@@ -156,8 +174,11 @@ namespace CollectionViewer
             if (searchcol != null)
             {
                 BuildGraph(usergraph, searchcol.GetCollectionPathList());
-            }
-            this.UserColViewer.Graph = usergraph;
+                this.HighlightCollection(searchcol);
+            }         
+
+            this.deviceColViewer.Graph = devgraph;
+            this.userColViewer.Graph = usergraph;
         }
 
         private void BuildGraph(Graph graph, List<SccmCollection> collections)
@@ -169,7 +190,6 @@ namespace CollectionViewer
                 if (foundcols.TryGetValue(col.ID, out outob) == false)
                 {
                     CollectionNode newnode = new CollectionNode(col.ID, col);
-                    MsaglHelpers.ConfigureNode(newnode, col);
                     graph.AddNode(newnode);
                 }
 
@@ -184,6 +204,21 @@ namespace CollectionViewer
                     graph.AddEdge(col.LimitingCollectionID, col.ID);
                 }
             }
+        }
+
+        private void ClearHighlightedCollections()
+        {
+            foreach (SccmCollection col in this._highlightedcollections)
+            {
+                col.IsHighlighted = false;
+            }
+            this._highlightedcollections.Clear();
+        }
+
+        private void HighlightCollection(SccmCollection collection)
+        {
+            collection.IsHighlighted = true;
+            this._highlightedcollections.Add(collection);
         }
     }
 }

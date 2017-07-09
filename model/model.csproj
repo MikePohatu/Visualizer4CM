@@ -51,6 +51,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SccmCollection.cs" />
     <Compile Include="SccmConnector.cs" />
+    <Compile Include="SccmDevice.cs" />
+    <Compile Include="SccmUser.cs" />
     <Compile Include="ViewModelBase.cs" />
     <Compile Include="XmlHandler.cs" />
   </ItemGroup>
