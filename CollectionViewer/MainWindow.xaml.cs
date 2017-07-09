@@ -28,6 +28,7 @@ namespace CollectionViewer
         private CollectionLibrary _userlibrary;
         private List<SccmCollection> _highlightedcollections;
         private SccmConnector _connector;
+        private bool _filteredview;
 
         public MainWindow()
         {
@@ -123,7 +124,17 @@ namespace CollectionViewer
 
                 if (col != null)
                 {
-                    this._highlightedcollections = col.HighlightCollectionPathList();
+                    if (isolatechk.IsChecked == false)
+                    {
+                        if (this._filteredview == true) { this.BuildTreeAllCollections(this._connector); }
+                        this._filteredview = false;
+                        this._highlightedcollections = col.HighlightCollectionPathList();
+                    }
+                    else
+                    {
+                        this._filteredview = true;
+                        this.BuildTreeCollectionPath(this._connector, collectionid);
+                    }
                 }
             }
             this.UpdateLayout();

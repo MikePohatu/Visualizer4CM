@@ -30,6 +30,7 @@ namespace CollectionViewer
             viewer.EdgeInsertButtonVisible = false;
             viewer.NavigationVisible = false;
             viewer.UndoRedoButtonsVisible = false;
+            viewer.CurrentLayoutMethod = LayoutMethod.MDS;
             //viewer.ToolBarIsVisible = false;
         }
     }
