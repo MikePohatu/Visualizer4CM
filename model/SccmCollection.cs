@@ -38,7 +38,7 @@ namespace model
             get { return this._id; }
             set
             {
-                this._id = value;
+                this._id = value.ToUpper();
                 this.OnPropertyChanged(this, "ID");
             }
         }
@@ -62,14 +62,14 @@ namespace model
             this.IsHighlighted = false;       
         }
 
-        public List<SccmCollection> HighlightCollectionPath()
+        public List<SccmCollection> HighlightCollectionPathList()
         {
             this.IsHighlighted = true;
             List<SccmCollection> highlightedcols;
 
             if (this.LimitingCollection != null)
             {
-                highlightedcols = this.LimitingCollection.HighlightCollectionPath();
+                highlightedcols = this.LimitingCollection.HighlightCollectionPathList();
                 highlightedcols.Add(this);
             }
             else
@@ -78,6 +78,23 @@ namespace model
                 highlightedcols.Add(this);
             }
             return highlightedcols;
+        }
+
+        public List<SccmCollection> GetCollectionPathList()
+        {
+            List<SccmCollection> cols;
+
+            if (this.LimitingCollection != null)
+            {
+                cols = this.LimitingCollection.GetCollectionPathList();
+                cols.Add(this);
+            }
+            else
+            {
+                cols = new List<SccmCollection>();
+                cols.Add(this);
+            }
+            return cols;
         }
     }
 }

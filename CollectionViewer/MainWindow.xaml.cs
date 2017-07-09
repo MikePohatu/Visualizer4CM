@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Msagl.Drawing;
+using Microsoft.Msagl.GraphViewerGdi;
 using model;
 using CollectionViewer.Auth;
 
@@ -26,6 +27,7 @@ namespace CollectionViewer
         private CollectionLibrary _devlibrary;
         private CollectionLibrary _userlibrary;
         private List<SccmCollection> _highlightedcollections;
+        private SccmConnector _connector;
 
         public MainWindow()
         {
@@ -35,7 +37,7 @@ namespace CollectionViewer
 
         private void Start()
         {
-            SccmConnector connector = new SccmConnector();
+            this._connector = new SccmConnector();
             LoginViewModel loginviewmodel = new LoginViewModel();
             LoginWindow loginwindow = new LoginWindow();
 
@@ -47,46 +49,12 @@ namespace CollectionViewer
             };
 
             loginwindow.okbtn.Click += (sender, e) => {
-                bool connected = this.TryConnect(connector, loginviewmodel, loginwindow);
+                bool connected = this.TryConnect(this._connector, loginviewmodel, loginwindow);
                 if (connected == true)
                 {
                     loginwindow.Close();
-                    connector.Query(loginviewmodel.Site);
-
-                    MsaglHelpers.ConfigureGViewer(DeviceColViewer);
-                    MsaglHelpers.ConfigureGViewer(UserColViewer);
-
-                    Graph devgraph = new Graph("graph");
-
-                    this._devlibrary = connector.DeviceCollectionLibrary;
-                    foreach (SccmCollection col in this._devlibrary.GetAllCollections())
-                    {
-                        CollectionNode newnode = new CollectionNode(col.ID, col);
-                        MsaglHelpers.ConfigureNode(newnode, col);
-                        devgraph.AddNode(newnode);
-
-                        if ((string.IsNullOrWhiteSpace(col.ID) == false) && (string.IsNullOrWhiteSpace(col.LimitingCollectionID) == false))
-                        {
-                            devgraph.AddEdge(col.LimitingCollectionID, col.ID);
-                        }
-                    }
-                    this.DeviceColViewer.Graph = devgraph;
-                    Graph usergraph = new Graph("graph");
-
-                    this._userlibrary = connector.DeviceCollectionLibrary;
-                    foreach (SccmCollection col in this._userlibrary.GetAllCollections())
-                    {
-                        CollectionNode newnode = new CollectionNode(col.ID, col);
-                        MsaglHelpers.ConfigureNode(newnode, col);
-                        usergraph.AddNode(newnode);
-
-                        if ((string.IsNullOrWhiteSpace(col.ID) == false) && (string.IsNullOrWhiteSpace(col.LimitingCollectionID) == false))
-                        {
-                            usergraph.AddEdge(col.LimitingCollectionID, col.ID);
-                        }
-                    }
-                    this.UserColViewer.Graph = usergraph;
-                    
+                    this._connector.Query(loginviewmodel.Site);
+                    this.BuildTreeAllCollections(this._connector);
                 }
             };
 
@@ -94,7 +62,7 @@ namespace CollectionViewer
             
         }
 
-        public bool TryConnect(SccmConnector connector, LoginViewModel loginviewmodel, LoginWindow loginwindow)
+        private bool TryConnect(SccmConnector connector, LoginViewModel loginviewmodel, LoginWindow loginwindow)
         {
             bool connected = false;
 
@@ -134,14 +102,112 @@ namespace CollectionViewer
                 foreach (SccmCollection hlcol in this._highlightedcollections) { hlcol.IsHighlighted = false; }
                 this._highlightedcollections.Clear();
             }
+            if (string.IsNullOrWhiteSpace(collectionid) == true) { this.BuildTreeAllCollections(this._connector); }
+            else { this.BuildTreeCollectionPath(this._connector, collectionid); }
 
-            SccmCollection col = this._devlibrary.GetCollection(collectionid);
-            if (col == null ) { col = this._userlibrary.GetCollection(collectionid); }
-            if (col != null)
+                //SccmCollection col = this._devlibrary.GetCollection(collectionid);
+                //if (col == null ) { col = this._userlibrary.GetCollection(collectionid); }
+                //if (col != null)
+                //{
+                //    this._highlightedcollections = col.HighlightCollectionPathList();
+                //}
+        }
+
+        private void BuildTreeAllCollections(SccmConnector connector)
+        {
+            MsaglHelpers.ConfigureGViewer(DeviceColViewer);
+            MsaglHelpers.ConfigureGViewer(UserColViewer);
+
+            //build the device graph
+            Graph devgraph = new Graph("devgraph");
+
+            this._devlibrary = connector.DeviceCollectionLibrary;
+            foreach (SccmCollection col in this._devlibrary.GetAllCollections())
             {
-                this._highlightedcollections = col.HighlightCollectionPath();
+                CollectionNode newnode = new CollectionNode(col.ID, col);
+                MsaglHelpers.ConfigureNode(newnode, col);
+                devgraph.AddNode(newnode);
+
+                if ((string.IsNullOrWhiteSpace(col.ID) == false) && (string.IsNullOrWhiteSpace(col.LimitingCollectionID) == false))
+                {
+                    devgraph.AddEdge(col.LimitingCollectionID, col.ID);
+                }
             }
-            //this.UserColViewer.
+            this.DeviceColViewer.Graph = devgraph;
+
+            //build the user graph
+            Graph usergraph = new Graph("usergraph");
+
+            this._userlibrary = connector.UserCollectionLibrary;
+            foreach (SccmCollection col in this._userlibrary.GetAllCollections())
+            {
+                CollectionNode newnode = new CollectionNode(col.ID, col);
+                MsaglHelpers.ConfigureNode(newnode, col);
+                usergraph.AddNode(newnode);
+
+                if ((string.IsNullOrWhiteSpace(col.ID) == false) && (string.IsNullOrWhiteSpace(col.LimitingCollectionID) == false))
+                {
+                    usergraph.AddEdge(col.LimitingCollectionID, col.ID);
+                }
+            }
+            this.UserColViewer.Graph = usergraph;
+        }
+
+        private void BuildTreeCollectionPath(SccmConnector connector, string collectionid)
+        {
+            Dictionary<string, object> foundcols = new Dictionary<string, object>();
+            bool devfound = false;
+            bool userfound = false;
+
+            MsaglHelpers.ConfigureGViewer(DeviceColViewer);
+            MsaglHelpers.ConfigureGViewer(UserColViewer);
+            SccmCollection searchcol;
+
+            //build the device graph
+            Graph devgraph = new Graph("devgraph");
+            this._devlibrary = connector.DeviceCollectionLibrary;
+            
+            searchcol = this._devlibrary.GetCollection(collectionid);
+            if (searchcol != null) {
+                devfound = true;
+                foreach (SccmCollection col in searchcol.GetCollectionPathList())
+                {
+                    object outob;
+                    if (foundcols.TryGetValue(col.ID, out outob)==false)
+                    {
+                        CollectionNode newnode = new CollectionNode(col.ID, col);
+                        MsaglHelpers.ConfigureNode(newnode, col);
+                        devgraph.AddNode(newnode);
+                    }
+                    if ((string.IsNullOrWhiteSpace(col.ID) == false) && (string.IsNullOrWhiteSpace(col.LimitingCollectionID) == false))
+                    { devgraph.AddEdge(col.LimitingCollectionID, col.ID); }
+
+                }  
+            }
+            this.DeviceColViewer.Graph = devgraph;
+
+            //build the user graph
+            Graph usergraph = new Graph("usergraph");
+            this._userlibrary = connector.UserCollectionLibrary;
+            searchcol = this._userlibrary.GetCollection(collectionid);
+            if (searchcol != null)
+            {
+                userfound = true;
+                foreach (SccmCollection col in searchcol.GetCollectionPathList())
+                {
+                    object outob;
+                    if (foundcols.TryGetValue(col.ID, out outob) == false)
+                    {
+                        CollectionNode newnode = new CollectionNode(col.ID, col);
+                        MsaglHelpers.ConfigureNode(newnode, col);
+                        usergraph.AddNode(newnode);
+                    }
+                    if ((string.IsNullOrWhiteSpace(col.ID) == false) && (string.IsNullOrWhiteSpace(col.LimitingCollectionID) == false))
+                    { usergraph.AddEdge(col.LimitingCollectionID, col.ID); }
+
+                } 
+            }
+            this.UserColViewer.Graph = usergraph;
         }
     }
 }

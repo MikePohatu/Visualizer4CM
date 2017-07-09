@@ -38,19 +38,20 @@ namespace model
         {
             if (!string.IsNullOrWhiteSpace(limitingid))
             {
+                string limitingidupper = limitingid.ToUpper();
                 SccmCollection outval;
-                bool ret = this._collections.TryGetValue(limitingid, out outval);
+                bool ret = this._collections.TryGetValue(limitingidupper, out outval);
                 if (ret == true) { child.LimitingCollection = outval; }
                 else
                 {
                     List<SccmCollection> pendinglist;
-                    ret = this._pendingregistrations.TryGetValue(limitingid, out pendinglist);
+                    ret = this._pendingregistrations.TryGetValue(limitingidupper, out pendinglist);
                     if (ret == true) { pendinglist.Add(child); }
                     else
                     {
                         List<SccmCollection> newlist = new List<SccmCollection>();
                         newlist.Add(child);
-                        this._pendingregistrations.Add(limitingid, newlist);
+                        this._pendingregistrations.Add(limitingidupper, newlist);
                     }
                 }
             }
@@ -61,8 +62,9 @@ namespace model
         {
             if (!string.IsNullOrWhiteSpace(collectionid))
             {
+                string colidupper = collectionid.ToUpper();
                 SccmCollection outval;
-                bool ret = this._collections.TryGetValue(collectionid, out outval);
+                bool ret = this._collections.TryGetValue(colidupper, out outval);
                 if (ret == true) { return outval; }
                 else { return null; }
             }
