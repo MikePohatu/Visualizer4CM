@@ -105,7 +105,7 @@ namespace model
             }
         }
 
-        public List<SccmCollectionRelationship> GetCollectionDependencies(string siteCode, string collectionid)
+        public List<SccmCollectionRelationship> GetCollectionDependencies(string collectionid, string sitecode)
         {
             try
             {

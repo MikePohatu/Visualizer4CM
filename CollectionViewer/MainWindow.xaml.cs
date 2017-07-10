@@ -26,8 +26,7 @@ namespace CollectionViewer
     {
         private CollectionLibrary _devlibrary;
         private CollectionLibrary _userlibrary;
-        private Graph _usergraph;
-        private Graph _devgraph;
+        private Graph[] _graphs = new Graph[2];
         private List<SccmCollection> _highlightedcollections;
         private SccmConnector _connector;
         private bool _filteredview;
@@ -60,7 +59,11 @@ namespace CollectionViewer
                     loginwindow.Close();
                     this._site = loginviewmodel.Site;
                     this._connector.Query(this._site);
-                    this.BuildTreeAllCollections(this._connector);
+                    Graph[] graphs = this.BuildTreeAllCollections(this._connector);
+                    MsaglHelpers.ConfigureGViewer(this.deviceColViewer);
+                    MsaglHelpers.ConfigureGViewer(this.userColViewer);
+                    this.deviceColViewer.Graph = graphs[0];
+                    this.userColViewer.Graph = graphs[1];
                 }
             };
 
@@ -104,6 +107,7 @@ namespace CollectionViewer
 
         private void FindCollectionID(string collectionid)
         {
+            Graph[] graphs = new Graph[2];
             this.ClearHighlightedCollections();
             CollectionLibrary library = null;
             if (string.IsNullOrWhiteSpace(collectionid) == false)
@@ -132,76 +136,66 @@ namespace CollectionViewer
                 {
                     if (isolatechk.IsChecked == false)
                     {
-                        if (this._filteredview == true) { this.BuildTreeAllCollections(this._connector); }
+                        if (this._filteredview == true) { graphs = this.BuildTreeAllCollections(this._connector); }
                         this._filteredview = false;
                         this._highlightedcollections = col.HighlightCollectionPathList();
                     }
                     else
                     {
                         this._filteredview = true;
-                        Graph foundgraph = this.BuildTreeCollectionPath(this._connector, collectionid);
-                        if (foundgraph != null)
-                        { this.BuildGraphCollectionRelationships(foundgraph, library, this._connector.GetCollectionDependencies(col.ID, this._site)); }
+                        graphs = this.BuildGraphCollectionRelationships(this._connector, collectionid);
                     }
                 }
             }
+            this.deviceColViewer.Graph = graphs[0];
+            this.userColViewer.Graph = graphs[1];
         }
 
-        private void BuildTreeAllCollections(SccmConnector connector)
+        private Graph[] BuildTreeAllCollections(SccmConnector connector)
         {
-            MsaglHelpers.ConfigureGViewer(deviceColViewer);
-            MsaglHelpers.ConfigureGViewer(userColViewer);
+            Graph[] graphs = new Graph[2];
+            graphs[0] = new Graph("devgraph");
+            graphs[1] = new Graph("usergraph");
 
             //build the device graph
-            Graph devgraph = new Graph("devgraph");
-
             this._devlibrary = connector.DeviceCollectionLibrary;
-            this.BuildGraph(devgraph, this._devlibrary.GetAllCollections());
-            this.deviceColViewer.Graph = devgraph;
+            this.BuildGraph(graphs[0], this._devlibrary.GetAllCollections());
 
             //build the user graph
-            Graph usergraph = new Graph("usergraph");
-
             this._userlibrary = connector.UserCollectionLibrary;
-            this.BuildGraph(usergraph, this._userlibrary.GetAllCollections());
-            this.userColViewer.Graph = usergraph;
+            this.BuildGraph(graphs[1], this._userlibrary.GetAllCollections());
+
+            return graphs;
         }
 
-        private Graph BuildTreeCollectionPath(SccmConnector connector, string collectionid)
+        private Graph[] BuildTreeCollectionPath(SccmConnector connector, string collectionid)
         {
-            Graph returngraph = null;
             this.ClearHighlightedCollections();
-
-            MsaglHelpers.ConfigureGViewer(deviceColViewer);
-            MsaglHelpers.ConfigureGViewer(userColViewer);
             SccmCollection searchcol;
 
-            Graph devgraph = new Graph("devgraph");
-            Graph usergraph = new Graph("usergraph");
+            Graph[] graphs = new Graph[2];
+            graphs[0] = new Graph("devgraph");
+            graphs[1] = new Graph("usergraph");
 
             //build the device graph
             this._devlibrary = connector.DeviceCollectionLibrary;
             searchcol = this._devlibrary.GetCollection(collectionid);
             if (searchcol != null)
             {
-                this.BuildGraph(devgraph, searchcol.GetCollectionPathList());
+                this.BuildGraph(graphs[0], searchcol.GetCollectionPathList());
                 this.HighlightCollection(searchcol);
-                returngraph = devgraph;
             }
-            this.deviceColViewer.Graph = devgraph;
             
             //build the user graph          
             this._userlibrary = connector.UserCollectionLibrary;
             searchcol = this._userlibrary.GetCollection(collectionid);
             if (searchcol != null)
             {
-                this.BuildGraph(usergraph, searchcol.GetCollectionPathList());
+                this.BuildGraph(graphs[1], searchcol.GetCollectionPathList());
                 this.HighlightCollection(searchcol);
-                returngraph = usergraph;
             }
-            this.userColViewer.Graph = usergraph;
 
-            return returngraph;            
+            return graphs;            
         }
 
         private void BuildGraph(Graph graph, List<SccmCollection> collections)
@@ -227,39 +221,66 @@ namespace CollectionViewer
             }
         }
 
-        private void BuildGraphCollectionRelationships(Graph graph, CollectionLibrary library, List<SccmCollectionRelationship> relationships)
+        private Graph[] BuildGraphCollectionRelationships(SccmConnector connector, string collectionid)
+        {
+            this.ClearHighlightedCollections();
+            SccmCollection searchcol;
+            Graph[] graphs = new Graph[2];
+            graphs[0] = new Graph("devgraph");
+            graphs[1] = new Graph("usergraph");
+
+            List<SccmCollectionRelationship> relationships = this._connector.GetCollectionDependencies(collectionid, this._site);
+
+            //build the device graph
+            searchcol = connector.DeviceCollectionLibrary.GetCollection(collectionid);
+            if (searchcol != null)
+            {
+                this.BuildGraph(graphs[0], searchcol.GetCollectionPathList());
+                this.HighlightCollection(searchcol);
+                this.AddIncExclRelationshipEdges(relationships, graphs[0], connector.DeviceCollectionLibrary);
+            }
+
+            //build the user graph          
+            searchcol = connector.UserCollectionLibrary.GetCollection(collectionid);
+            if (searchcol != null)
+            {
+                this.BuildGraph(graphs[1], searchcol.GetCollectionPathList());
+                this.HighlightCollection(searchcol);
+                this.AddIncExclRelationshipEdges(relationships, graphs[1], connector.UserCollectionLibrary);
+            }
+
+            return graphs;
+        }
+
+        private void AddIncExclRelationshipEdges(List<SccmCollectionRelationship> relationships, Graph graph, CollectionLibrary library)
         {
             foreach (SccmCollectionRelationship colrel in relationships)
             {
-                Node sourcenode = graph.FindNode(colrel.SourceCollectionID);
-                Node targetnode = graph.FindNode(colrel.DependentCollectionID);
-
-                if (sourcenode == null)
+                if (colrel.Type != SccmCollectionRelationship.RelationShipType.Limiting)
                 {
-                    SccmCollection col = library.GetCollection(colrel.SourceCollectionID);
-                    sourcenode = new CollectionNode(col.ID, col);
-                    graph.AddNode(sourcenode);
-                }
+                    if (graph.FindNode(colrel.DependentCollectionID) == null)
+                    {
+                        SccmCollection col = library.GetCollection(colrel.DependentCollectionID);
+                        graph.AddNode(new CollectionNode(col.ID, col));
+                    }
 
-                if (targetnode == null)
-                {
-                    SccmCollection col = library.GetCollection(colrel.SourceCollectionID);
-                    targetnode = new CollectionNode(col.ID, col);
-                    graph.AddNode(targetnode);
-                }
+                    if (graph.FindNode(colrel.SourceCollectionID) == null)
+                    {
+                        SccmCollection col = library.GetCollection(colrel.SourceCollectionID);
+                        graph.AddNode(new CollectionNode(col.ID, col));
+                    }
 
-                Edge newedge = new Edge(sourcenode, targetnode, ConnectionToGraph.Connected);
+                    Edge newedge = graph.AddEdge(colrel.DependentCollectionID, colrel.SourceCollectionID);
 
-                if (colrel.Type == SccmCollectionRelationship.RelationShipType.Exclue)
-                {  
-                    newedge.Attr.Color = Microsoft.Msagl.Drawing.Color.Red;
-                    //graph.AddEdge(colrel.DependentCollectionID, colrel.SourceCollectionID);
+                    if (colrel.Type == SccmCollectionRelationship.RelationShipType.Exclude)
+                    {
+                        newedge.Attr.Color = Microsoft.Msagl.Drawing.Color.Red;
+                    }
+                    else if (colrel.Type == SccmCollectionRelationship.RelationShipType.Include)
+                    { newedge.Attr.Color = Microsoft.Msagl.Drawing.Color.Blue; }
                 }
-                else if (colrel.Type == SccmCollectionRelationship.RelationShipType.Include)
-                { newedge.Attr.Color = Microsoft.Msagl.Drawing.Color.Blue; }
             }
         }
-
 
         private void ClearHighlightedCollections()
         {

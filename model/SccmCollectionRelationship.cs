@@ -8,7 +8,7 @@ namespace model
 {
     public class SccmCollectionRelationship
     {
-        public enum RelationShipType { Limiting, Include, Exclue }
+        public enum RelationShipType { Limiting, Include, Exclude }
         public string DependentCollectionID { get; set; }
         public RelationShipType Type { get; set; }
         public string SourceCollectionID { get; set; }
@@ -21,7 +21,7 @@ namespace model
         {
             if (type == 1) { this.Type = RelationShipType.Limiting; }
             else if(type == 2) { this.Type = RelationShipType.Include; }
-            else if (type == 3) { this.Type = RelationShipType.Exclue; }
+            else if (type == 3) { this.Type = RelationShipType.Exclude; }
         }
     }
 }
