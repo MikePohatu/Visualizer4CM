@@ -1,0 +1,6 @@
+<Auth>
+	<User>username</User>
+	<Password>password</Password>
+	<Domain>domain</Domain>
+	<Server>server</Server>
+</Auth>

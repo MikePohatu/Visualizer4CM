@@ -133,5 +133,32 @@ namespace model
                 return null;
             }
         }
+
+        public SccmDevice GetDevice(WqlConnectionManager connection, string siteCode, string devicename)
+        {
+            try
+            {
+                // This query selects all collections
+                string query = "select * from SMS_FullCollectionMembership WHERE Name='" + devicename + "'";
+                SccmDevice device = new SccmDevice();
+
+                // Run query
+                using (IResultObject results = connection.QueryProcessor.ExecuteQuery(query))
+                {
+                    // Enumerate through the collection of objects returned by the query.
+                    foreach (IResultObject resource in results)
+                    {
+                        device.ID = resource["ResourceID"].StringValue;
+                        device.Name = resource["Name"].StringValue;
+                        device.CollectionIDs.Add(resource["CollectionID"].StringValue);
+                    }
+                }
+                return device;
+            }
+            catch
+            {
+                return null;
+            }
+        }
     }
 }
