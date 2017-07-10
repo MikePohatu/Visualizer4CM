@@ -104,5 +104,33 @@ namespace model
                 return null;
             }
         }
+
+        public List<SccmCollectionRelationship> GetCollectionDependencies(string siteCode, string collectionid)
+        {
+            try
+            {
+                // This query selects all collections
+                string query = "select * from SMS_CollectionDependencies WHERE DependentCollectionID='" + collectionid + "'";
+                List<SccmCollectionRelationship> relationships = new List<SccmCollectionRelationship>();
+                // Run query
+                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
+                {
+                    // Enumerate through the collection of objects returned by the query.
+                    foreach (IResultObject resource in results)
+                    {
+                        SccmCollectionRelationship colrel = new SccmCollectionRelationship();
+                        colrel.DependentCollectionID = resource["DependentCollectionID"].StringValue;
+                        colrel.SetType(resource["RelationshipType"].IntegerValue);
+                        colrel.SourceCollectionID = resource["SourceCollectionID"].StringValue;
+                        relationships.Add(colrel);
+                    }
+                }
+                return relationships;
+            }
+            catch
+            {
+                return null;
+            }
+        }
     }
 }
