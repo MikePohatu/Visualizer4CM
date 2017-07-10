@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using model;
@@ -53,24 +42,29 @@ namespace CollectionViewer
             };
 
             loginwindow.okbtn.Click += (sender, e) => {
-                bool connected = this.TryConnect(this._connector, loginviewmodel, loginwindow);
-                if (connected == true)
-                {
-                    loginwindow.Close();
-                    this._site = loginviewmodel.Site;
-                    this._connector.Query(this._site);
-                    this._devlibrary = this._connector.DeviceCollectionLibrary;
-                    this._userlibrary = this._connector.UserCollectionLibrary;
-                    Graph[] graphs = this.BuildTreeAllCollections(this._connector);
-                    MsaglHelpers.ConfigureGViewer(this.deviceColViewer);
-                    MsaglHelpers.ConfigureGViewer(this.userColViewer);
-                    this.deviceColViewer.Graph = graphs[0];
-                    this.userColViewer.Graph = graphs[1];
-                }
+                if (this.TryConnect(this._connector, loginviewmodel, loginwindow) == true)
+                { this.Startup(loginwindow, loginviewmodel); }
             };
+
+            //loginwindow.pwdbx.Enter
 
             loginwindow.ShowDialog();
             
+        }
+
+        private void Startup(LoginWindow loginwindow, LoginViewModel loginviewmodel)
+        {
+            loginwindow.Close();
+            this._site = loginviewmodel.Site;
+            this._connector.Query(this._site);
+            this._devlibrary = this._connector.DeviceCollectionLibrary;
+            this._userlibrary = this._connector.UserCollectionLibrary;
+            Graph[] graphs = this.BuildTreeAllCollections(this._connector);
+            MsaglHelpers.ConfigureGViewer(this.deviceColViewer);
+            MsaglHelpers.ConfigureGViewer(this.userColViewer);
+            this.deviceColViewer.Graph = graphs[0];
+            this.userColViewer.Graph = graphs[1];
+
         }
 
         private bool TryConnect(SccmConnector connector, LoginViewModel loginviewmodel, LoginWindow loginwindow)
