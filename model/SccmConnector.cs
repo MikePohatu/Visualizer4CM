@@ -134,7 +134,7 @@ namespace model
             }
         }
 
-        public SccmDevice GetDevice(WqlConnectionManager connection, string siteCode, string devicename)
+        public SccmDevice GetDevice(string siteCode, string devicename)
         {
             try
             {
@@ -143,7 +143,7 @@ namespace model
                 SccmDevice device = new SccmDevice();
 
                 // Run query
-                using (IResultObject results = connection.QueryProcessor.ExecuteQuery(query))
+                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
                 {
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)

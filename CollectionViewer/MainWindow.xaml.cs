@@ -103,7 +103,7 @@ namespace CollectionViewer
 
         private void FindCollectionID(string collectionid)
         {
-            //Graph[] graphs = new Graph[2];
+            Graph[] graphs = new Graph[2];
             this.ClearHighlightedCollections();
             CollectionLibrary library = null;
             if (string.IsNullOrWhiteSpace(collectionid) == false)
@@ -139,13 +139,14 @@ namespace CollectionViewer
                     else if (modecombo.Text == "Mesh")
                     {
                         this._filteredview = true;
-                        Graph[] graphs = this.BuildTreeMeshMode(this._connector, collectionid);
+                        graphs = this.BuildTreeMeshMode(this._connector, collectionid);
                         this.UpdateGraphs(graphs);
                     }
                     else if (modecombo.Text == "Limiting")
                     {
                         this._filteredview = true;
-                        this.UpdateGraphs(this.BuildTreeLimitingMode(this._connector, collectionid));
+                        graphs = this.BuildTreeLimitingMode(this._connector, collectionid);
+                        this.UpdateGraphs(graphs);
                     }
                 }
             }
@@ -154,8 +155,15 @@ namespace CollectionViewer
                 if (this._filteredview == true)
                 {
                     this._filteredview = false;
-                    this.UpdateGraphs(this.BuildTreeAllCollections(this._connector));
                 }
+                graphs = this.BuildTreeAllCollections(this._connector);
+                this.UpdateGraphs(graphs);
+            }
+
+            if (string.IsNullOrWhiteSpace(this.searchdevtb.Text) == false)
+            {
+                SccmDevice dev = this._connector.GetDevice(this._site, this.searchdevtb.Text.Trim());
+                this.HighlightCollectionMembers(graphs, dev.CollectionIDs);
             }
         }
 
@@ -163,6 +171,22 @@ namespace CollectionViewer
         {
             this.deviceColViewer.Graph = graphs[0];
             this.userColViewer.Graph = graphs[1];
+        }
+
+        private void HighlightCollectionMembers(Graph[] graphs, List<string> collectionids)
+        {
+            foreach (Graph graph in graphs)
+            {
+                foreach (string colid in collectionids)
+                {
+                    CollectionNode node = graph?.FindNode(colid) as CollectionNode;
+                    if (node != null)
+                    {
+                        this._highlightedcollections.Add(node.Collection);
+                        node.Collection.IsMemberPresent = true;
+                    }
+                }
+            }
         }
 
         private Graph[] BuildTreeAllCollections(SccmConnector connector)

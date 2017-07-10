@@ -6,9 +6,14 @@ using model;
 namespace CollectionViewer
 {
     public class CollectionNode : Node
-    {
-        private SccmCollection _collection;
+    {       
         const int _highlightedlinewidth = 5;
+        private SccmCollection _collection;
+        public SccmCollection Collection
+        {
+            get { return this._collection; }
+            set { this._collection = value; }
+        }
 
         public CollectionNode(string id, SccmCollection collection) :base(id)
         {
@@ -42,7 +47,7 @@ namespace CollectionViewer
             if (e.PropertyName.Equals("IsMemberPresent"))
             {
                 SccmCollection col = (SccmCollection)sender;
-                if (col.IsHighlighted == true)
+                if (col.IsMemberPresent == true)
                 {
                     this.Attr.LineWidth = _highlightedlinewidth;
                     this.Attr.Color = Color.Orange;
