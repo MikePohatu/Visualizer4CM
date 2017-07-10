@@ -270,12 +270,10 @@ namespace CollectionViewer
                         graph.AddNode(new CollectionNode(col.ID, col));
                     }
 
-                    Edge newedge = graph.AddEdge(colrel.DependentCollectionID, colrel.SourceCollectionID);
+                    Edge newedge = graph.AddEdge(colrel.SourceCollectionID, colrel.Type.ToString() , colrel.DependentCollectionID);
 
                     if (colrel.Type == SccmCollectionRelationship.RelationShipType.Exclude)
-                    {
-                        newedge.Attr.Color = Microsoft.Msagl.Drawing.Color.Red;
-                    }
+                    { newedge.Attr.Color = Microsoft.Msagl.Drawing.Color.Red; }
                     else if (colrel.Type == SccmCollectionRelationship.RelationShipType.Include)
                     { newedge.Attr.Color = Microsoft.Msagl.Drawing.Color.Blue; }
                 }
