@@ -62,6 +62,7 @@ namespace model
                         collection.Name = resource["Name"].StringValue;
                         collection.LimitingCollectionID = resource["LimitToCollectionID"].StringValue;
                         collection.Comment = resource["Comment"].StringValue;
+                        collection.IncludeExcludeCollectionCount = resource["IncludeExcludeCollectionsCount"].IntegerValue;
 
                         library.AddCollection(collection);
                     }

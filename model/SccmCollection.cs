@@ -62,6 +62,17 @@ namespace model
             }
         }
 
+        private int _includeexcludecolcount;
+        public int IncludeExcludeCollectionCount
+        {
+            get { return this._includeexcludecolcount; }
+            set
+            {
+                this._includeexcludecolcount = value;
+                this.OnPropertyChanged(this, "IncludeExcludeCollectionCount");
+            }
+        }
+
         public SccmCollection() { }
 
         public SccmCollection(string id, string name, string limitingcollectionid)

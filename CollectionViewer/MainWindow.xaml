@@ -43,8 +43,12 @@
             <TextBox x:Name="searchcoltb" Width="120" GotFocus="OnTextBoxFocused" Style="{StaticResource BaseControlStyle}"/>
             <Label Content="Device:" Width="Auto" Style="{StaticResource BaseControlStyle}"/>
             <TextBox x:Name="searchdevtb" Width="120" GotFocus="OnTextBoxFocused" Style="{StaticResource BaseControlStyle}"/>
-            <Label Content="Isolate path:" Width="Auto" Style="{StaticResource BaseControlStyle}"/>
-            <CheckBox x:Name="isolatechk" Style="{StaticResource BaseControlStyle}" VerticalAlignment="Center"/>
+            <Label Content="Mode:" Width="Auto" Style="{StaticResource BaseControlStyle}"/>
+            <ComboBox x:Name="modecombo" Width="80" HorizontalContentAlignment="Left" Padding="5,2,2,2" Style="{StaticResource BaseControlStyle}">
+                <ComboBoxItem>Limiting</ComboBoxItem>
+                <ComboBoxItem IsSelected="True">Mesh</ComboBoxItem>
+                <ComboBoxItem>Context</ComboBoxItem>
+            </ComboBox>
             <Button x:Name="searchbtn" Width="50" Content="Find"  Style="{StaticResource BaseControlStyle}" Click="OnFindButtonPressed"/>
             <Label x:Name="notifylbl"  Style="{StaticResource BaseControlStyle}" Foreground="Blue"/>
         </StackPanel>

@@ -136,16 +136,22 @@ namespace CollectionViewer
 
                 if (col != null)
                 {
-                    if (isolatechk.IsChecked == false)
+                    if (modecombo.Text == "Context")
                     {
                         if (this._filteredview == true) { this.UpdateGraphs(this.BuildTreeAllCollections(this._connector)); }
                         this._filteredview = false;
                         this._highlightedcollections = col.HighlightCollectionPathList();
                     }
-                    else
+                    else if (modecombo.Text == "Mesh")
                     {
                         this._filteredview = true;
-                        this.UpdateGraphs(this.BuildGraphCollectionRelationships(this._connector, collectionid));
+                        Graph[] graphs = this.BuildTreeMeshMode(this._connector, collectionid);
+                        this.UpdateGraphs(graphs);
+                    }
+                    else if (modecombo.Text == "Limiting")
+                    {
+                        this._filteredview = true;
+                        this.UpdateGraphs(this.BuildTreeLimitingMode(this._connector, collectionid));
                     }
                 }
             }
@@ -173,15 +179,15 @@ namespace CollectionViewer
             graphs[1] = new Graph("usergraph");
 
             //build the device graph
-            this.BuildGraph(graphs[0], connector.DeviceCollectionLibrary.GetAllCollections());
+            this.BuildLimitingPath(graphs[0], connector.DeviceCollectionLibrary.GetAllCollections());
 
             //build the user graph
-            this.BuildGraph(graphs[1], connector.UserCollectionLibrary.GetAllCollections());
+            this.BuildLimitingPath(graphs[1], connector.UserCollectionLibrary.GetAllCollections());
 
             return graphs;
         }
 
-        private Graph[] BuildTreeCollectionPath(SccmConnector connector, string collectionid)
+        private Graph[] BuildTreeLimitingMode(SccmConnector connector, string collectionid)
         {
             this.ClearHighlightedCollections();
             SccmCollection searchcol;
@@ -194,7 +200,7 @@ namespace CollectionViewer
             searchcol = connector.DeviceCollectionLibrary.GetCollection(collectionid);
             if (searchcol != null)
             {
-                this.BuildGraph(graphs[0], searchcol.GetCollectionPathList());
+                this.BuildLimitingPath(graphs[0], searchcol.GetCollectionPathList());
                 this.HighlightCollection(searchcol);
             }
             
@@ -202,14 +208,14 @@ namespace CollectionViewer
             searchcol = connector.UserCollectionLibrary.GetCollection(collectionid);
             if (searchcol != null)
             {
-                this.BuildGraph(graphs[1], searchcol.GetCollectionPathList());
+                this.BuildLimitingPath(graphs[1], searchcol.GetCollectionPathList());
                 this.HighlightCollection(searchcol);
             }
 
             return graphs;            
         }
 
-        private Graph[] BuildGraphCollectionRelationships(SccmConnector connector, string collectionid)
+        private Graph[] BuildTreeMeshMode(SccmConnector connector, string collectionid)
         {
             this.ClearHighlightedCollections();
             SccmCollection searchcol;
@@ -223,70 +229,77 @@ namespace CollectionViewer
             searchcol = connector.DeviceCollectionLibrary.GetCollection(collectionid);
             if (searchcol != null)
             {
-                this.BuildGraph(graphs[0], searchcol.GetCollectionPathList());
+                graphs[0].AddNode(new CollectionNode(searchcol.ID, searchcol));
                 this.HighlightCollection(searchcol);
-                this.AddIncExclRelationshipEdges(relationships, graphs[0], connector.DeviceCollectionLibrary);
+                this.BuildMeshLinks(graphs[0], connector.DeviceCollectionLibrary, searchcol);
+                //this.AddIncExclRelationshipEdges(relationships, graphs[0], connector.DeviceCollectionLibrary);
             }
 
             //build the user graph          
             searchcol = connector.UserCollectionLibrary.GetCollection(collectionid);
             if (searchcol != null)
             {
-                this.BuildGraph(graphs[1], searchcol.GetCollectionPathList());
+                graphs[1].AddNode(new CollectionNode(searchcol.ID, searchcol));
                 this.HighlightCollection(searchcol);
-                this.AddIncExclRelationshipEdges(relationships, graphs[1], connector.UserCollectionLibrary);
+                this.BuildMeshLinks(graphs[1], connector.UserCollectionLibrary, searchcol);
+                //this.AddIncExclRelationshipEdges(relationships, graphs[1], connector.UserCollectionLibrary);
             }
 
             return graphs;
         }
 
-        private void BuildGraph(Graph graph, List<SccmCollection> collections)
+        private void BuildMeshLinks(Graph graph,CollectionLibrary library, SccmCollection collection)
+        {
+            List<SccmCollectionRelationship> relationships = this._connector.GetCollectionDependencies(collection.ID, this._site);
+
+            foreach (SccmCollectionRelationship colrel in relationships)
+            {
+                if (graph.FindNode(colrel.DependentCollectionID) == null)
+                {
+                    SccmCollection col = library.GetCollection(colrel.DependentCollectionID);
+                    graph.AddNode(new CollectionNode(col.ID, col));
+                }
+
+                if (graph.FindNode(colrel.SourceCollectionID) == null)
+                {
+                    SccmCollection col = library.GetCollection(colrel.SourceCollectionID);
+                    graph.AddNode(new CollectionNode(col.ID, col));
+                    BuildMeshLinks(graph, library, col); //recursive build
+                }
+
+                Edge newedge = graph.AddEdge(colrel.DependentCollectionID, colrel.Type.ToString(), colrel.SourceCollectionID);
+
+                if (colrel.Type == SccmCollectionRelationship.RelationShipType.Exclude)
+                { newedge.Attr.Color = Microsoft.Msagl.Drawing.Color.Red; }
+                else if (colrel.Type == SccmCollectionRelationship.RelationShipType.Include)
+                { newedge.Attr.Color = Microsoft.Msagl.Drawing.Color.Blue; }
+                else if (colrel.Type == SccmCollectionRelationship.RelationShipType.Limiting)
+                { newedge.Attr.Color = Microsoft.Msagl.Drawing.Color.Black; }
+            }
+        }
+
+        private void BuildLimitingPath(Graph graph, List<SccmCollection> collections)
         {
             foreach (SccmCollection col in collections)
             {
-                if (graph.FindNode(col.ID) == null)
+                Node colnode = graph.FindNode(col.ID);
+                if (colnode == null)
                 {
-                    CollectionNode newnode = new CollectionNode(col.ID, col);
-                    graph.AddNode(newnode);
+                    colnode = new CollectionNode(col.ID, col);
+                    graph.AddNode(colnode);
                 }
 
                 if (string.IsNullOrWhiteSpace(col.LimitingCollectionID) == false)
                 {
-                    if (graph.FindNode(col.LimitingCollectionID) == null)
+                    Node limitingnode = graph.FindNode(col.LimitingCollectionID);
+                    if (limitingnode == null)
                     {
                         SccmCollection limcol = this._devlibrary.GetCollection(col.LimitingCollectionID);
-                        CollectionNode newlimnode = new CollectionNode(col.ID, col);
-                        graph.AddNode(newlimnode);
-                    }
-                    graph.AddEdge(col.LimitingCollectionID, col.ID);
-                }
-            }
-        }
-
-        private void AddIncExclRelationshipEdges(List<SccmCollectionRelationship> relationships, Graph graph, CollectionLibrary library)
-        {
-            foreach (SccmCollectionRelationship colrel in relationships)
-            {
-                if (colrel.Type != SccmCollectionRelationship.RelationShipType.Limiting)
-                {
-                    if (graph.FindNode(colrel.DependentCollectionID) == null)
-                    {
-                        SccmCollection col = library.GetCollection(colrel.DependentCollectionID);
-                        graph.AddNode(new CollectionNode(col.ID, col));
+                        limitingnode = new CollectionNode(col.ID, col);
+                        graph.AddNode(limitingnode);
                     }
 
-                    if (graph.FindNode(colrel.SourceCollectionID) == null)
-                    {
-                        SccmCollection col = library.GetCollection(colrel.SourceCollectionID);
-                        graph.AddNode(new CollectionNode(col.ID, col));
-                    }
-
-                    Edge newedge = graph.AddEdge(colrel.SourceCollectionID, colrel.Type.ToString() , colrel.DependentCollectionID);
-
-                    if (colrel.Type == SccmCollectionRelationship.RelationShipType.Exclude)
-                    { newedge.Attr.Color = Microsoft.Msagl.Drawing.Color.Red; }
-                    else if (colrel.Type == SccmCollectionRelationship.RelationShipType.Include)
-                    { newedge.Attr.Color = Microsoft.Msagl.Drawing.Color.Blue; }
+                    graph.AddEdge(col.ID, col.LimitingCollectionID);
                 }
             }
         }
