@@ -72,7 +72,7 @@ namespace CollectionViewerTests
             WqlConnectionManager connection = new WqlConnectionManager();
             connection.Connect(server, authdomain + "\\" + authuser, authpw);
             SccmConnector connector = new SccmConnector();
-            SccmDevice device = connector.GetDevice(connection, "001", devicename);
+            SccmDevice device = connector.GetDevice("001", devicename);
             return device?.ID;
             
         }
