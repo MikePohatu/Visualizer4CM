@@ -59,6 +59,8 @@ namespace CollectionViewer
                     loginwindow.Close();
                     this._site = loginviewmodel.Site;
                     this._connector.Query(this._site);
+                    this._devlibrary = this._connector.DeviceCollectionLibrary;
+                    this._userlibrary = this._connector.UserCollectionLibrary;
                     Graph[] graphs = this.BuildTreeAllCollections(this._connector);
                     MsaglHelpers.ConfigureGViewer(this.deviceColViewer);
                     MsaglHelpers.ConfigureGViewer(this.userColViewer);
@@ -107,7 +109,7 @@ namespace CollectionViewer
 
         private void FindCollectionID(string collectionid)
         {
-            Graph[] graphs = new Graph[2];
+            //Graph[] graphs = new Graph[2];
             this.ClearHighlightedCollections();
             CollectionLibrary library = null;
             if (string.IsNullOrWhiteSpace(collectionid) == false)
@@ -123,7 +125,7 @@ namespace CollectionViewer
                 else
                 {
                     col = this._userlibrary.GetCollection(collectionid);
-                    if (col != null )
+                    if (col != null)
                     {
                         //workaround for nodes not redrawing on update. Swap to other tab then back
                         this.maintabctrl.SelectedItem = this.devtab;
@@ -136,34 +138,45 @@ namespace CollectionViewer
                 {
                     if (isolatechk.IsChecked == false)
                     {
-                        if (this._filteredview == true) { graphs = this.BuildTreeAllCollections(this._connector); }
+                        if (this._filteredview == true) { this.UpdateGraphs(this.BuildTreeAllCollections(this._connector)); }
                         this._filteredview = false;
                         this._highlightedcollections = col.HighlightCollectionPathList();
                     }
                     else
                     {
                         this._filteredview = true;
-                        graphs = this.BuildGraphCollectionRelationships(this._connector, collectionid);
+                        this.UpdateGraphs(this.BuildGraphCollectionRelationships(this._connector, collectionid));
                     }
                 }
             }
+            else
+            {
+                if (this._filteredview == true)
+                {
+                    this._filteredview = false;
+                    this.UpdateGraphs(this.BuildTreeAllCollections(this._connector));
+                }
+            }
+        }
+
+        private void UpdateGraphs(Graph[] graphs)
+        {
             this.deviceColViewer.Graph = graphs[0];
             this.userColViewer.Graph = graphs[1];
         }
 
         private Graph[] BuildTreeAllCollections(SccmConnector connector)
         {
+            this.ClearHighlightedCollections();
             Graph[] graphs = new Graph[2];
             graphs[0] = new Graph("devgraph");
             graphs[1] = new Graph("usergraph");
 
             //build the device graph
-            this._devlibrary = connector.DeviceCollectionLibrary;
-            this.BuildGraph(graphs[0], this._devlibrary.GetAllCollections());
+            this.BuildGraph(graphs[0], connector.DeviceCollectionLibrary.GetAllCollections());
 
             //build the user graph
-            this._userlibrary = connector.UserCollectionLibrary;
-            this.BuildGraph(graphs[1], this._userlibrary.GetAllCollections());
+            this.BuildGraph(graphs[1], connector.UserCollectionLibrary.GetAllCollections());
 
             return graphs;
         }
@@ -178,8 +191,7 @@ namespace CollectionViewer
             graphs[1] = new Graph("usergraph");
 
             //build the device graph
-            this._devlibrary = connector.DeviceCollectionLibrary;
-            searchcol = this._devlibrary.GetCollection(collectionid);
+            searchcol = connector.DeviceCollectionLibrary.GetCollection(collectionid);
             if (searchcol != null)
             {
                 this.BuildGraph(graphs[0], searchcol.GetCollectionPathList());
@@ -187,8 +199,7 @@ namespace CollectionViewer
             }
             
             //build the user graph          
-            this._userlibrary = connector.UserCollectionLibrary;
-            searchcol = this._userlibrary.GetCollection(collectionid);
+            searchcol = connector.UserCollectionLibrary.GetCollection(collectionid);
             if (searchcol != null)
             {
                 this.BuildGraph(graphs[1], searchcol.GetCollectionPathList());
@@ -196,29 +207,6 @@ namespace CollectionViewer
             }
 
             return graphs;            
-        }
-
-        private void BuildGraph(Graph graph, List<SccmCollection> collections)
-        {
-            foreach (SccmCollection col in collections)
-            {
-                if (graph.FindNode(col.ID) == null)
-                {
-                    CollectionNode newnode = new CollectionNode(col.ID, col);
-                    graph.AddNode(newnode);
-                }
-
-                if (string.IsNullOrWhiteSpace(col.LimitingCollectionID) == false)
-                {
-                    if (graph.FindNode(col.LimitingCollectionID) == null)
-                    {
-                        SccmCollection limcol = this._devlibrary.GetCollection(col.LimitingCollectionID);
-                        CollectionNode newlimnode = new CollectionNode(col.ID, col);
-                        graph.AddNode(newlimnode);
-                    }
-                    graph.AddEdge(col.LimitingCollectionID, col.ID);
-                }
-            }
         }
 
         private Graph[] BuildGraphCollectionRelationships(SccmConnector connector, string collectionid)
@@ -250,6 +238,29 @@ namespace CollectionViewer
             }
 
             return graphs;
+        }
+
+        private void BuildGraph(Graph graph, List<SccmCollection> collections)
+        {
+            foreach (SccmCollection col in collections)
+            {
+                if (graph.FindNode(col.ID) == null)
+                {
+                    CollectionNode newnode = new CollectionNode(col.ID, col);
+                    graph.AddNode(newnode);
+                }
+
+                if (string.IsNullOrWhiteSpace(col.LimitingCollectionID) == false)
+                {
+                    if (graph.FindNode(col.LimitingCollectionID) == null)
+                    {
+                        SccmCollection limcol = this._devlibrary.GetCollection(col.LimitingCollectionID);
+                        CollectionNode newlimnode = new CollectionNode(col.ID, col);
+                        graph.AddNode(newlimnode);
+                    }
+                    graph.AddEdge(col.LimitingCollectionID, col.ID);
+                }
+            }
         }
 
         private void AddIncExclRelationshipEdges(List<SccmCollectionRelationship> relationships, Graph graph, CollectionLibrary library)

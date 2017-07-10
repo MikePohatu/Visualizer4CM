@@ -31,10 +31,12 @@ namespace CollectionViewer
                 if (col.IsHighlighted == true) {
                     this.Attr.LineWidth = _highlightedlinewidth;
                     this.Attr.Color = Color.Green;
+                    this.ChangeInEdges(Color.Green, _highlightedlinewidth);
                 }
                 else {
                     this.Attr.LineWidth = 1;
-                    this.Attr.Color = Color.Gray;
+                    this.Attr.Color = Color.Black;
+                    this.ChangeInEdges(Color.Black,1);
                 }
             }
             if (e.PropertyName.Equals("IsMemberPresent"))
@@ -48,8 +50,17 @@ namespace CollectionViewer
                 else
                 {
                     this.Attr.LineWidth = 1;
-                    this.Attr.Color = Color.Gray;
+                    this.Attr.Color = Color.Black;
                 }
+            }
+        }
+
+        private void ChangeInEdges(Color newcolor, int newthickness)
+        {
+            foreach (Edge edge in this.InEdges)
+            {
+                edge.Attr.Color = newcolor;
+                edge.Attr.Weight = newthickness;
             }
         }
     }
