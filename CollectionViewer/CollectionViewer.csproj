@@ -73,6 +73,7 @@
     </Compile>
     <Compile Include="CollectionNode.cs" />
     <Compile Include="MsaglHelpers.cs" />
+    <Compile Include="Panes\BasePane.cs" />
     <Compile Include="Panes\ResourcePage.xaml.cs">
       <DependentUpon>ResourcePage.xaml</DependentUpon>
     </Compile>

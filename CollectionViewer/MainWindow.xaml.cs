@@ -101,22 +101,6 @@ namespace CollectionViewer
             return connected;
         }
 
-        private void OnBuildButtonPressed(object sender, RoutedEventArgs e)
-        {
-            //this.FindCollectionID(this.searchcoltb.Text);
-        }
-
-        private void OnFindButtonPressed(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
-        private void OnTextBoxFocused(object sender, RoutedEventArgs e)
-        {
-            TextBox tb = (TextBox)sender;
-            tb.SelectAll();
-        }
-
         private void HighlightCollectionMembers(Graph[] graphs, List<string> collectionids)
         {
             foreach (Graph graph in graphs)
