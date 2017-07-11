@@ -28,7 +28,7 @@ namespace CollectionViewer
                     if (limitingnode == null)
                     {
                         SccmCollection limcol = library.GetCollection(col.LimitingCollectionID);
-                        limitingnode = new CollectionNode(col.ID, col);
+                        limitingnode = new CollectionNode(limcol.ID, limcol);
                         graph.AddNode(limitingnode);
                     }
 

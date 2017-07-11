@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:CollectionViewer.Panes"
       xmlns:gv="clr-namespace:Microsoft.Msagl.GraphViewerGdi;assembly=Microsoft.Msagl.GraphViewerGDI"
       mc:Ignorable="d" 
-      d:DesignHeight="300" d:DesignWidth="300"
+      d:DesignHeight="300" d:DesignWidth="600"
       Height="Auto" Width="Auto"
       Title="DevicePage">
     <Page.Resources>
@@ -48,7 +48,7 @@
             <StackPanel Grid.Column="1" Orientation="Horizontal" Height="Auto" VerticalAlignment="Bottom" HorizontalAlignment="Stretch">
                 <Rectangle VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,25,0" Height="22" Width="1" Fill="DarkGray"/>
                 <Label Content="{Binding FindLabelText}" Width="Auto" Style="{StaticResource BaseControlStyle}"/>
-                <TextBox x:Name="searchdevtb" Width="120" Text="{Binding DeviceText}" Style="{StaticResource BaseControlStyle}"/>
+                <TextBox x:Name="searchdevtb" Width="120" Text="{Binding ResourceText}" Style="{StaticResource BaseControlStyle}"/>
                 <Button x:Name="searchbtn" Width="50" Content="Find"  Style="{StaticResource BaseControlStyle}"/>
                 <Label x:Name="notifylbl"  Style="{StaticResource BaseControlStyle}" Foreground="Blue"/>
             </StackPanel>
