@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
-using model;
+using viewmodel;
 
 namespace CollectionViewer
 {

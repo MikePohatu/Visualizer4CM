@@ -7,7 +7,7 @@ using System.Diagnostics;
 using Microsoft.ConfigurationManagement.ManagementProvider;
 using Microsoft.ConfigurationManagement.ManagementProvider.WqlQueryEngine;
 
-namespace model
+namespace viewmodel
 {
     public class SccmConnector
     {
@@ -20,7 +20,7 @@ namespace model
 
         public bool Connect(string server)
         {
-            try { this._connection?.Connect(server); }
+            try { this._connection.Connect(server); }
             catch { return false; }
             return true;
         }
@@ -32,18 +32,18 @@ namespace model
             return true;
         }
 
-        public void Query(string site)
+        public void QueryAll(string site)
         {
             try
             {
-                this._devlibrary = this.GetDeviceCollectionLibrary(this._connection, site);
-                this._userlibrary = this.GetUserCollectionLibrary(this._connection, site);
+                this._devlibrary = this.GetDeviceCollectionLibrary(this._connection);
+                this._userlibrary = this.GetUserCollectionLibrary(this._connection);
             }
             catch { return; }
         }
 
 
-        public CollectionLibrary GetDeviceCollectionLibrary(WqlConnectionManager connection, string siteCode)
+        public CollectionLibrary GetDeviceCollectionLibrary(WqlConnectionManager connection)
         {
             try
             {
@@ -75,7 +75,7 @@ namespace model
             }
         }
 
-        public CollectionLibrary GetUserCollectionLibrary(WqlConnectionManager connection, string siteCode)
+        public CollectionLibrary GetUserCollectionLibrary(WqlConnectionManager connection)
         {
             try
             {
@@ -106,7 +106,7 @@ namespace model
             }
         }
 
-        public List<SccmCollectionRelationship> GetCollectionDependencies(string collectionid, string sitecode)
+        public List<SccmCollectionRelationship> GetCollectionDependencies(string collectionid)
         {
             try
             {
@@ -134,7 +134,7 @@ namespace model
             }
         }
 
-        public SccmDevice GetDevice(string siteCode, string devicename)
+        public SccmDevice GetDevice(string devicename)
         {
             try
             {

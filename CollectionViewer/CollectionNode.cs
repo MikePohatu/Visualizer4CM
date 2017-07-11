@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using Microsoft.Msagl.Drawing;
-using model;
+using viewmodel;
 
 namespace CollectionViewer
 {

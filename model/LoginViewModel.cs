@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Win32;
 
-namespace model
+namespace viewmodel
 {
     public class LoginViewModel: ViewModelBase
     {

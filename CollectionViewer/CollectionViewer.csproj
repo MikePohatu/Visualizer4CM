@@ -73,11 +73,21 @@
     </Compile>
     <Compile Include="CollectionNode.cs" />
     <Compile Include="MsaglHelpers.cs" />
+    <Compile Include="Panes\ResourcePage.xaml.cs">
+      <DependentUpon>ResourcePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Panes\DevicePane.cs" />
+    <Compile Include="Panes\UserPane.cs" />
+    <Compile Include="TreeBuilder.cs" />
     <Compile Include="View\CollectionBlock.xaml.cs">
       <DependentUpon>CollectionBlock.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\XmlStringConverter.cs" />
     <Page Include="Auth\LoginWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Panes\ResourcePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -127,11 +137,12 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\model\model.csproj">
+    <ProjectReference Include="..\model\viewmodel.csproj">
       <Project>{4984f353-541c-4ab7-ae8f-c22fc4b52ff1}</Project>
-      <Name>model</Name>
+      <Name>viewmodel</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

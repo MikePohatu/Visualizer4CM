@@ -5,7 +5,7 @@ using CollectionViewer;
 using NUnit.Framework;
 using Microsoft.ConfigurationManagement.ManagementProvider;
 using Microsoft.ConfigurationManagement.ManagementProvider.WqlQueryEngine;
-using model;
+using viewmodel;
 
 namespace CollectionViewerTests
 {
@@ -30,7 +30,7 @@ namespace CollectionViewerTests
             WqlConnectionManager connection = new WqlConnectionManager();
             connection.Connect(server, authdomain + "\\" + authuser, authpw);
             SccmConnector connector = new SccmConnector();
-            CollectionLibrary library = connector.GetDeviceCollectionLibrary(connection,"001");
+            CollectionLibrary library = connector.GetDeviceCollectionLibrary(connection);
             return library?.GetCollection(collectionid)?.LimitingCollectionID;
         }
 
@@ -72,7 +72,7 @@ namespace CollectionViewerTests
             WqlConnectionManager connection = new WqlConnectionManager();
             connection.Connect(server, authdomain + "\\" + authuser, authpw);
             SccmConnector connector = new SccmConnector();
-            SccmDevice device = connector.GetDevice("001", devicename);
+            SccmDevice device = connector.GetDevice(devicename);
             return device?.ID;
             
         }

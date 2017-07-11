@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace model
+namespace viewmodel
 {
     public class SccmCollection: ViewModelBase
     {

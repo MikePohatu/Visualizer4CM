@@ -7,7 +7,7 @@
     <ProjectGuid>{4984F353-541C-4AB7-AE8F-C22FC4B52FF1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>model</RootNamespace>
+    <RootNamespace>viewmodel</RootNamespace>
     <AssemblyName>model</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

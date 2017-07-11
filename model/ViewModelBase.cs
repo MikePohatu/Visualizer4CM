@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace model
+namespace viewmodel
 {
     public class ViewModelBase : INotifyPropertyChanged
     {

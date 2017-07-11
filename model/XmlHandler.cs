@@ -2,7 +2,7 @@
 using System.IO;
 using System.Xml.Linq;
 
-namespace model
+namespace viewmodel
 {
     public static class XmlHandler
     {

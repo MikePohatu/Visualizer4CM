@@ -6,51 +6,11 @@
         xmlns:local="clr-namespace:CollectionViewer"
         xmlns:gv="clr-namespace:Microsoft.Msagl.GraphViewerGdi;assembly=Microsoft.Msagl.GraphViewerGDI"
         mc:Ignorable="d"
-        Title="Collection Tree View" Height="350" MinWidth="530">
-    <Window.Resources>
-        <ResourceDictionary>
-            <Style x:Key="BaseControlStyle" TargetType="{x:Type Control}">
-                <Setter Property="Control.Padding" Value="2"/>
-                <Setter Property="Control.Margin" Value="5"/>
-            </Style>
-        </ResourceDictionary>
-    </Window.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="33"/>
-        </Grid.RowDefinitions>
-        <DockPanel  Grid.Row="0">
-            <TabControl x:Name="maintabctrl">
-                <TabItem x:Name="devtab" Header="Device Collections">
-                    <Grid>
-                        <WindowsFormsHost Name="windowsFormsHostDevice" Margin="0,0,0,0">
-                            <gv:GViewer x:Name="deviceColViewer"></gv:GViewer>
-                        </WindowsFormsHost>
-                    </Grid>
-                </TabItem>
-                <TabItem x:Name="usertab" Header="User Collections">
-                    <Grid>
-                        <WindowsFormsHost Name="windowsFormsHostUser" Margin="0,0,0,0">
-                            <gv:GViewer x:Name="userColViewer"></gv:GViewer>
-                        </WindowsFormsHost>
-                    </Grid>
-                </TabItem>
-            </TabControl>
-        </DockPanel>
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Height="Auto" VerticalAlignment="Bottom">
-            <Label Content="Collection:" Width="Auto" Style="{StaticResource BaseControlStyle}"/>
-            <TextBox x:Name="searchcoltb" Width="120" GotFocus="OnTextBoxFocused" Style="{StaticResource BaseControlStyle}"/>
-            <Label Content="Device:" Width="Auto" Style="{StaticResource BaseControlStyle}"/>
-            <TextBox x:Name="searchdevtb" Width="120" GotFocus="OnTextBoxFocused" Style="{StaticResource BaseControlStyle}"/>
-            <Label Content="Mode:" Width="Auto" Style="{StaticResource BaseControlStyle}"/>
-            <ComboBox x:Name="modecombo" Width="80" HorizontalContentAlignment="Left" Padding="5,2,2,2" Style="{StaticResource BaseControlStyle}">
-                <ComboBoxItem>Limiting</ComboBoxItem>
-                <ComboBoxItem IsSelected="True">Mesh</ComboBoxItem>
-                <ComboBoxItem>Context</ComboBoxItem>
-            </ComboBox>
-            <Button x:Name="searchbtn" Width="50" Content="Find"  Style="{StaticResource BaseControlStyle}" Click="OnFindButtonPressed"/>
-            <Label x:Name="notifylbl"  Style="{StaticResource BaseControlStyle}" Foreground="Blue"/>
-        </StackPanel>
-    </Grid>
+        Title="Collection Tree View" Height="Auto">
+
+    <DockPanel  Grid.Row="0">
+        <TabControl x:Name="maintabctrl">
+
+        </TabControl>
+    </DockPanel>
 </Window>
