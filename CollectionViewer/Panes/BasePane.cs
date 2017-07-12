@@ -22,14 +22,14 @@ namespace CollectionViewer.Panes
         protected ResourcePage _page;
         public Page Page { get { return this._page; } }
 
-        protected string _progress;
-        public string Progress
+        protected string _notificationtext;
+        public string NotificationText
         {
-            get { return this._progress; }
+            get { return this._notificationtext; }
             set
             {
-                this._progress = value;
-                this.OnPropertyChanged(this, "Progress");
+                this._notificationtext = value;
+                this.OnPropertyChanged(this, "NotificationText");
             }
         }
 
@@ -164,29 +164,27 @@ namespace CollectionViewer.Panes
 
         protected void OnProgressUpdate(object sender, EventArgs e)
         {
-            this.Progress = this.Progress + ".";
+            this.NotificationText = this.NotificationText + ".";
         }
 
         protected void OnProgressFinished(object sender, EventArgs e)
         {
-            //this.Progress = null;
+            this.NotificationText = null;
         }
 
         protected void OnAbortButtonClick(object sender, RoutedEventArgs e)
         {
             this._page.gviewer.AbortAsyncLayout();
-            this.Progress = "Build aborted";
+            this.NotificationText = "Build aborted";
         }
 
         protected void OnBuildButtonPressed(object sender, RoutedEventArgs e)
         {
             this._graph = null;
-            this._page.gviewerhost.Visibility = Visibility.Collapsed;
-            this.Progress = "Building.";
+            this.NotificationText = "Building.";
             this.ClearHighlightedCollections();
             this._graph = this.FindCollectionID(this._collectiontext, this._page.modecombo.Text);
             this.UpdatePaneToTabControl();
-            this._page.gviewerhost.Visibility = Visibility.Visible;
         }
 
         protected abstract void OnFindButtonPressed(object sender, RoutedEventArgs e);
