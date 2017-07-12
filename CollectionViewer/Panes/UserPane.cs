@@ -27,6 +27,11 @@ namespace CollectionViewer.Panes
                 SccmDevice dev = this._connector.GetDevice(this._resourcetext.Trim());
                 this._highlightedcollections = TreeBuilder.HighlightCollectionMembers(this._graph, dev.CollectionIDs);
             }
+            else
+            {
+                SccmCollection col = this._library.GetCollection(this.CollectionText);
+                if (col != null) { col.IsHighlighted = true; }
+            }
             this.UpdatePaneToTabControl();
         }
     }
