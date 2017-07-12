@@ -14,7 +14,7 @@ namespace CollectionViewer.Panes
         protected CollectionLibrary _library;
         protected List<SccmCollection> _highlightedcollections = new List<SccmCollection>();
         protected bool _filteredview = false;
-
+        protected int _progresscount = 0;
         protected Graph _graph;
         public Graph Graph { get { return this._graph; } }
 
@@ -79,15 +79,12 @@ namespace CollectionViewer.Panes
         public BasePane(SccmConnector connector)
         {
             this._connector = connector;
-            //this._library = connector.DeviceCollectionLibrary;
             this._pane = new ResourceTabControl();
             MsaglHelpers.ConfigureGViewer(this._pane.gviewer);
             this._pane.DataContext = this;
             this._pane.searchbtn.Click += this.OnFindButtonPressed;
             this._pane.buildbtn.Click += this.OnBuildButtonPressed;
             this._pane.gviewer.AsyncLayoutProgress += this.OnProgressUpdate;
-            this._pane.gviewer.GraphLoadingEnded += this.OnProgressFinished;
-            //this._pane.gviewer.
             this._pane.abortbtn.Click += OnAbortButtonClick;
         }
 
@@ -157,30 +154,31 @@ namespace CollectionViewer.Panes
             {
                 col.IsHighlighted = false;
                 Node node = this._graph.FindNode(col.ID);
-                //this._page.gviewer.Invalidate();
             }
             this._highlightedcollections.Clear();
         }
 
         protected void OnProgressUpdate(object sender, EventArgs e)
         {
-            this.NotificationText = this.NotificationText + ".";
-        }
-
-        protected void OnProgressFinished(object sender, EventArgs e)
-        {
-            this.NotificationText = null;
+            if (this._progresscount < 2 ) {
+                this.NotificationText = this.NotificationText + ".";
+                this._progresscount++;
+            }
+            else { this.NotificationText = null; }
+            
         }
 
         protected void OnAbortButtonClick(object sender, RoutedEventArgs e)
         {
             this._pane.gviewer.AbortAsyncLayout();
             this.NotificationText = "Build aborted";
+            this._progresscount = 0;
+            this.NotificationText = null;
         }
 
         protected void OnBuildButtonPressed(object sender, RoutedEventArgs e)
         {
-            this.NotificationText = "Building.";
+            this.NotificationText = "Building";
             this.ClearHighlightedCollections();
             this._graph = this.FindCollectionID(this._collectiontext, this._pane.modecombo.Text);
             this.UpdatePaneToTabControl();
