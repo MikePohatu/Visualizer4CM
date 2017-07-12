@@ -1,10 +1,4 @@
-﻿using System.Windows.Controls;
-using System.Windows;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Msagl.Drawing;
+﻿using System.Windows;
 using viewmodel;
 
 namespace CollectionViewer.Panes
@@ -21,7 +15,7 @@ namespace CollectionViewer.Panes
 
         protected override void OnFindButtonPressed(object sender, RoutedEventArgs e)
         {
-            TreeBuilder.ClearHighlightedCollections(this._highlightedcollections);
+            this.ClearHighlightedCollections();
             if (string.IsNullOrWhiteSpace(this._resourcetext) == false)
             {
                 SccmDevice dev = this._connector.GetDevice(this._resourcetext.Trim());

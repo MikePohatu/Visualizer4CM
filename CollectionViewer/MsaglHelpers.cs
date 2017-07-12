@@ -27,6 +27,7 @@ namespace CollectionViewer
             viewer.NavigationVisible = false;
             viewer.UndoRedoButtonsVisible = false;
             viewer.CurrentLayoutMethod = LayoutMethod.MDS;
+            viewer.AsyncLayout = true;
             //viewer.ToolBarIsVisible = false;
         }
     }

@@ -21,7 +21,7 @@ namespace CollectionViewer.Panes
 
         protected override void OnFindButtonPressed(object sender, RoutedEventArgs e)
         {
-            TreeBuilder.ClearHighlightedCollections(this._highlightedcollections);
+            this.ClearHighlightedCollections();
             if (string.IsNullOrWhiteSpace(this._resourcetext) == false)
             {
                 SccmDevice dev = this._connector.GetDevice(this._resourcetext.Trim());

@@ -22,12 +22,16 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="33"/>
         </Grid.RowDefinitions>
-        <WindowsFormsHost Grid.Row="0" Name="windowsFormsHostDevice" Margin="0,0,0,0">
-            <gv:GViewer x:Name="colviewer"></gv:GViewer>
+
+        <WindowsFormsHost x:Name="gviewerhost" Grid.Row="0" Margin="0,0,0,0">
+            <gv:GViewer x:Name="gviewer"></gv:GViewer>
         </WindowsFormsHost>
+        <Label x:Name="progresslbl" Panel.ZIndex="200" Grid.Row="0" Width="100" Height="50"
+               HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"
+               Content="{Binding Progress}" Style="{StaticResource BaseControlStyle}" FontSize="10"/>
         <Grid Grid.Row="1" >
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="430"/>
+                <ColumnDefinition Width="490"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
@@ -42,6 +46,7 @@
                     <ComboBoxItem>Context</ComboBoxItem>
                 </ComboBox>
                 <Button x:Name="buildbtn" Width="50" Content="Build"  Style="{StaticResource BaseControlStyle}" Margin="3"/>
+                <Button x:Name="abortbtn" Width="50" Content="Abort"  Style="{StaticResource BaseControlStyle}" Margin="3"/>
             </StackPanel>
 
             <!-- Device search area-->

@@ -1,7 +1,7 @@
 ﻿using System.Windows.Controls;
 using System.Collections.Generic;
 using System.Windows;
-using System.Linq;
+using System;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Msagl.Drawing;
@@ -21,6 +21,17 @@ namespace CollectionViewer.Panes
 
         protected ResourcePage _page;
         public Page Page { get { return this._page; } }
+
+        protected string _progress;
+        public string Progress
+        {
+            get { return this._progress; }
+            set
+            {
+                this._progress = value;
+                this.OnPropertyChanged(this, "Progress");
+            }
+        }
 
         protected string _collectiontext;
         public string CollectionText
@@ -71,16 +82,19 @@ namespace CollectionViewer.Panes
             this._connector = connector;
             //this._library = connector.DeviceCollectionLibrary;
             this._page = new ResourcePage();
-            MsaglHelpers.ConfigureGViewer(this._page.colviewer);
+            MsaglHelpers.ConfigureGViewer(this._page.gviewer);
             this._page.DataContext = this;
             this._page.searchbtn.Click += this.OnFindButtonPressed;
             this._page.buildbtn.Click += this.OnBuildButtonPressed;
+            this._page.gviewer.AsyncLayoutProgress += this.OnProgressUpdate;
+            this._page.gviewer.GraphLoadingEnded += this.OnProgressFinished;
+            this._page.abortbtn.Click += OnAbortButtonClick;
         }
 
-        public void FindCollectionID(string collectionid, string mode)
-        {
-            TreeBuilder.ClearHighlightedCollections(this._highlightedcollections);
-
+        public Graph FindCollectionID(string collectionid, string mode)
+        { 
+            this.ClearHighlightedCollections();
+            Graph graph = null;
             if (string.IsNullOrWhiteSpace(collectionid) == false)
             {
                 SccmCollection col = this._library.GetCollection(collectionid);
@@ -88,19 +102,19 @@ namespace CollectionViewer.Panes
                 {
                     if (mode == "Context")
                     {
-                        if (this._filteredview == true) { this._graph = TreeBuilder.BuildTreeAllCollections(this._library); }
+                        if (this._filteredview == true) { graph = TreeBuilder.BuildTreeAllCollections(this._library); }
                         this._filteredview = false;
                         this._highlightedcollections = col.HighlightCollectionPathList();
                     }
                     else if (mode == "Mesh")
                     {
                         this._filteredview = true;
-                        this._graph = TreeBuilder.BuildTreeMeshMode(this._connector, this._library, collectionid);
+                        graph = TreeBuilder.BuildTreeMeshMode(this._connector, this._library, collectionid);
                     }
                     else if (mode == "Limiting")
                     {
                         this._filteredview = true;
-                        this._graph = TreeBuilder.BuildTreeLimitingMode(this._library, collectionid);
+                        graph = TreeBuilder.BuildTreeLimitingMode(this._library, collectionid);
                     }
                     col.IsHighlighted = true;
                 }
@@ -111,29 +125,20 @@ namespace CollectionViewer.Panes
                 {
                     this._filteredview = false;
                 }
-                this._graph = TreeBuilder.BuildTreeAllCollections(this._library);
+                graph = TreeBuilder.BuildTreeAllCollections(this._library);
             }
+            return graph;
         }
 
         protected Graph BuildTreeAllCollections()
         {
-            TreeBuilder.ClearHighlightedCollections(this._highlightedcollections);
-            this._graph = new Graph();
+            this.ClearHighlightedCollections();
 
             //build the user graph
             this._graph = TreeBuilder.BuildLimitingPath(this._library.GetAllCollections(),this._library);
 
             return this._graph;
         }
-
-        protected void OnBuildButtonPressed(object sender, RoutedEventArgs e)
-        {
-            TreeBuilder.ClearHighlightedCollections(this._highlightedcollections);
-            this.FindCollectionID(this._collectiontext, this._page.modecombo.Text);
-            this.UpdatePaneToTabControl();
-        }
-
-        protected abstract void OnFindButtonPressed(object sender, RoutedEventArgs e);
 
         protected void OnTextBoxFocused(object sender, RoutedEventArgs e)
         {
@@ -143,7 +148,47 @@ namespace CollectionViewer.Panes
 
         protected void UpdatePaneToTabControl()
         {
-            this._page.colviewer.Graph = this._graph;
+            this._page.gviewer.Graph = this._graph;
         }
+
+        protected void ClearHighlightedCollections()
+        {
+            foreach (SccmCollection col in this._highlightedcollections)
+            {
+                col.IsHighlighted = false;
+                Node node = this._graph.FindNode(col.ID);
+                //this._page.gviewer.Invalidate();
+            }
+            this._highlightedcollections.Clear();
+        }
+
+        protected void OnProgressUpdate(object sender, EventArgs e)
+        {
+            this.Progress = this.Progress + ".";
+        }
+
+        protected void OnProgressFinished(object sender, EventArgs e)
+        {
+            //this.Progress = null;
+        }
+
+        protected void OnAbortButtonClick(object sender, RoutedEventArgs e)
+        {
+            this._page.gviewer.AbortAsyncLayout();
+            this.Progress = "Build aborted";
+        }
+
+        protected void OnBuildButtonPressed(object sender, RoutedEventArgs e)
+        {
+            this._graph = null;
+            this._page.gviewerhost.Visibility = Visibility.Collapsed;
+            this.Progress = "Building.";
+            this.ClearHighlightedCollections();
+            this._graph = this.FindCollectionID(this._collectiontext, this._page.modecombo.Text);
+            this.UpdatePaneToTabControl();
+            this._page.gviewerhost.Visibility = Visibility.Visible;
+        }
+
+        protected abstract void OnFindButtonPressed(object sender, RoutedEventArgs e);
     }
 }
