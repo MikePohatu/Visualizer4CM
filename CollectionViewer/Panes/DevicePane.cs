@@ -32,6 +32,7 @@ namespace CollectionViewer.Panes
                 SccmCollection col = this._library.GetCollection(this.CollectionText);
                 if (col != null) { col.IsHighlighted = true; }
             }
+            this.Redraw();
         }
     }
 }

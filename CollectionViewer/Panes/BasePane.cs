@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Windows;
 using System;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Msagl.Drawing;
 using viewmodel;
+using System.Windows.Threading;
 
 namespace CollectionViewer.Panes
 {
     public abstract class BasePane: ViewModelBase
     {
+        public event EventHandler<EventArgs> RedrawRequired;
         protected SccmConnector _connector;
         protected CollectionLibrary _library;
         protected List<SccmCollection> _highlightedcollections = new List<SccmCollection>();
@@ -180,7 +180,6 @@ namespace CollectionViewer.Panes
 
         protected void OnBuildButtonPressed(object sender, RoutedEventArgs e)
         {
-            this._graph = null;
             this.NotificationText = "Building.";
             this.ClearHighlightedCollections();
             this._graph = this.FindCollectionID(this._collectiontext, this._page.modecombo.Text);
@@ -188,5 +187,10 @@ namespace CollectionViewer.Panes
         }
 
         protected abstract void OnFindButtonPressed(object sender, RoutedEventArgs e);
+
+        protected void Redraw()
+        {
+            this.RedrawRequired?.Invoke(this, new EventArgs());
+        }
     }
 }

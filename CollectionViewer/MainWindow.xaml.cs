@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Msagl.Drawing;
-using Microsoft.Msagl.GraphViewerGdi;
+using System;
 using viewmodel;
 using CollectionViewer.Panes;
 using CollectionViewer.Auth;
@@ -60,6 +60,7 @@ namespace CollectionViewer
             this._userpane = new UserPane(this._connector);
 
             this._devicepane = new DevicePane(this._connector);
+            this._devicepane.RedrawRequired += this.OnRedrawRequired;
             TabItem devtabitem = new TabItem();
             //devtabitem.DataContext = this._devicepane;
             devtabitem.Header = this._devicepane.Header;
@@ -68,7 +69,9 @@ namespace CollectionViewer
             devtabitem.Content = devtabtrame;
             maintabctrl.Items.Add(devtabitem);
 
+
             this._userpane = new UserPane(this._connector);
+            this._userpane.RedrawRequired += this.OnRedrawRequired;
             TabItem usertabitem = new TabItem();
             //devtabitem.DataContext = this._devicepane;
             usertabitem.Header = this._userpane.Header;
@@ -117,9 +120,12 @@ namespace CollectionViewer
             }
         }
 
-        private void DisplayRefreshWorkaround()
+        //workaround to make tab redraw
+        private void OnRedrawRequired(object sender, EventArgs e)
         {
-
+            object tab = this.maintabctrl.SelectedItem;
+            this.maintabctrl.SelectedItem = null;
+            this.maintabctrl.SelectedItem = tab;
         }
     }
 }
