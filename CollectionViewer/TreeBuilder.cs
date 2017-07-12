@@ -133,14 +133,5 @@ namespace CollectionViewer
 
             return graph;
         }
-
-        public static void ClearHighlightedCollections(List<SccmCollection> highlightedcollections)
-        {
-            foreach (SccmCollection col in highlightedcollections)
-            {
-                col.IsHighlighted = false;
-            }
-            highlightedcollections.Clear();
-        }
     }
 }
