@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace CollectionViewer.Panes
 {
     /// <summary>
-    /// Interaction logic for DevicePage.xaml
+    /// Interaction logic for ResourceTabControl.xaml
     /// </summary>
-    public partial class ResourcePage : Page
+    public partial class ResourceTabControl : UserControl
     {
-        public ResourcePage()
+        public ResourceTabControl()
         {
             InitializeComponent();
         }

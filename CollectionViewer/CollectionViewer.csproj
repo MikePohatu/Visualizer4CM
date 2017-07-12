@@ -75,10 +75,10 @@
     <Compile Include="CollectionNode.cs" />
     <Compile Include="MsaglHelpers.cs" />
     <Compile Include="Panes\BasePane.cs" />
-    <Compile Include="Panes\ResourcePage.xaml.cs">
-      <DependentUpon>ResourcePage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Panes\DevicePane.cs" />
+    <Compile Include="Panes\ResourceTabControl.xaml.cs">
+      <DependentUpon>ResourceTabControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Panes\UserPane.cs" />
     <Compile Include="TreeBuilder.cs" />
     <Compile Include="View\CollectionBlock.xaml.cs">
@@ -89,7 +89,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Panes\ResourcePage.xaml">
+    <Page Include="Panes\ResourceTabControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

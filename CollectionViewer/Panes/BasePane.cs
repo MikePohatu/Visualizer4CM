@@ -10,7 +10,6 @@ namespace CollectionViewer.Panes
 {
     public abstract class BasePane: ViewModelBase
     {
-        public event EventHandler<EventArgs> RedrawRequired;
         protected SccmConnector _connector;
         protected CollectionLibrary _library;
         protected List<SccmCollection> _highlightedcollections = new List<SccmCollection>();
@@ -19,8 +18,8 @@ namespace CollectionViewer.Panes
         protected Graph _graph;
         public Graph Graph { get { return this._graph; } }
 
-        protected ResourcePage _page;
-        public Page Page { get { return this._page; } }
+        protected ResourceTabControl _pane;
+        public ResourceTabControl Pane { get { return this._pane; } }
 
         protected string _notificationtext;
         public string NotificationText
@@ -81,14 +80,15 @@ namespace CollectionViewer.Panes
         {
             this._connector = connector;
             //this._library = connector.DeviceCollectionLibrary;
-            this._page = new ResourcePage();
-            MsaglHelpers.ConfigureGViewer(this._page.gviewer);
-            this._page.DataContext = this;
-            this._page.searchbtn.Click += this.OnFindButtonPressed;
-            this._page.buildbtn.Click += this.OnBuildButtonPressed;
-            this._page.gviewer.AsyncLayoutProgress += this.OnProgressUpdate;
-            this._page.gviewer.GraphLoadingEnded += this.OnProgressFinished;
-            this._page.abortbtn.Click += OnAbortButtonClick;
+            this._pane = new ResourceTabControl();
+            MsaglHelpers.ConfigureGViewer(this._pane.gviewer);
+            this._pane.DataContext = this;
+            this._pane.searchbtn.Click += this.OnFindButtonPressed;
+            this._pane.buildbtn.Click += this.OnBuildButtonPressed;
+            this._pane.gviewer.AsyncLayoutProgress += this.OnProgressUpdate;
+            this._pane.gviewer.GraphLoadingEnded += this.OnProgressFinished;
+            //this._pane.gviewer.
+            this._pane.abortbtn.Click += OnAbortButtonClick;
         }
 
         public Graph FindCollectionID(string collectionid, string mode)
@@ -148,7 +148,7 @@ namespace CollectionViewer.Panes
 
         protected void UpdatePaneToTabControl()
         {
-            this._page.gviewer.Graph = this._graph;
+            this._pane.gviewer.Graph = this._graph;
         }
 
         protected void ClearHighlightedCollections()
@@ -174,7 +174,7 @@ namespace CollectionViewer.Panes
 
         protected void OnAbortButtonClick(object sender, RoutedEventArgs e)
         {
-            this._page.gviewer.AbortAsyncLayout();
+            this._pane.gviewer.AbortAsyncLayout();
             this.NotificationText = "Build aborted";
         }
 
@@ -182,7 +182,7 @@ namespace CollectionViewer.Panes
         {
             this.NotificationText = "Building.";
             this.ClearHighlightedCollections();
-            this._graph = this.FindCollectionID(this._collectiontext, this._page.modecombo.Text);
+            this._graph = this.FindCollectionID(this._collectiontext, this._pane.modecombo.Text);
             this.UpdatePaneToTabControl();
         }
 
@@ -190,7 +190,7 @@ namespace CollectionViewer.Panes
 
         protected void Redraw()
         {
-            this.RedrawRequired?.Invoke(this, new EventArgs());
+            this._pane.gviewer.Invalidate();
         }
     }
 }

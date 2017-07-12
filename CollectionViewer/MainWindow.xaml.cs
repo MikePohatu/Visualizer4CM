@@ -60,24 +60,16 @@ namespace CollectionViewer
             this._userpane = new UserPane(this._connector);
 
             this._devicepane = new DevicePane(this._connector);
-            this._devicepane.RedrawRequired += this.OnRedrawRequired;
             TabItem devtabitem = new TabItem();
-            //devtabitem.DataContext = this._devicepane;
             devtabitem.Header = this._devicepane.Header;
-            Frame devtabtrame = new Frame();
-            devtabtrame.Content = this._devicepane.Page;
-            devtabitem.Content = devtabtrame;
+            devtabitem.Content = this._devicepane.Pane;
             maintabctrl.Items.Add(devtabitem);
 
 
             this._userpane = new UserPane(this._connector);
-            this._userpane.RedrawRequired += this.OnRedrawRequired;
             TabItem usertabitem = new TabItem();
-            //devtabitem.DataContext = this._devicepane;
             usertabitem.Header = this._userpane.Header;
-            Frame usertabframe = new Frame();
-            usertabframe.Content = this._userpane.Page;
-            usertabitem.Content = usertabframe;
+            usertabitem.Content = this._userpane.Pane;
             maintabctrl.Items.Add(usertabitem);
         }
 
@@ -118,14 +110,6 @@ namespace CollectionViewer
                     }
                 }
             }
-        }
-
-        //workaround to make tab redraw
-        private void OnRedrawRequired(object sender, EventArgs e)
-        {
-            object tab = this.maintabctrl.SelectedItem;
-            this.maintabctrl.SelectedItem = null;
-            this.maintabctrl.SelectedItem = tab;
         }
     }
 }
