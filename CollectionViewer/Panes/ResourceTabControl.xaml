@@ -10,9 +10,14 @@
       Height="Auto" Width="Auto">
     <UserControl.Resources>
         <ResourceDictionary>
+            <Style x:Key="BaseLabelStyle" TargetType="{x:Type Control}">
+                <Setter Property="Control.Padding" Value="2"/>
+                <Setter Property="Control.Margin" Value="5"/>
+            </Style>
             <Style x:Key="BaseControlStyle" TargetType="{x:Type Control}">
                 <Setter Property="Control.Padding" Value="2"/>
                 <Setter Property="Control.Margin" Value="5"/>
+                <Setter Property="Control.IsEnabled" Value="{Binding ControlsEnabled}"/>
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -34,9 +39,9 @@
 
             <!-- Tree build area-->
             <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Bottom">
-                <Label Content="Collection:" Width="Auto" Style="{StaticResource BaseControlStyle}"/>
+                <Label Content="Collection:" Width="Auto" Style="{StaticResource BaseLabelStyle}"/>
                 <TextBox x:Name="buildtb" Width="120" Text="{Binding CollectionText, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource BaseControlStyle}"/>
-                <Label Content="Mode:" Width="Auto" Style="{StaticResource BaseControlStyle}"/>
+                <Label Content="Mode:" Width="Auto" Style="{StaticResource BaseLabelStyle}"/>
                 <ComboBox x:Name="modecombo" Width="80" HorizontalContentAlignment="Left" Padding="5,2,2,2" Style="{StaticResource BaseControlStyle}">
                     <ComboBoxItem>Limiting</ComboBoxItem>
                     <ComboBoxItem IsSelected="True">Mesh</ComboBoxItem>
@@ -49,10 +54,10 @@
             <!-- Device search area-->
             <StackPanel Grid.Column="1" Orientation="Horizontal" Height="Auto" VerticalAlignment="Bottom" HorizontalAlignment="Stretch">
                 <Rectangle VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,25,0" Height="22" Width="1" Fill="DarkGray"/>
-                <Label Content="{Binding FindLabelText}" Width="Auto" Style="{StaticResource BaseControlStyle}"/>
+                <Label Content="{Binding FindLabelText}" Width="Auto" Style="{StaticResource BaseLabelStyle}"/>
                 <TextBox x:Name="searchtb" Width="120" Text="{Binding ResourceText, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource BaseControlStyle}"/>
                 <Button x:Name="searchbtn" Width="50" Content="Find"  Style="{StaticResource BaseControlStyle}"/>
-                <Label x:Name="notifylbl" Content="{Binding NotificationText}"  Style="{StaticResource BaseControlStyle}" Foreground="Blue"/>
+                <Label x:Name="notifylbl" Content="{Binding NotificationText}"  Style="{StaticResource BaseLabelStyle}" Foreground="Blue"/>
             </StackPanel>
         </Grid>
     </Grid>

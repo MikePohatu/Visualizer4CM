@@ -80,6 +80,17 @@ namespace CollectionViewer.Panes
             }
         }
 
+        protected bool _controlsenabled = true;
+        public bool ControlsEnabled
+        {
+            get { return this._controlsenabled; }
+            set
+            {
+                this._controlsenabled = value;
+                this.OnPropertyChanged(this, "ControlsEnabled");
+            }
+        }
+
         // Constructor
         public BasePane(SccmConnector connector)
         {
@@ -156,6 +167,7 @@ namespace CollectionViewer.Panes
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Await.Warning", "CS4014:Await.Warning")]
         protected async void BuildGraph()
         {
+            this.ControlsEnabled = false;
             this._building = true;
             this.ClearHighlightedCollections();
             string mode = this._pane.modecombo.Text;
@@ -163,6 +175,7 @@ namespace CollectionViewer.Panes
             await Task.Run(() => this._graph = this.FindCollectionID(this._collectiontext, mode));
             await Task.Run(() => this.UpdatePaneToTabControl());
             this._building = false;
+            this.ControlsEnabled = true;
         }
 
         /// <summary>
