@@ -103,7 +103,7 @@ namespace CollectionViewer.Panes
             this._pane.buildtb.KeyUp += this.OnBuildKeyUp;
             this._pane.buildbtn.Click += this.OnBuildButtonPressed;
             this._pane.gviewer.AsyncLayoutProgress += this.OnProgressUpdate;
-            this._pane.abortbtn.Click += OnAbortButtonClick;
+            //this._pane.abortbtn.Click += OnAbortButtonClick;
         }
 
         public Graph FindCollectionID(string collectionid, string mode)
@@ -237,13 +237,13 @@ namespace CollectionViewer.Panes
 
         }
 
-        protected void OnAbortButtonClick(object sender, RoutedEventArgs e)
-        {
-            this._pane.gviewer.AbortAsyncLayout();
-            this.NotificationText = "Build aborted";
-            this._progresscount = 0;
-            this.NotificationText = null;
-        }
+        //protected void OnAbortButtonClick(object sender, RoutedEventArgs e)
+        //{
+        //    this._pane.gviewer.AbortAsyncLayout();
+        //    this.NotificationText = "Build aborted";
+        //    this._progresscount = 0;
+        //    this.NotificationText = null;
+        //}
 
         protected void Redraw()
         {
