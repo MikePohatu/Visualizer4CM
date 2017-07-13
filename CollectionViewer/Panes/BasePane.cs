@@ -5,6 +5,7 @@ using System;
 using Microsoft.Msagl.Drawing;
 using viewmodel;
 using System.Windows.Threading;
+using System.Threading.Tasks;
 
 namespace CollectionViewer.Panes
 {
@@ -88,7 +89,12 @@ namespace CollectionViewer.Panes
             this._pane.abortbtn.Click += OnAbortButtonClick;
         }
 
-        public Graph FindCollectionID(string collectionid, string mode)
+        //protected async Task<Graph> AsyncFindCollectionID(string collectionid, string mode)
+        //{
+        //    return this.FindCollectionID(collectionid, mode);
+        //}
+
+        public async Task<Graph> FindCollectionID(string collectionid, string mode)
         { 
             this.ClearHighlightedCollections();
             Graph graph = null;
@@ -178,14 +184,20 @@ namespace CollectionViewer.Panes
 
         protected void OnBuildButtonPressed(object sender, RoutedEventArgs e)
         {
+            this.BuildAndUpdate();
+        }
+
+        protected async void BuildAndUpdate()
+        {
             this.NotificationText = "Building";
             this.ClearHighlightedCollections();
-            this._graph = this.FindCollectionID(this._collectiontext, this._pane.modecombo.Text);
+            this._graph = await this.FindCollectionID(this._collectiontext, this._pane.modecombo.Text);
             this.UpdatePaneToTabControl();
+            this.NotificationText = null;
         }
 
         protected abstract void OnFindButtonPressed(object sender, RoutedEventArgs e);
-
+        
         protected void Redraw()
         {
             this._pane.gviewer.Invalidate();
