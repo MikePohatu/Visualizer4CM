@@ -94,7 +94,7 @@ namespace CollectionViewer.Panes
         //    return this.FindCollectionID(collectionid, mode);
         //}
 
-        public async Task<Graph> FindCollectionID(string collectionid, string mode)
+        public Graph FindCollectionID(string collectionid, string mode)
         { 
             this.ClearHighlightedCollections();
             Graph graph = null;
@@ -182,19 +182,21 @@ namespace CollectionViewer.Panes
             this.NotificationText = null;
         }
 
-        protected void OnBuildButtonPressed(object sender, RoutedEventArgs e)
-        {
-            this.BuildAndUpdate();
-        }
-
-        protected async void BuildAndUpdate()
+        protected async void OnBuildButtonPressed(object sender, RoutedEventArgs e)
         {
             this.NotificationText = "Building";
             this.ClearHighlightedCollections();
-            Task<Graph> buildtask = this.FindCollectionID(this._collectiontext, this._pane.modecombo.Text);
-            this._graph = await buildtask;
+            this._graph = await this.BuildGraph(this._collectiontext, this._pane.modecombo.Text);
             this.UpdatePaneToTabControl();
             this.NotificationText = null;
+        }
+
+        protected Task<Graph> BuildGraph(string collectionid, string mode)
+        {
+            return Task.Run(() =>
+            {
+                return this.FindCollectionID(collectionid, mode);
+            });
         }
 
         protected abstract void OnFindButtonPressed(object sender, RoutedEventArgs e);
