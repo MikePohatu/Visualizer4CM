@@ -42,7 +42,7 @@ namespace CollectionViewer.Panes
             get { return this._collectiontext; }
             set
             {
-                this._collectiontext = value;
+                this._collectiontext = value.ToUpper();
                 this.OnPropertyChanged(this, "CollectionText");
             }
         }
