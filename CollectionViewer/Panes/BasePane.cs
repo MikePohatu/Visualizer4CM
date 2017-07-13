@@ -1,21 +1,24 @@
 ﻿using System.Windows.Controls;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Input;
 using System;
 using Microsoft.Msagl.Drawing;
 using viewmodel;
-using System.Windows.Threading;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace CollectionViewer.Panes
 {
-    public abstract class BasePane: ViewModelBase
+    public abstract class BasePane : ViewModelBase
     {
         protected SccmConnector _connector;
         protected CollectionLibrary _library;
         protected List<SccmCollection> _highlightedcollections = new List<SccmCollection>();
         protected bool _filteredview = false;
         protected int _progresscount = 0;
+        protected bool _building = false;
+
         protected Graph _graph;
         public Graph Graph { get { return this._graph; } }
 
@@ -77,6 +80,7 @@ namespace CollectionViewer.Panes
             }
         }
 
+        // Constructor
         public BasePane(SccmConnector connector)
         {
             this._connector = connector;
@@ -84,19 +88,15 @@ namespace CollectionViewer.Panes
             MsaglHelpers.ConfigureGViewer(this._pane.gviewer);
             this._pane.DataContext = this;
             this._pane.searchbtn.Click += this.OnFindButtonPressed;
+            this._pane.searchtb.KeyUp += this.OnFindKeyUp;
+            this._pane.buildtb.KeyUp += this.OnBuildKeyUp;
             this._pane.buildbtn.Click += this.OnBuildButtonPressed;
             this._pane.gviewer.AsyncLayoutProgress += this.OnProgressUpdate;
             this._pane.abortbtn.Click += OnAbortButtonClick;
         }
 
-        //protected async Task<Graph> AsyncFindCollectionID(string collectionid, string mode)
-        //{
-        //    return this.FindCollectionID(collectionid, mode);
-        //}
-
         public Graph FindCollectionID(string collectionid, string mode)
-        { 
-            this.ClearHighlightedCollections();
+        {
             Graph graph = null;
             if (string.IsNullOrWhiteSpace(collectionid) == false)
             {
@@ -133,16 +133,6 @@ namespace CollectionViewer.Panes
             return graph;
         }
 
-        protected Graph BuildTreeAllCollections()
-        {
-            this.ClearHighlightedCollections();
-
-            //build the user graph
-            this._graph = TreeBuilder.BuildLimitingPath(this._library.GetAllCollections(),this._library);
-
-            return this._graph;
-        }
-
         protected void OnTextBoxFocused(object sender, RoutedEventArgs e)
         {
             TextBox tb = (TextBox)sender;
@@ -159,19 +149,79 @@ namespace CollectionViewer.Panes
             foreach (SccmCollection col in this._highlightedcollections)
             {
                 col.IsHighlighted = false;
-                Node node = this._graph.FindNode(col.ID);
             }
             this._highlightedcollections.Clear();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Await.Warning", "CS4014:Await.Warning")]
+        protected async void BuildGraph()
+        {
+            this._building = true;
+            this.ClearHighlightedCollections();
+            string mode = this._pane.modecombo.Text;
+            Task.Run(() => this.NotifyProgress("Building"));
+            await Task.Run(() => this._graph = this.FindCollectionID(this._collectiontext, mode));
+            await Task.Run(() => this.UpdatePaneToTabControl());
+            this._building = false;
+        }
+
+        /// <summary>
+        /// Adds notification with dots slowly working. Adds the dots to the specified string
+        /// </summary>
+        /// <param name="basetext"></param>
+        protected void NotifyProgress(string basetext)
+        {
+            int count = 0;
+            this.NotificationText = basetext;
+
+            while (this._building == true)
+            {
+                if (count < 5)
+                {
+                    this.NotificationText = this.NotificationText + ".";
+                    count++;
+                }
+                else
+                {
+                    this.NotificationText = basetext;
+                    count = 0;
+                }
+                Thread.Sleep(500);
+            }
+            this.NotificationText = null;
+        }
+
+        protected void OnFindButtonPressed(object sender, RoutedEventArgs e) { this.Find(); }
+        protected abstract void Find();
+        protected void OnFindKeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                this.Find();
+            }
+        }
+        protected void OnBuildKeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                this.BuildGraph();
+            }
+        }
+
+        protected void OnBuildButtonPressed(object sender, RoutedEventArgs e)
+        {
+            this.BuildGraph();
+        }
+
         protected void OnProgressUpdate(object sender, EventArgs e)
         {
-            if (this._progresscount < 2 ) {
+            if (this._progresscount < 2)
+            {
                 this.NotificationText = this.NotificationText + ".";
                 this._progresscount++;
             }
             else { this.NotificationText = null; }
-            
+
         }
 
         protected void OnAbortButtonClick(object sender, RoutedEventArgs e)
@@ -182,26 +232,6 @@ namespace CollectionViewer.Panes
             this.NotificationText = null;
         }
 
-        protected async void OnBuildButtonPressed(object sender, RoutedEventArgs e)
-        {
-            this.NotificationText = "Building";
-            this.ClearHighlightedCollections();
-            Task<Graph> buildtask = this.BuildGraph(this._collectiontext, this._pane.modecombo.Text);
-            this._graph = await buildtask;
-            this.UpdatePaneToTabControl();
-            this.NotificationText = null;
-        }
-
-        protected Task<Graph> BuildGraph(string collectionid, string mode)
-        {
-            return Task.Run(() =>
-            {
-                return this.FindCollectionID(collectionid, mode);
-            });
-        }
-
-        protected abstract void OnFindButtonPressed(object sender, RoutedEventArgs e);
-        
         protected void Redraw()
         {
             this._pane.gviewer.Invalidate();

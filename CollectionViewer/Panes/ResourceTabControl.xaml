@@ -35,7 +35,7 @@
             <!-- Tree build area-->
             <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Bottom">
                 <Label Content="Collection:" Width="Auto" Style="{StaticResource BaseControlStyle}"/>
-                <TextBox x:Name="searchcoltb" Width="120" Text="{Binding CollectionText}" Style="{StaticResource BaseControlStyle}"/>
+                <TextBox x:Name="buildtb" Width="120" Text="{Binding CollectionText, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource BaseControlStyle}"/>
                 <Label Content="Mode:" Width="Auto" Style="{StaticResource BaseControlStyle}"/>
                 <ComboBox x:Name="modecombo" Width="80" HorizontalContentAlignment="Left" Padding="5,2,2,2" Style="{StaticResource BaseControlStyle}">
                     <ComboBoxItem>Limiting</ComboBoxItem>
@@ -50,7 +50,7 @@
             <StackPanel Grid.Column="1" Orientation="Horizontal" Height="Auto" VerticalAlignment="Bottom" HorizontalAlignment="Stretch">
                 <Rectangle VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,25,0" Height="22" Width="1" Fill="DarkGray"/>
                 <Label Content="{Binding FindLabelText}" Width="Auto" Style="{StaticResource BaseControlStyle}"/>
-                <TextBox x:Name="searchdevtb" Width="120" Text="{Binding ResourceText}" Style="{StaticResource BaseControlStyle}"/>
+                <TextBox x:Name="searchtb" Width="120" Text="{Binding ResourceText, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource BaseControlStyle}"/>
                 <Button x:Name="searchbtn" Width="50" Content="Find"  Style="{StaticResource BaseControlStyle}"/>
                 <Label x:Name="notifylbl" Content="{Binding NotificationText}"  Style="{StaticResource BaseControlStyle}" Foreground="Blue"/>
             </StackPanel>

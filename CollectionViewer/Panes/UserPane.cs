@@ -13,7 +13,7 @@ namespace CollectionViewer.Panes
             this._library = connector.UserCollectionLibrary;
         }
 
-        protected override void OnFindButtonPressed(object sender, RoutedEventArgs e)
+        protected override void Find()
         {
             this.ClearHighlightedCollections();
             if (string.IsNullOrWhiteSpace(this._resourcetext) == false)
