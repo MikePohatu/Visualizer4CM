@@ -186,7 +186,8 @@ namespace CollectionViewer.Panes
         {
             this.NotificationText = "Building";
             this.ClearHighlightedCollections();
-            this._graph = await this.BuildGraph(this._collectiontext, this._pane.modecombo.Text);
+            Task<Graph> buildtask = this.BuildGraph(this._collectiontext, this._pane.modecombo.Text);
+            this._graph = await buildtask;
             this.UpdatePaneToTabControl();
             this.NotificationText = null;
         }
