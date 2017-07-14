@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:CollectionViewer"
         xmlns:gv="clr-namespace:Microsoft.Msagl.GraphViewerGdi;assembly=Microsoft.Msagl.GraphViewerGDI"
         mc:Ignorable="d"
-        Title="Collection Tree View" Height="Auto">
+        Title="Visualizer4CM" Height="Auto">
 
     <DockPanel  Grid.Row="0">
         <TabControl x:Name="maintabctrl">
