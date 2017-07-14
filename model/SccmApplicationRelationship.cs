@@ -8,23 +8,22 @@ namespace viewmodel
 {
     public class SccmApplicationRelationship
     {
-        public enum RelationShipType { Install, DontInstall }
+        public enum RelationShipType { Install, NoInstall }
 
-        public int ToDeploymentTypeCIID { get; set; }
-        public int ToApplicationCIID { get; set; }
+        public string ToDeploymentTypeCIID { get; set; }
+        public string ToApplicationCIID { get; set; }
         public RelationShipType Type { get; set; }
-        public int FromApplicationCIID { get; set; }
-        public int FromDeploymentTypeCIID { get; set; }
+        public string FromApplicationCIID { get; set; }
+        public string FromDeploymentTypeCIID { get; set; }
 
         /// <summary>
-        /// Set the type based on int - 1=LIMITING,2=INCLUDE,3=EXCLUDE
+        /// Set the type based on int - 2=NoInstall,3=Install
         /// </summary>
         /// <param name="type"></param>
         public void SetType(int type)
         {
-            //if (type == 1) { this.Type = RelationShipType.Limiting; }
-            //else if(type == 2) { this.Type = RelationShipType.Include; }
-            //else if (type == 3) { this.Type = RelationShipType.Exclude; }
+            if (type == 3) { this.Type = RelationShipType.Install; }
+            else if (type == 2) { this.Type = RelationShipType.NoInstall; }
         }
     }
 }

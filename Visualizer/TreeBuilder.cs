@@ -10,7 +10,7 @@ namespace Visualizer
 {
     public static class TreeBuilder
     {
-        public static Graph BuildLimitingPath(List<SccmCollection> collections, CollectionLibrary library)
+        public static Graph BuildCollectionLimitingPath(List<SccmCollection> collections, CollectionLibrary library)
         {
             Graph graph = new Graph();
             foreach (SccmCollection col in collections)
@@ -64,7 +64,7 @@ namespace Visualizer
         /// <param name="library"></param>
         /// <param name="collectionid"></param>
         /// <returns></returns>
-        public static Graph BuildTreeMeshMode(SccmConnector connector, CollectionLibrary library, string collectionid)
+        public static Graph BuildCollectionTreeMeshMode(SccmConnector connector, CollectionLibrary library, string collectionid)
         {
             SccmCollection searchcol;
             Graph graph = new Graph();
@@ -74,12 +74,12 @@ namespace Visualizer
             if (searchcol != null)
             {
                 graph.AddNode(new CollectionNode(searchcol.ID, searchcol));
-                BuildMeshLinks(connector,graph, library, searchcol);
+                BuildCollectionMeshLinks(connector,graph, library, searchcol);
             }
             return graph;
         }
 
-        private static void BuildMeshLinks(SccmConnector connector, Graph graph, CollectionLibrary library, SccmCollection collection)
+        private static void BuildCollectionMeshLinks(SccmConnector connector, Graph graph, CollectionLibrary library, SccmCollection collection)
         {
             List<SccmCollectionRelationship> relationships = connector.GetCollectionDependencies(collection.ID);
 
@@ -95,7 +95,7 @@ namespace Visualizer
                 {
                     SccmCollection col = library.GetCollection(colrel.SourceCollectionID);
                     graph.AddNode(new CollectionNode(col.ID, col));
-                    BuildMeshLinks(connector,graph, library, col); //recursive build
+                    BuildCollectionMeshLinks(connector,graph, library, col); //recursive build
                 }
 
                 Edge newedge = graph.AddEdge(colrel.DependentCollectionID, colrel.Type.ToString(), colrel.SourceCollectionID);
@@ -109,7 +109,7 @@ namespace Visualizer
             }
         }
 
-        public static Graph BuildTreeLimitingMode(CollectionLibrary library, string collectionid)
+        public static Graph BuildCollectionTreeLimitingMode(CollectionLibrary library, string collectionid)
         {
             Graph graph = null;
 
@@ -117,21 +117,68 @@ namespace Visualizer
             SccmCollection searchcol = library.GetCollection(collectionid);
             if (searchcol != null)
             {
-                graph = BuildLimitingPath(searchcol.GetCollectionPathList(), library);
+                graph = BuildCollectionLimitingPath(searchcol.GetCollectionPathList(), library);
                 searchcol.IsHighlighted = true;
             }
 
             return graph;
         }
 
-        public static Graph BuildTreeAllCollections(CollectionLibrary library)
+        public static Graph BuildCollectionTreeAllCollections(CollectionLibrary library)
         {
             Graph graph = null;
 
             //build the graph
-            graph = BuildLimitingPath(library.GetAllCollections(), library);
+            graph = BuildCollectionLimitingPath(library.GetAllCollections(), library);
 
             return graph;
+        }
+
+        public static Graph BuildApplicationTree(SccmConnector connector, Dictionary<string,SccmApplication> applications, List<string> applicationids)
+        {
+            SccmApplication searchapp;
+            Graph graph = new Graph();
+
+            //build the graph
+            foreach (string applicationid in applicationids)
+            {
+                if (applications.TryGetValue(applicationid, out searchapp) == true)
+                {
+                    graph.AddNode(new ApplicationNode(searchapp.CIID, searchapp));
+                    BuildApplicationMeshLinks(connector, graph, applications, searchapp);
+                }
+            } 
+            return graph;
+        }
+
+        private static void BuildApplicationMeshLinks(SccmConnector connector, Graph graph, Dictionary<string,SccmApplication> applications, SccmApplication application)
+        {
+            List<SccmApplicationRelationship> relationships = connector.GetApplicationRelationships(application.CIID);
+
+            foreach (SccmApplicationRelationship rel in relationships)
+            {
+                if (graph.FindNode(rel.FromApplicationCIID) == null)
+                {
+                    SccmApplication fromapp;
+                    if (applications.TryGetValue(rel.FromApplicationCIID,out fromapp))
+                    { graph.AddNode(new ApplicationNode(fromapp.CIID, fromapp)); }
+                }
+
+                if (graph.FindNode(rel.ToApplicationCIID) == null)
+                {
+                    SccmApplication toapp;
+                    if (applications.TryGetValue(rel.ToApplicationCIID, out toapp))
+                    { graph.AddNode(new ApplicationNode(toapp.CIID, toapp)); }
+                }
+
+                Edge newedge = graph.AddEdge(rel.FromApplicationCIID, rel.Type.ToString(), rel.ToApplicationCIID);
+
+                if (rel.Type == SccmApplicationRelationship.RelationShipType.Install)
+                { newedge.Attr.Color = Color.Blue; }
+                else
+                { newedge.Attr.Color = Color.Black; }
+
+            }
         }
     }
 }

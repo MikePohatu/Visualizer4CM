@@ -36,14 +36,14 @@ namespace viewmodel
         {
             try
             {
-                this._devlibrary = this.GetDeviceCollectionLibrary(this._connection);
-                this._userlibrary = this.GetUserCollectionLibrary(this._connection);
+                this._devlibrary = this.GetDeviceCollectionLibrary();
+                this._userlibrary = this.GetUserCollectionLibrary();
             }
             catch { return; }
         }
 
 
-        public CollectionLibrary GetDeviceCollectionLibrary(WqlConnectionManager connection)
+        public CollectionLibrary GetDeviceCollectionLibrary()
         {
             try
             {
@@ -52,7 +52,7 @@ namespace viewmodel
                 CollectionLibrary library = new CollectionLibrary();
 
                 // Run query
-                using (IResultObject results = connection.QueryProcessor.ExecuteQuery(query))
+                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
                 { 
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
@@ -75,7 +75,7 @@ namespace viewmodel
             }
         }
 
-        public CollectionLibrary GetUserCollectionLibrary(WqlConnectionManager connection)
+        public CollectionLibrary GetUserCollectionLibrary()
         {
             try
             {
@@ -84,7 +84,7 @@ namespace viewmodel
                 CollectionLibrary library = new CollectionLibrary();
 
                 // Run query
-                using (IResultObject results = connection.QueryProcessor.ExecuteQuery(query))
+                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
                 {
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
@@ -108,11 +108,12 @@ namespace viewmodel
 
         public List<SccmCollectionRelationship> GetCollectionDependencies(string collectionid)
         {
+            List<SccmCollectionRelationship> relationships = new List<SccmCollectionRelationship>();
             try
             {
                 // This query selects all collections
                 string query = "select * from SMS_CollectionDependencies WHERE DependentCollectionID='" + collectionid + "'";
-                List<SccmCollectionRelationship> relationships = new List<SccmCollectionRelationship>();
+                
                 // Run query
                 using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
                 {
@@ -125,22 +126,20 @@ namespace viewmodel
                         colrel.SourceCollectionID = resource["SourceCollectionID"].StringValue;
                         relationships.Add(colrel);
                     }
-                }
-                return relationships;
+                }    
             }
-            catch
-            {
-                return null;
-            }
+            catch { }
+            return relationships;
         }
 
-        public List<SccmApplication> GetApplications()
+        public Dictionary<string,SccmApplication> GetApplications()
         {
+            Dictionary<string,SccmApplication> applications = new Dictionary<string, SccmApplication>();
             try
             {
                 // This query selects all collections
-                string query = "select * from SMS_Application";
-                List<SccmApplication> applications = new List<SccmApplication>();
+                string query = "select * from SMS_Application WHERE IsLatest='TRUE'";
+                
                 // Run query
                 using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
                 {
@@ -148,30 +147,55 @@ namespace viewmodel
                     foreach (IResultObject resource in results)
                     {
                         SccmApplication app = new SccmApplication();
-                        app.CIID = resource["CI_ID"].IntegerValue;
+                        app.CIID = resource["CI_ID"].IntegerValue.ToString();
+                        app.Name = resource["LocalizedDisplayName"].StringValue;
                         app.IsDeployed = resource["IsDeployed"].BooleanValue;
                         app.IsEnabled = resource["IsEnabled"].BooleanValue;
                         app.IsSuperseded = resource["IsSuperseded"].BooleanValue;
                         app.IsSuperseding = resource["IsSuperseding"].BooleanValue;
-                        applications.Add(app);
+                        app.IsLatest = resource["IsLatest"].BooleanValue;
+                        applications.Add(app.CIID,app);
                     }
                 }
-                return applications;
+                
             }
-            catch
-            {
-                return null;
-            }
+            catch { }
+            return applications;
         }
 
-        public List<SccmApplicationRelationship> GetApplicationDependencyRelationships(string applicationciid)
+        public List<string> GetApplicationIDsFromSearch(string search)
         {
+            List<string> appids = new List<string>();
             try
             {
                 // This query selects all collections
-                string query = "select * from SMS_AppDependenceRelation WHERE FromApplicationCIID='" + applicationciid + "'";
+                string query = "select CI_ID,LocalizedDisplayName from SMS_Application WHERE LocalizedDisplayName LIKE '%" + search + "%'";
+                
+                // Run query
+                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
+                {
+                    // Enumerate through the collection of objects returned by the query.
+                    foreach (IResultObject resource in results)
+                    {
+                        string ciid = resource["CI_ID"].IntegerValue.ToString();
+                        appids.Add(ciid);
+                    }
+                }             
+            }
+            catch { }
+            return appids;
+        }
 
-                List<SccmApplicationRelationship> dependencies = null;
+        public List<SccmApplicationRelationship> GetApplicationRelationships(string applicationciid)
+        {
+            List<SccmApplicationRelationship> relationships = new List<SccmApplicationRelationship>();
+
+            try
+            {
+                // This query selects all relationships of the specified app ID
+                string query = "select * from SMS_AppDependenceRelation WHERE FromApplicationCIID='" + applicationciid + "'"
+                    + " OR ToApplicationCIID='" + "'";
+
                 // Run query
                 using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
                 {
@@ -179,19 +203,17 @@ namespace viewmodel
                     foreach (IResultObject resource in results)
                     {
                         SccmApplicationRelationship apprel = new SccmApplicationRelationship();
-                        apprel.FromApplicationCIID = resource["FromApplicationCIID"].IntegerValue;
-                        apprel.ToApplicationCIID = resource["ToApplicationCIID"].IntegerValue;
-                        apprel.ToDeploymentTypeCIID = resource["ToDeploymentTypeCIID"].IntegerValue;
-                        apprel.FromDeploymentTypeCIID = resource["FromDeploymentTypeCIID"].IntegerValue;
-                        dependencies.Add(apprel);
+                        apprel.FromApplicationCIID = resource["FromApplicationCIID"].IntegerValue.ToString();
+                        apprel.ToApplicationCIID = resource["ToApplicationCIID"].IntegerValue.ToString();
+                        apprel.ToDeploymentTypeCIID = resource["ToDeploymentTypeCIID"].IntegerValue.ToString();
+                        apprel.FromDeploymentTypeCIID = resource["FromDeploymentTypeCIID"].IntegerValue.ToString();
+                        apprel.SetType(resource["TypeFlag"].IntegerValue);
+                        relationships.Add(apprel);
                     }
-                }
-                return dependencies;
+                }              
             }
-            catch
-            {
-                return null;
-            }
+            catch { }
+            return relationships;
         }
 
 
@@ -202,15 +224,19 @@ namespace viewmodel
                 // This query selects all collections
                 string query = "select * from SMS_FullCollectionMembership WHERE Name='" + devicename + "'";
                 SccmDevice device = new SccmDevice();
-
+                int count = 0;
                 // Run query
                 using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
                 {
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
                     {
-                        device.ID = resource["ResourceID"].StringValue;
-                        device.Name = resource["Name"].StringValue;
+                        if (count == 0)
+                        {
+                            device.ID = resource["ResourceID"].StringValue;
+                            device.Name = resource["Name"].StringValue;
+                            count++;
+                        }                   
                         device.CollectionIDs.Add(resource["CollectionID"].StringValue);
                     }
                 }

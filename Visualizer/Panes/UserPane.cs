@@ -3,9 +3,8 @@ using viewmodel;
 
 namespace Visualizer.Panes
 {
-    public class UserPane: BasePane
+    public class UserPane: BaseResourcePane
     {
-        
         public UserPane(SccmConnector connector): base(connector)
         {
             this._header = "User Collections";

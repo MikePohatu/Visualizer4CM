@@ -9,9 +9,8 @@ using viewmodel;
 
 namespace Visualizer.Panes
 {
-    public class DevicePane: BasePane
+    public class DevicePane: BaseResourcePane
     {
-
         public DevicePane(SccmConnector connector): base(connector)
         {
             this._header = "Device Collections";

@@ -17,6 +17,7 @@ namespace Visualizer
         private Graph[] _graphs = new Graph[2];
         private UserPane _userpane;
         private DevicePane _devicepane;
+        private ApplicationPane _apppane;
         private List<SccmCollection> _highlightedcollections;
         private SccmConnector _connector;
         private string _site;
@@ -71,6 +72,12 @@ namespace Visualizer
             usertabitem.Header = this._userpane.Header;
             usertabitem.Content = this._userpane.Pane;
             maintabctrl.Items.Add(usertabitem);
+
+            this._apppane = new ApplicationPane(this._connector);
+            TabItem apptabitem = new TabItem();
+            apptabitem.Header = this._apppane.Header;
+            apptabitem.Content = this._apppane.Pane;
+            maintabctrl.Items.Add(apptabitem);
         }
 
         private bool TryConnect(SccmConnector connector, LoginViewModel loginviewmodel, LoginWindow loginwindow)

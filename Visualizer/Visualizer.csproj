@@ -72,10 +72,15 @@
     <Compile Include="Auth\LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ApplicationNode.cs" />
     <Compile Include="CollectionNode.cs" />
     <Compile Include="MsaglHelpers.cs" />
     <Compile Include="Panes\BasePane.cs" />
+    <Compile Include="Panes\BaseResourcePane.cs" />
     <Compile Include="Panes\DevicePane.cs" />
+    <Compile Include="Panes\ApplicationTabControl.xaml.cs">
+      <DependentUpon>ApplicationTabControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Panes\ResourceTabControl.xaml.cs">
       <DependentUpon>ResourceTabControl.xaml</DependentUpon>
     </Compile>
@@ -89,6 +94,10 @@
     <Page Include="Auth\LoginWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Panes\ApplicationTabControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Panes\ResourceTabControl.xaml">
       <SubType>Designer</SubType>
