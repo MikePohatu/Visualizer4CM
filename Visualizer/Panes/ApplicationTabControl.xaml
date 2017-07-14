@@ -24,26 +24,42 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="33"/>
+            <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="130"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
 
-        <WindowsFormsHost x:Name="gviewerhost" Grid.Row="0" Margin="0,0,0,0">
-            <gv:GViewer x:Name="gviewer"></gv:GViewer>
-        </WindowsFormsHost>
-
-        <Grid Grid.Row="1" >
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-
+        <Grid Grid.Column="0">
             <!-- Tree build area-->
-            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Bottom">
-                <Label Content="Search application" Width="Auto" Style="{StaticResource BaseLabelStyle}"/>
-                <TextBox x:Name="buildtb" Width="120" Text="{Binding ApplicationText, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource BaseControlStyle}"/>
-                <Button x:Name="buildbtn" Width="50" Content="Build"  Style="{StaticResource BaseControlStyle}" Margin="3"/>
+            <StackPanel Orientation="Vertical">
+                <Label Content="Search" Width="Auto" Style="{StaticResource BaseLabelStyle}"/>
+                <TextBox x:Name="searchtb" Width="120" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource BaseControlStyle}"/>
+                <Button x:Name="searchbtn" Width="50" Content="Search" HorizontalAlignment="Right" Style="{StaticResource BaseControlStyle}"/>
+                <ListBox x:Name="searchresultslb" Height="130" ScrollViewer.CanContentScroll="True" 
+                         ItemsSource="{Binding SearchResults}" SelectedItem="{Binding SelectedResult, Mode=TwoWay}"
+                        SelectedValuePath="CIID" DisplayMemberPath="Name"
+                         Style="{StaticResource BaseControlStyle}" >
+                </ListBox>
+                <Button x:Name="buildbtn" Width="50" Content="Build" HorizontalAlignment="Right" Style="{StaticResource BaseControlStyle}"/>
                 <!--<Button x:Name="abortbtn" Width="50" Content="Abort"  Style="{StaticResource BaseControlStyle}" Margin="3"/>-->
-                <Label x:Name="notifylbl" Content="{Binding NotificationText}"  Style="{StaticResource BaseLabelStyle}" Foreground="Blue"/>
+                
             </StackPanel>
+            
         </Grid>
-    </Grid>
+        
+        <!-- Display column -->
+        <Grid Grid.Column="1">
+
+
+            <WindowsFormsHost x:Name="gviewerhost" Grid.Row="0" Margin="0,0,0,0">
+                <gv:GViewer x:Name="gviewer"></gv:GViewer>
+            </WindowsFormsHost>
+
+
+        </Grid>
+        <Label Grid.Row="1" Grid.ColumnSpan="2" x:Name="notifylbl" Content="{Binding NotificationText}"  Style="{StaticResource BaseLabelStyle}"  Foreground="Blue"/>
+        </Grid>
 </UserControl>

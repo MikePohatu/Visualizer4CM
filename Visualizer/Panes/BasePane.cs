@@ -14,7 +14,7 @@ namespace Visualizer.Panes
     {
         protected SccmConnector _connector;
         protected int _progresscount = 0;
-        protected bool _building = false;
+        protected bool _processing = false;
 
         protected Graph _graph;
         public Graph Graph { get { return this._graph; } }
@@ -99,7 +99,7 @@ namespace Visualizer.Panes
             int count = 0;
             this.NotificationText = basetext;
 
-            while (this._building == true)
+            while (this._processing == true)
             {
                 if (count < 5)
                 {

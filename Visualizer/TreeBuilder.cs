@@ -134,20 +134,13 @@ namespace Visualizer
             return graph;
         }
 
-        public static Graph BuildApplicationTree(SccmConnector connector, Dictionary<string,SccmApplication> applications, List<string> applicationids)
+        public static Graph BuildApplicationTree(SccmConnector connector, Dictionary<string,SccmApplication> applications, SccmApplication application)
         {
-            SccmApplication searchapp;
             Graph graph = new Graph();
 
             //build the graph
-            foreach (string applicationid in applicationids)
-            {
-                if (applications.TryGetValue(applicationid, out searchapp) == true)
-                {
-                    graph.AddNode(new ApplicationNode(searchapp.CIID, searchapp));
-                    BuildApplicationMeshLinks(connector, graph, applications, searchapp);
-                }
-            } 
+            graph.AddNode(new ApplicationNode(application.CIID, application));
+            BuildApplicationMeshLinks(connector, graph, applications, application);
             return graph;
         }
 

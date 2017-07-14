@@ -44,5 +44,10 @@ namespace viewmodel
         public bool IsSuperseded { get; set; }
         public bool IsSuperseding { get; set; }
         public bool IsLatest { get; set; }
+
+        public new string ToString()
+        {
+            return this._name;
+        }
     }
 }

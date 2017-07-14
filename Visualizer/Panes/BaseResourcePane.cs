@@ -96,13 +96,13 @@ namespace Visualizer.Panes
         protected override async void BuildGraph()
         {
             this.ControlsEnabled = false;
-            this._building = true;
+            this._processing = true;
             this.ClearHighlightedCollections();
             string mode = this._pane.modecombo.Text;
             Task.Run(() => this.NotifyProgress("Building"));
             await Task.Run(() => this._graph = this.FindCollectionID(this._collectiontext, mode));
             await Task.Run(() => this.UpdatePaneToTabControl());
-            this._building = false;
+            this._processing = false;
             this.ControlsEnabled = true;
         }
 
