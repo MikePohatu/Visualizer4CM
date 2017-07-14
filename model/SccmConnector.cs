@@ -134,6 +134,67 @@ namespace viewmodel
             }
         }
 
+        public List<SccmApplication> GetApplications()
+        {
+            try
+            {
+                // This query selects all collections
+                string query = "select * from SMS_Application";
+                List<SccmApplication> applications = new List<SccmApplication>();
+                // Run query
+                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
+                {
+                    // Enumerate through the collection of objects returned by the query.
+                    foreach (IResultObject resource in results)
+                    {
+                        SccmApplication app = new SccmApplication();
+                        app.CIID = resource["CI_ID"].IntegerValue;
+                        app.IsDeployed = resource["IsDeployed"].BooleanValue;
+                        app.IsEnabled = resource["IsEnabled"].BooleanValue;
+                        app.IsSuperseded = resource["IsSuperseded"].BooleanValue;
+                        app.IsSuperseding = resource["IsSuperseding"].BooleanValue;
+                        applications.Add(app);
+                    }
+                }
+                return applications;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public List<SccmApplicationRelationship> GetApplicationDependencyRelationships(string applicationciid)
+        {
+            try
+            {
+                // This query selects all collections
+                string query = "select * from SMS_AppDependenceRelation WHERE FromApplicationCIID='" + applicationciid + "'";
+
+                List<SccmApplicationRelationship> dependencies = null;
+                // Run query
+                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
+                {
+                    // Enumerate through the collection of objects returned by the query.
+                    foreach (IResultObject resource in results)
+                    {
+                        SccmApplicationRelationship apprel = new SccmApplicationRelationship();
+                        apprel.FromApplicationCIID = resource["FromApplicationCIID"].IntegerValue;
+                        apprel.ToApplicationCIID = resource["ToApplicationCIID"].IntegerValue;
+                        apprel.ToDeploymentTypeCIID = resource["ToDeploymentTypeCIID"].IntegerValue;
+                        apprel.FromDeploymentTypeCIID = resource["FromDeploymentTypeCIID"].IntegerValue;
+                        dependencies.Add(apprel);
+                    }
+                }
+                return dependencies;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+
         public SccmDevice GetDevice(string devicename)
         {
             try
