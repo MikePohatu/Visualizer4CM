@@ -74,6 +74,10 @@
       <Project>{4984f353-541c-4ab7-ae8f-c22fc4b52ff1}</Project>
       <Name>viewmodel</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Visualizer\Visualizer.csproj">
+      <Project>{92b1dafe-de3d-4faa-b82c-16d51a9501ec}</Project>
+      <Name>Visualizer</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

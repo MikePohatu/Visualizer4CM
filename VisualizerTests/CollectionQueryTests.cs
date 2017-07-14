@@ -7,7 +7,7 @@ using Microsoft.ConfigurationManagement.ManagementProvider;
 using Microsoft.ConfigurationManagement.ManagementProvider.WqlQueryEngine;
 using viewmodel;
 
-namespace CollectionViewerTests
+namespace VisualizerTests
 {
     [TestFixture]
     public class CollectionQueryTests
