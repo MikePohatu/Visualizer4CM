@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.15
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CollectionViewer", "CollectionViewer\CollectionViewer.csproj", "{92B1DAFE-DE3D-4FAA-B82C-16D51A9501EC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Visualizer", "CollectionViewer\Visualizer.csproj", "{92B1DAFE-DE3D-4FAA-B82C-16D51A9501EC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CollectionViewerTests", "CollectionViewerTests\CollectionViewerTests.csproj", "{E22F759A-13ED-433B-B43D-59B8183ED76A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisualizerTests", "CollectionViewerTests\VisualizerTests.csproj", "{E22F759A-13ED-433B-B43D-59B8183ED76A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "viewmodel", "model\viewmodel.csproj", "{4984F353-541C-4AB7-AE8F-C22FC4B52FF1}"
 EndProject
