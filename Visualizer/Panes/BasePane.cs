@@ -8,7 +8,7 @@ using viewmodel;
 using System.Threading.Tasks;
 using System.Threading;
 
-namespace CollectionViewer.Panes
+namespace Visualizer.Panes
 {
     public abstract class BasePane : ViewModelBase
     {

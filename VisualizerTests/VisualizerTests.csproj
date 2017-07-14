@@ -6,8 +6,8 @@
     <ProjectGuid>{E22F759A-13ED-433B-B43D-59B8183ED76A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CollectionViewerTests</RootNamespace>
-    <AssemblyName>CollectionViewerTests</AssemblyName>
+    <RootNamespace>VisualizerTests</RootNamespace>
+    <AssemblyName>VisualizerTests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -70,10 +70,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CollectionViewer\Visualizer.csproj">
-      <Project>{92b1dafe-de3d-4faa-b82c-16d51a9501ec}</Project>
-      <Name>Visualizer</Name>
-    </ProjectReference>
     <ProjectReference Include="..\model\viewmodel.csproj">
       <Project>{4984f353-541c-4ab7-ae8f-c22fc4b52ff1}</Project>
       <Name>viewmodel</Name>

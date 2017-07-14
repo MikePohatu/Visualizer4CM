@@ -1,16 +1,22 @@
-﻿using System.Windows;
+﻿using System.Windows.Controls;
+using System.Collections.Generic;
+using System.Windows;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.Msagl.Drawing;
 using viewmodel;
 
-namespace CollectionViewer.Panes
+namespace Visualizer.Panes
 {
-    public class UserPane: BasePane
+    public class DevicePane: BasePane
     {
-        
-        public UserPane(SccmConnector connector): base(connector)
+
+        public DevicePane(SccmConnector connector): base(connector)
         {
-            this._header = "User Collections";
-            this._findlabeltext = "User:";
-            this._library = connector.UserCollectionLibrary;
+            this._header = "Device Collections";
+            this._findlabeltext = "Device:";
+            this._library = connector.DeviceCollectionLibrary;
         }
 
         protected override void Find()

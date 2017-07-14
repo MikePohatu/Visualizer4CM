@@ -3,7 +3,7 @@ using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using viewmodel;
 
-namespace CollectionViewer
+namespace Visualizer
 {
     public static class MsaglHelpers
     {

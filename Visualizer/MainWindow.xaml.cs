@@ -4,10 +4,10 @@ using System.Windows.Controls;
 using Microsoft.Msagl.Drawing;
 using System;
 using viewmodel;
-using CollectionViewer.Panes;
-using CollectionViewer.Auth;
+using Visualizer.Panes;
+using Visualizer.Auth;
 
-namespace CollectionViewer
+namespace Visualizer
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

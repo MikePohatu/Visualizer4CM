@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("model")]
+[assembly: AssemblyProduct("Visualizer4CM")]
 [assembly: AssemblyCopyright("Copyright © Mike Pohatu 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

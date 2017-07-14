@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace CollectionViewer.View
+namespace Visualizer.View
 {
     public class XmlStringConverter : IValueConverter
     {

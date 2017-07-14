@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Xml.Linq;
-using CollectionViewer;
+using Visualizer;
 using NUnit.Framework;
 using Microsoft.ConfigurationManagement.ManagementProvider;
 using Microsoft.ConfigurationManagement.ManagementProvider.WqlQueryEngine;

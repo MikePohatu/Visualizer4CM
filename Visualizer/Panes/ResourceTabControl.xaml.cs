@@ -10,24 +10,19 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace CollectionViewer.Auth
+namespace Visualizer.Panes
 {
     /// <summary>
-    /// Interaction logic for LoginWindow.xaml
+    /// Interaction logic for ResourceTabControl.xaml
     /// </summary>
-    public partial class LoginWindow : Window
+    public partial class ResourceTabControl : UserControl
     {
-        public LoginWindow()
+        public ResourceTabControl()
         {
             InitializeComponent();
-        }
-
-        private void OnTextBoxFocused(object sender, RoutedEventArgs e)
-        {
-            TextBox tb = (TextBox)sender;
-            tb.SelectAll();
         }
     }
 }

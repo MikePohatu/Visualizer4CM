@@ -3,7 +3,7 @@ using System.ComponentModel;
 using Microsoft.Msagl.Drawing;
 using viewmodel;
 
-namespace CollectionViewer
+namespace Visualizer
 {
     public class CollectionNode : Node
     {       

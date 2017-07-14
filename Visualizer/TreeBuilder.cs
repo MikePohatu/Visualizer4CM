@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Msagl.Drawing;
 using viewmodel;
 
-namespace CollectionViewer
+namespace Visualizer
 {
     public static class TreeBuilder
     {
