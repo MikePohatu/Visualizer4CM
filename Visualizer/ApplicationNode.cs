@@ -32,7 +32,7 @@ namespace Visualizer
         {
             if (e.PropertyName.Equals("IsHighlighted"))
             {
-                SccmCollection col = (SccmCollection)sender;
+                SccmApplication col = (SccmApplication)sender;
                 if (col.IsHighlighted == true) {
                     this.Attr.LineWidth = _highlightedlinewidth;
                     this.Attr.Color = Color.Green;

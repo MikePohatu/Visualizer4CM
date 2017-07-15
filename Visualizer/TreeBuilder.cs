@@ -154,14 +154,22 @@ namespace Visualizer
                 {
                     SccmApplication fromapp;
                     if (applications.TryGetValue(rel.FromApplicationCIID,out fromapp))
-                    { graph.AddNode(new ApplicationNode(fromapp.CIID, fromapp)); }
+                    {
+                        if (fromapp.IsLatest == false) { continue; }
+                        graph.AddNode(new ApplicationNode(fromapp.CIID, fromapp));
+                    }
+                    else { continue; }
                 }
 
                 if (graph.FindNode(rel.ToApplicationCIID) == null)
                 {
                     SccmApplication toapp;
                     if (applications.TryGetValue(rel.ToApplicationCIID, out toapp))
-                    { graph.AddNode(new ApplicationNode(toapp.CIID, toapp)); }
+                    {
+                        if (toapp.IsLatest == false) { continue; }
+                        graph.AddNode(new ApplicationNode(toapp.CIID, toapp));
+                    }
+                    else { continue; }
                 }
 
                 Edge newedge = graph.AddEdge(rel.FromApplicationCIID, rel.Type.ToString(), rel.ToApplicationCIID);

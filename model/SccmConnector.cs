@@ -169,7 +169,7 @@ namespace viewmodel
             try
             {
                 // This query selects all collections
-                string query = "select CI_ID,LocalizedDisplayName from SMS_Application WHERE LocalizedDisplayName LIKE '%" + search + "%'";
+                string query = "select CI_ID,LocalizedDisplayName from SMS_Application WHERE LocalizedDisplayName LIKE '%" + search + "%' AND IsLatest='TRUE'";
                 
                 // Run query
                 using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))

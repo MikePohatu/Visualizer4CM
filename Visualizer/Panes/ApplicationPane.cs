@@ -8,6 +8,7 @@ namespace Visualizer.Panes
     public class ApplicationPane : BasePane
     {
         protected Dictionary<string, SccmApplication> _applications;
+        protected SccmApplication _highlightedapplication;
         protected bool _queryisrun;
 
         protected ApplicationTabControl _pane;
@@ -70,11 +71,15 @@ namespace Visualizer.Panes
             {
                 this.ControlsEnabled = false;
                 this._processing = true;
+                if (this._highlightedapplication != null) { this._highlightedapplication.IsHighlighted = true; }
                 //List<string> appids = this._connector.GetApplicationIDsFromSearch(this._searchtext?.Trim());
                 Task.Run(() => this.NotifyProgress("Building"));
                 
                 await Task.Run(() => this._graph = TreeBuilder.BuildApplicationTree(this._connector, this._applications, this.SelectedResult));
                 await Task.Run(() => this.UpdatePaneToTabControl());
+                this._highlightedapplication = this.SelectedResult;
+                this.SelectedResult.IsHighlighted = true;
+                this.Redraw();
                 this._processing = false;
                 this.ControlsEnabled = true;
             }
