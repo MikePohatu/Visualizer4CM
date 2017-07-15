@@ -30,18 +30,25 @@
 
         <Grid Grid.Column="0">
             <!-- Tree build area-->
-            <StackPanel Orientation="Vertical">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Vertical" Grid.Row="0">
                 <Label Content="Search" Width="Auto" Style="{StaticResource BaseLabelStyle}"/>
                 <TextBox x:Name="searchtb" Width="Auto" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource BaseControlStyle}"/>
                 <Button x:Name="searchbtn" Width="50" Content="Search" HorizontalAlignment="Right" Style="{StaticResource BaseControlStyle}"/>
-                <ListBox x:Name="searchresultslb" Height="130" ScrollViewer.CanContentScroll="True" 
+            </StackPanel>
+            <ListBox x:Name="searchresultslb" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Row="1" MinHeight="130" ScrollViewer.CanContentScroll="True" 
                          ItemsSource="{Binding SearchResults}" SelectedItem="{Binding SelectedResult, Mode=TwoWay}"
                         SelectedValuePath="CIID" DisplayMemberPath="Name"
-                         Style="{StaticResource BaseControlStyle}" >
-                </ListBox>
+                         Style="{StaticResource BaseControlStyle}" />
+
+            <StackPanel Orientation="Vertical" Grid.Row="2">
                 <Button x:Name="buildbtn" Width="50" Content="Build" HorizontalAlignment="Right" Style="{StaticResource BaseControlStyle}"/>
                 <!--<Button x:Name="abortbtn" Width="50" Content="Abort"  Style="{StaticResource BaseControlStyle}" Margin="3"/>-->
-                <Label Grid.Row="1" Grid.ColumnSpan="2" x:Name="notifylbl" Content="{Binding NotificationText}"  Style="{StaticResource BaseLabelStyle}"  Foreground="Blue"/>
+                <Label x:Name="notifylbl" Height="25" Content="{Binding NotificationText}" Style="{StaticResource BaseLabelStyle}" Foreground="Blue"/>
             </StackPanel>
         </Grid>
 
