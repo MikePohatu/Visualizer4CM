@@ -35,7 +35,7 @@ namespace Visualizer.Panes
         public BaseResourcePane(SccmConnector connector):base(connector)
         {
             this._pane = new ResourceTabControl();
-            MsaglHelpers.ConfigureGViewer(this._pane.gviewer);
+            MsaglHelpers.ConfigureCollectionsGViewer(this._pane.gviewer);
             this._pane.DataContext = this;
             this._pane.buildtb.KeyUp += this.OnBuildKeyUp;
             this._pane.buildbtn.Click += this.OnBuildButtonPressed;

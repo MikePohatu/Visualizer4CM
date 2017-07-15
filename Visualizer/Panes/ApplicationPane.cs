@@ -50,7 +50,7 @@ namespace Visualizer.Panes
             this._header = "Applications";
             this._findlabeltext = "Application:";
             this._pane = new ApplicationTabControl();
-            MsaglHelpers.ConfigureGViewer(this._pane.gviewer);
+            MsaglHelpers.ConfigureApplicationsGViewer(this._pane.gviewer);
             this._pane.DataContext = this;
             this._pane.searchbtn.KeyUp += this.OnBuildKeyUp;
             this._pane.buildbtn.Click += this.OnBuildButtonPressed;

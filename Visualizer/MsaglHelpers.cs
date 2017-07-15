@@ -21,12 +21,21 @@ namespace Visualizer
             a.UserData = col;
         }
 
-        public static void ConfigureGViewer(GViewer viewer )
+        public static void ConfigureCollectionsGViewer(GViewer viewer )
         {
             viewer.EdgeInsertButtonVisible = false;
             viewer.NavigationVisible = false;
             viewer.UndoRedoButtonsVisible = false;
             viewer.CurrentLayoutMethod = LayoutMethod.MDS;
+            //viewer.AsyncLayout = true;
+        }
+
+        public static void ConfigureApplicationsGViewer(GViewer viewer)
+        {
+            viewer.EdgeInsertButtonVisible = false;
+            viewer.NavigationVisible = false;
+            viewer.UndoRedoButtonsVisible = false;
+            //viewer.CurrentLayoutMethod = LayoutMethod.MDS;
             //viewer.AsyncLayout = true;
         }
     }
