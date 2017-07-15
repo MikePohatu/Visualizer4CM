@@ -24,7 +24,7 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"/>
-            <ColumnDefinition Width="1"/>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
@@ -52,9 +52,9 @@
             </StackPanel>
         </Grid>
 
-        <GridSplitter VerticalAlignment="Stretch" 
+        <GridSplitter VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                   Grid.Column="1" ResizeBehavior="PreviousAndNext"
-                  Width="1" Background="#FFBCBCBC"/>
+                  Width="3"/>
         
         <!-- Display column -->
         <Grid Grid.Column="2" Background="LightGray">

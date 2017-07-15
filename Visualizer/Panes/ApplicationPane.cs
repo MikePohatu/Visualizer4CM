@@ -83,8 +83,6 @@ namespace Visualizer.Panes
             }
         }
 
-
-
         protected void UpdatePaneToTabControl()
         {
             this._pane.gviewer.Graph = this._graph;
