@@ -36,7 +36,6 @@ namespace Visualizer
                 if (col.IsHighlighted == true) {
                     this.Attr.LineWidth = _highlightedlinewidth;
                     this.Attr.Color = Color.Green;
-                    this.ChangeInEdges(Color.Green, _highlightedlinewidth);
                 }
                 else {
                     this.Attr.LineWidth = 1;
