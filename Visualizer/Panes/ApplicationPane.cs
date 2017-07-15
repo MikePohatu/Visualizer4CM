@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Input;
 using System.Collections.Generic;
 using viewmodel;
 using System.Threading.Tasks;
@@ -53,6 +54,7 @@ namespace Visualizer.Panes
             this._pane.searchbtn.KeyUp += this.OnBuildKeyUp;
             this._pane.buildbtn.Click += this.OnBuildButtonPressed;
             this._pane.searchbtn.Click += this.OnSearchButtonPressed;
+            this._pane.searchtb.KeyUp += this.OnSearchKeyUp;
             this._pane.gviewer.AsyncLayoutProgress += this.OnProgressUpdate;
         }
 
@@ -96,6 +98,14 @@ namespace Visualizer.Panes
         protected void OnSearchButtonPressed(object sender, RoutedEventArgs e)
         {
             this.UpdateSearchResults();
+        }
+
+        protected void OnSearchKeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                this.UpdateSearchResults();
+            }
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Await.Warning", "CS4014:Await.Warning")]
