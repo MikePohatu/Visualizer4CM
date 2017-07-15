@@ -7,9 +7,7 @@ namespace Visualizer.Panes
 {
     public class ApplicationPane : BasePane
     {
-        protected Dictionary<string, SccmApplication> _applications;
         protected SccmApplication _highlightedapplication;
-        protected bool _queryisrun;
 
         protected ApplicationTabControl _pane;
         public ApplicationTabControl Pane { get { return this._pane; } }
@@ -58,12 +56,6 @@ namespace Visualizer.Panes
             this._pane.gviewer.AsyncLayoutProgress += this.OnProgressUpdate;
         }
 
-        protected void QueryApplications()
-        {
-            this._applications = this._connector.GetApplications();
-            this._queryisrun = true;
-        }
-
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Await.Warning", "CS4014:Await.Warning")]
         protected override async void BuildGraph()
         {             
@@ -71,12 +63,14 @@ namespace Visualizer.Panes
             {
                 this.ControlsEnabled = false;
                 this._processing = true;
-                if (this._highlightedapplication != null) { this._highlightedapplication.IsHighlighted = true; }
-                //List<string> appids = this._connector.GetApplicationIDsFromSearch(this._searchtext?.Trim());
-                Task.Run(() => this.NotifyProgress("Building"));
-                
-                await Task.Run(() => this._graph = TreeBuilder.BuildApplicationTree(this._connector, this._applications, this.SelectedResult));
+                if (this._highlightedapplication != null) { this._highlightedapplication.IsHighlighted = false; }
+
+                Task.Run(() => this.NotifyProgress("Building"));                
+                await Task.Run(() => this._graph = TreeBuilder.BuildApplicationTree(this._connector, this.SelectedResult));
+
+                this.UpdateProgressMessage("Updating view");
                 await Task.Run(() => this.UpdatePaneToTabControl());
+
                 this._highlightedapplication = this.SelectedResult;
                 this.SelectedResult.IsHighlighted = true;
                 this.Redraw();
@@ -88,6 +82,8 @@ namespace Visualizer.Panes
                 this.NotificationText = "Please select a search result";
             }
         }
+
+
 
         protected void UpdatePaneToTabControl()
         {
@@ -109,29 +105,9 @@ namespace Visualizer.Panes
         {
             this.ControlsEnabled = false;
             this._processing = true;
-            //List<string> appids = this._connector.GetApplicationIDsFromSearch(this._searchtext?.Trim());
-            
-            if (this._queryisrun == false)
-            {
-                Task.Run(() => this.NotifyProgress("Getting full applications list"));
-                await Task.Run(() => this.QueryApplications());
-            }
-   
-            this.UpdateProgressMessage("Searching");
-            List<string> results = null;
-            await Task.Run(() => results = this._connector.GetApplicationIDsFromSearch(this._searchtext));
-            
-            this.UpdateProgressMessage("Updating results");
-            List<SccmApplication> applicationresults = new List<SccmApplication>();
-            foreach (string result in results)
-            {
-                SccmApplication outapp;
-                if (this._applications.TryGetValue(result, out outapp) == true)
-                {
-                    applicationresults.Add(outapp);
-                }
-            }
-            this.SearchResults = applicationresults;
+
+            Task.Run(() => this.NotifyProgress("Searching"));
+            await Task.Run(() => this.SearchResults = this._connector.GetApplicationsListFromSearch(this._searchtext));
 
             this._processing = false;
             this.ControlsEnabled = true;

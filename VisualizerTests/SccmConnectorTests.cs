@@ -19,7 +19,7 @@ namespace VisualizerTests
         public int GetApplicationID(string appname)
         {
             SccmConnector connector = this.CreateAndConnectConnector();
-            List<int> appids = connector.GetApplicationIDsFromSearch(appname);
+            List<int> appids = connector.GetApplicationsListFromSearch(appname);
             foreach (int id in appids) { return id; }
             return -1;
         }

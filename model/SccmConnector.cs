@@ -132,7 +132,7 @@ namespace viewmodel
             return relationships;
         }
 
-        public Dictionary<string,SccmApplication> GetApplications()
+        public Dictionary<string,SccmApplication> GetAllApplications()
         {
             Dictionary<string,SccmApplication> applications = new Dictionary<string, SccmApplication>();
             try
@@ -146,14 +146,7 @@ namespace viewmodel
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
                     {
-                        SccmApplication app = new SccmApplication();
-                        app.CIID = resource["CI_ID"].IntegerValue.ToString();
-                        app.Name = resource["LocalizedDisplayName"].StringValue;
-                        app.IsDeployed = resource["IsDeployed"].BooleanValue;
-                        app.IsEnabled = resource["IsEnabled"].BooleanValue;
-                        app.IsSuperseded = resource["IsSuperseded"].BooleanValue;
-                        app.IsSuperseding = resource["IsSuperseding"].BooleanValue;
-                        app.IsLatest = resource["IsLatest"].BooleanValue;
+                        SccmApplication app = new SccmApplication(resource);
                         applications.Add(app.CIID,app);
                     }
                 }
@@ -163,27 +156,69 @@ namespace viewmodel
             return applications;
         }
 
-        public List<string> GetApplicationIDsFromSearch(string search)
+        /// <summary>
+        /// Get a dictionary of SccmApplication objects based on a list of CI_IDs
+        /// </summary>
+        /// <param name="applicationids"></param>
+        /// <returns></returns>
+        public Dictionary<string, SccmApplication> GetApplicationDictionaryFromIDs(List<string> applicationids)
         {
-            List<string> appids = new List<string>();
+            Dictionary<string, SccmApplication> applications = new Dictionary<string, SccmApplication>();
+            string queryapplist = "";
+            int count = 0;
+
+            //build up the query
+            foreach (string appid in applicationids)
+            {
+                if (count == 0)
+                {
+                    queryapplist = "CI_ID='" + appid + "'";
+                    count++;
+                }
+                else { queryapplist = queryapplist + " OR CI_ID='" + appid + "'"; }
+            }
+
             try
             {
-                // This query selects all collections
-                string query = "select CI_ID,LocalizedDisplayName from SMS_Application WHERE LocalizedDisplayName LIKE '%" + search + "%' AND IsLatest='TRUE'";
-                
+                string query = "select * from SMS_Application WHERE IsLatest='TRUE' AND (" + queryapplist + ")";
+
                 // Run query
                 using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
                 {
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
                     {
-                        string ciid = resource["CI_ID"].IntegerValue.ToString();
-                        appids.Add(ciid);
+                        SccmApplication app = new SccmApplication(resource);
+                        applications.Add(app.CIID, app);
                     }
-                }             
+                }
+
             }
             catch { }
-            return appids;
+            return applications;
+        }
+
+        public List<SccmApplication> GetApplicationsListFromSearch(string search)
+        {
+            List<SccmApplication> applications = new List<SccmApplication>();
+            try
+            {
+                // This query selects all collections
+                string query = "select * from SMS_Application WHERE LocalizedDisplayName LIKE '%" + search + "%' AND IsLatest='TRUE'";
+
+                // Run query
+                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
+                {
+                    // Enumerate through the collection of objects returned by the query.
+                    foreach (IResultObject resource in results)
+                    {
+                        SccmApplication app = new SccmApplication(resource);
+                        applications.Add(app);
+                    }
+                }
+            }
+            catch { }
+            return applications;
         }
 
         public List<SccmApplicationRelationship> GetApplicationRelationships(string applicationciid)
@@ -216,6 +251,35 @@ namespace viewmodel
             return relationships;
         }
 
+        //public SccmApplication GetApplication(string ciid)
+        //{
+        //    try
+        //    {
+        //        // This query selects all collections
+        //        string query = "select * from SMS_Application WHERE IsLatest='TRUE' AND CI_ID='" + ciid + "'";
+
+        //        // Run query
+        //        using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
+        //        {
+        //            // Enumerate through the collection of objects returned by the query.
+        //            foreach (IResultObject resource in results)
+        //            {
+        //                SccmApplication app = new SccmApplication();
+        //                app.CIID = resource["CI_ID"].IntegerValue.ToString();
+        //                app.Name = resource["LocalizedDisplayName"].StringValue;
+        //                app.IsDeployed = resource["IsDeployed"].BooleanValue;
+        //                app.IsEnabled = resource["IsEnabled"].BooleanValue;
+        //                app.IsSuperseded = resource["IsSuperseded"].BooleanValue;
+        //                app.IsSuperseding = resource["IsSuperseding"].BooleanValue;
+        //                app.IsLatest = resource["IsLatest"].BooleanValue;
+        //                return app;
+        //            }
+        //        }
+
+        //    }
+        //    catch { }
+        //    return null;
+        //}
 
         public SccmDevice GetDevice(string devicename)
         {

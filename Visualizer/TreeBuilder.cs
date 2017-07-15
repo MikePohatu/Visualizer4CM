@@ -134,19 +134,37 @@ namespace Visualizer
             return graph;
         }
 
-        public static Graph BuildApplicationTree(SccmConnector connector, Dictionary<string,SccmApplication> applications, SccmApplication application)
+        public static Graph BuildApplicationTree(SccmConnector connector, SccmApplication application)
         {
             Graph graph = new Graph();
 
             //build the graph
             graph.AddNode(new ApplicationNode(application.CIID, application));
-            BuildApplicationMeshLinks(connector, graph, applications, application);
+            BuildApplicationMeshLinks(connector, graph, application);
             return graph;
         }
 
-        private static void BuildApplicationMeshLinks(SccmConnector connector, Graph graph, Dictionary<string,SccmApplication> applications, SccmApplication application)
+        private static void BuildApplicationMeshLinks(SccmConnector connector, Graph graph, SccmApplication application)
         {
+            
             List<SccmApplicationRelationship> relationships = connector.GetApplicationRelationships(application.CIID);
+            Dictionary<string, string> relatedapplicationids = new Dictionary<string, string>();
+
+            foreach (SccmApplicationRelationship relationship in relationships)
+            {
+                string outid;
+                if (relatedapplicationids.TryGetValue(relationship.FromApplicationCIID,out outid) == false)
+                {
+                    relatedapplicationids.Add(relationship.FromApplicationCIID,null);
+                }
+
+                if (relatedapplicationids.TryGetValue(relationship.ToApplicationCIID, out outid) == false)
+                {
+                    relatedapplicationids.Add(relationship.ToApplicationCIID, null);
+                }
+            }
+            
+            Dictionary<string, SccmApplication> applications = connector.GetApplicationDictionaryFromIDs(relatedapplicationids.Keys.ToList());
 
             foreach (SccmApplicationRelationship rel in relationships)
             {

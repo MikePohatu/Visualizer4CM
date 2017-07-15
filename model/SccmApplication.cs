@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.ConfigurationManagement.ManagementProvider;
 
 namespace viewmodel
 {
@@ -44,6 +45,18 @@ namespace viewmodel
         public bool IsSuperseded { get; set; }
         public bool IsSuperseding { get; set; }
         public bool IsLatest { get; set; }
+
+        public SccmApplication() { }
+        public SccmApplication(IResultObject resource)
+        {
+            this.CIID = resource["CI_ID"].IntegerValue.ToString();
+            this.Name = resource["LocalizedDisplayName"].StringValue;
+            this.IsDeployed = resource["IsDeployed"].BooleanValue;
+            this.IsEnabled = resource["IsEnabled"].BooleanValue;
+            this.IsSuperseded = resource["IsSuperseded"].BooleanValue;
+            this.IsSuperseding = resource["IsSuperseding"].BooleanValue;
+            this.IsLatest = resource["IsLatest"].BooleanValue;
+        }
 
         public new string ToString()
         {
