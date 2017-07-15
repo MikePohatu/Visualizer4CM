@@ -141,6 +141,12 @@ namespace Visualizer.Panes
 
         }
 
+        protected void UpdateProgressMessage(string newmessage)
+        {
+            this.NotificationText = newmessage;
+            this._progresscount = 0;
+        }
+
         //protected void OnAbortButtonClick(object sender, RoutedEventArgs e)
         //{
         //    this._pane.gviewer.AbortAsyncLayout();
