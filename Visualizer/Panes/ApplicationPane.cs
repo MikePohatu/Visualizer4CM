@@ -105,14 +105,19 @@ namespace Visualizer.Panes
             this.ControlsEnabled = false;
             this._processing = true;
             //List<string> appids = this._connector.GetApplicationIDsFromSearch(this._searchtext?.Trim());
-            Task.Run(() => this.NotifyProgress("Querying server"));
-            if (this._queryisrun == false) { await Task.Run(() => this.QueryApplications()); }
-
-            this.UpdateProgressMessage("Processing results");
-            List<string> results = this._connector.GetApplicationIDsFromSearch(this._searchtext);
-            List<SccmApplication> applicationresults = new List<SccmApplication>();
-
+            
+            if (this._queryisrun == false)
+            {
+                Task.Run(() => this.NotifyProgress("Getting full applications list"));
+                await Task.Run(() => this.QueryApplications());
+            }
+   
+            this.UpdateProgressMessage("Searching");
+            List<string> results = null;
+            await Task.Run(() => results = this._connector.GetApplicationIDsFromSearch(this._searchtext));
+            
             this.UpdateProgressMessage("Updating results");
+            List<SccmApplication> applicationresults = new List<SccmApplication>();
             foreach (string result in results)
             {
                 SccmApplication outapp;

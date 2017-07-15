@@ -36,7 +36,7 @@
             <!-- Tree build area-->
             <StackPanel Orientation="Vertical">
                 <Label Content="Search" Width="Auto" Style="{StaticResource BaseLabelStyle}"/>
-                <TextBox x:Name="searchtb" Width="120" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource BaseControlStyle}"/>
+                <TextBox x:Name="searchtb" Width="Auto" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource BaseControlStyle}"/>
                 <Button x:Name="searchbtn" Width="50" Content="Search" HorizontalAlignment="Right" Style="{StaticResource BaseControlStyle}"/>
                 <ListBox x:Name="searchresultslb" Height="130" ScrollViewer.CanContentScroll="True" 
                          ItemsSource="{Binding SearchResults}" SelectedItem="{Binding SelectedResult, Mode=TwoWay}"

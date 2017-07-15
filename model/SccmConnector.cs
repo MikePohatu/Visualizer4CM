@@ -194,7 +194,7 @@ namespace viewmodel
             {
                 // This query selects all relationships of the specified app ID
                 string query = "select * from SMS_AppDependenceRelation WHERE FromApplicationCIID='" + applicationciid + "'"
-                    + " OR ToApplicationCIID='" + "'";
+                    + " OR ToApplicationCIID='" + applicationciid + "'";
 
                 // Run query
                 using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
