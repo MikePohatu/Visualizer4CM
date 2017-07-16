@@ -174,6 +174,25 @@ namespace viewmodel
             }
         }
 
+        public bool TryConnect(SccmConnector connector, string password)
+        {
+            bool connected = false;
+
+            if (this.PassThrough == true) { connected = connector.Connect(this.Server); }
+            else { connected = connector.Connect(this.Username, password, this.Domain, this.Server); }
+
+            if (connected == false)
+            {
+                this.NotifyMessage = this.DeniedMessage;
+            }
+            else
+            {
+                this.NotifyMessage = null;
+            }
+
+            return connected;
+        }
+
         private void SetDefaults()
         {
             this.Server = (string)Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\ConfigMgr10\AdminUI\MRU\1", "ServerName", null);

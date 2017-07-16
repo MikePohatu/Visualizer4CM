@@ -36,14 +36,15 @@ namespace Visualizer
                 if (col.IsHighlighted == true) {
                     this.Attr.LineWidth = _highlightedlinewidth;
                     this.Attr.Color = Color.Green;
-                    this.ChangeInEdges(Color.Green, _highlightedlinewidth);
+                    //this.ChangeOutEdges(Color.Green, _highlightedlinewidth);
                 }
                 else {
                     this.Attr.LineWidth = 1;
                     this.Attr.Color = Color.Black;
-                    this.ChangeInEdges(Color.Black,1);
+                    //this.ChangeOutEdges(Color.Black,1);
                 }
             }
+
             if (e.PropertyName.Equals("IsMemberPresent"))
             {
                 SccmCollection col = (SccmCollection)sender;
@@ -60,9 +61,9 @@ namespace Visualizer
             }
         }
 
-        private void ChangeInEdges(Color newcolor, int newthickness)
+        private void ChangeOutEdges(Color newcolor, int newthickness)
         {
-            foreach (Edge edge in this.InEdges)
+            foreach (Edge edge in this.OutEdges)
             {
                 edge.Attr.Color = newcolor;
                 edge.Attr.Weight = newthickness;

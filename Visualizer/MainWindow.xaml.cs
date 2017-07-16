@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Msagl.Drawing;
-using System;
+using System.Windows.Input;
 using viewmodel;
 using Visualizer.Panes;
 using Visualizer.Auth;
@@ -43,14 +43,25 @@ namespace Visualizer
             };
 
             loginwindow.okbtn.Click += (sender, e) => {
-                if (this.TryConnect(this._connector, loginviewmodel, loginwindow) == true)
-                { this.Startup(loginwindow, loginviewmodel); }
+                if (loginviewmodel.TryConnect(this._connector, loginwindow.pwdbx.Password) == true) { this.Startup(loginwindow, loginviewmodel); }
             };
 
-            //loginwindow.pwdbx.Enter
+            loginwindow.pwdbx.KeyUp += (sender, e) => {
+                if (e.Key == Key.Enter)
+                { if (loginviewmodel.TryConnect(this._connector, loginwindow.pwdbx.Password) == true) { this.Startup(loginwindow, loginviewmodel); } }    
+            };
+
+            loginwindow.usertb.KeyUp += (sender, e) => {
+                if (e.Key == Key.Enter)
+                { if (loginviewmodel.TryConnect(this._connector, loginwindow.pwdbx.Password) == true) { this.Startup(loginwindow, loginviewmodel); } }
+            };
+
+            loginwindow.domaintb.KeyUp += (sender, e) => {
+                if (e.Key == Key.Enter)
+                { if (loginviewmodel.TryConnect(this._connector, loginwindow.pwdbx.Password) == true) { this.Startup(loginwindow, loginviewmodel); } }
+            };
 
             loginwindow.ShowDialog();
-            
         }
 
         private void Startup(LoginWindow loginwindow, LoginViewModel loginviewmodel)
@@ -80,28 +91,7 @@ namespace Visualizer
             maintabctrl.Items.Add(apptabitem);
         }
 
-        private bool TryConnect(SccmConnector connector, LoginViewModel loginviewmodel, LoginWindow loginwindow)
-        {
-            bool connected = false;
-
-            if (loginviewmodel.PassThrough == true) { connected = connector.Connect(loginviewmodel.Server); }
-            else { connected = connector.Connect(loginviewmodel.Username, loginwindow.pwdbx.Password, loginviewmodel.Domain, loginviewmodel.Server); }
-
-            ToolTip tt = (ToolTip)loginwindow.maingrid.ToolTip;
-
-            if (connected == false)
-            {
-                loginviewmodel.NotifyMessage = loginviewmodel.DeniedMessage;
-                tt.IsOpen = true;
-            }
-            else
-            {
-                loginviewmodel.NotifyMessage = null;
-                tt.IsOpen = false;
-            }
-
-            return connected;
-        }
+        
 
         private void HighlightCollectionMembers(Graph[] graphs, List<string> collectionids)
         {

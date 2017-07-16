@@ -16,49 +16,99 @@
             </Style>
             <Style x:Key="BaseControlStyle" TargetType="{x:Type Control}">
                 <Setter Property="Control.Padding" Value="2"/>
-                <Setter Property="Control.Margin" Value="5"/>
+                <Setter Property="Control.Margin" Value="2"/>
                 <Setter Property="Control.IsEnabled" Value="{Binding ControlsEnabled}"/>
+                <Setter Property="Control.Height" Value="20"/>
+            </Style>
+            <Style x:Key="BaseListBoxStyle" TargetType="{x:Type Control}">
+                <Setter Property="Control.Padding" Value="2"/>
+                <Setter Property="Control.Margin" Value="2"/>
+                <Setter Property="Control.IsEnabled" Value="{Binding ControlsEnabled}"/>
+            </Style>
+            <Style x:Key="TextBoxStyle" TargetType="{x:Type Control}">
+                <Setter Property="Control.Padding" Value="2"/>
+                <Setter Property="Control.Margin" Value="2"/>
+                <Setter Property="Control.IsEnabled" Value="{Binding ControlsEnabled}"/>
+                <Setter Property="Control.Height" Value="20"/>
+            </Style>
+            <Style x:Key="ButtonStyle" TargetType="{x:Type Button}">
+                <Setter Property="Button.Padding" Value="1"/>
+                <Setter Property="Button.Margin" Value="2"/>
+                <Setter Property="Button.IsEnabled" Value="{Binding ControlsEnabled}"/>
+                <Setter Property="Button.Width" Value="50"/>
+                <Setter Property="Button.Height" Value="20"/>
+                <Setter Property="Button.VerticalContentAlignment" Value="Center"/>
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
+    
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="33"/>
-        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
 
-        <WindowsFormsHost x:Name="gviewerhost" Grid.Row="0" Margin="0,0,0,0">
-            <gv:GViewer x:Name="gviewer"></gv:GViewer>
-        </WindowsFormsHost>
+        <Grid Grid.Column="0">
+            <Grid Grid.Row="1" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition MinHeight="130" Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
-        <Grid Grid.Row="1" >
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="430"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
+                <!-- Tree build area-->
+                <StackPanel Grid.Row="0" Orientation="Vertical" VerticalAlignment="Top">
+                    <Label Content="Collection:" Width="Auto" Style="{StaticResource BaseLabelStyle}"/>
+                    <TextBox x:Name="buildtb" HorizontalAlignment="Stretch" Text="{Binding CollectionText, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxStyle}"/>
+                    
+                    <!--<Button x:Name="abortbtn" Width="50" Content="Abort"  Style="{StaticResource BaseControlStyle}" Margin="3"/>-->
+                </StackPanel>
 
-            <!-- Tree build area-->
-            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Bottom">
-                <Label Content="Collection:" Width="Auto" Style="{StaticResource BaseLabelStyle}"/>
-                <TextBox x:Name="buildtb" Width="120" Text="{Binding CollectionText, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource BaseControlStyle}"/>
-                <Label Content="Mode:" Width="Auto" Style="{StaticResource BaseLabelStyle}"/>
-                <ComboBox x:Name="modecombo" Width="80" HorizontalContentAlignment="Left" Padding="5,2,2,2" Style="{StaticResource BaseControlStyle}">
-                    <ComboBoxItem>Limiting</ComboBoxItem>
-                    <ComboBoxItem IsSelected="True">Mesh</ComboBoxItem>
-                    <ComboBoxItem>Context</ComboBoxItem>
-                </ComboBox>
-                <Button x:Name="buildbtn" Width="50" Content="Build"  Style="{StaticResource BaseControlStyle}" Margin="3"/>
-                <!--<Button x:Name="abortbtn" Width="50" Content="Abort"  Style="{StaticResource BaseControlStyle}" Margin="3"/>-->
-            </StackPanel>
+                <ListBox Grid.Row="1" x:Name="searchresultslb" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ScrollViewer.CanContentScroll="True" 
+                         ItemsSource="{Binding SearchResults}" SelectedItem="{Binding SelectedResult, Mode=TwoWay}"
+                        SelectedValuePath="CIID" DisplayMemberPath="Name"
+                         Style="{StaticResource BaseListBoxStyle}" />
+                
+                <!-- Device search area-->
 
-            <!-- Device search area-->
-            <StackPanel Grid.Column="1" Orientation="Horizontal" Height="Auto" VerticalAlignment="Bottom" HorizontalAlignment="Stretch">
-                <Rectangle VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,25,0" Height="22" Width="1" Fill="DarkGray"/>
-                <Label Content="{Binding FindLabelText}" Width="Auto" Style="{StaticResource BaseLabelStyle}"/>
-                <TextBox x:Name="searchtb" Width="120" Text="{Binding ResourceText, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource BaseControlStyle}"/>
-                <Button x:Name="searchbtn" Width="50" Content="Find"  Style="{StaticResource BaseControlStyle}"/>
-                <Label x:Name="notifylbl" Content="{Binding NotificationText}"  Style="{StaticResource BaseLabelStyle}" Foreground="Blue"/>
-            </StackPanel>
+                <Grid Grid.Row="2" Margin="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                
+                    <Label Grid.Column="0" Grid.Row="0" Content="Mode:" Width="Auto" Style="{StaticResource BaseLabelStyle}"/>
+                    <ComboBox Grid.Column="1" Grid.Row="0" x:Name="modecombo" Width="85" HorizontalAlignment="Right" HorizontalContentAlignment="Left" Padding="5,2,2,2" Style="{StaticResource BaseControlStyle}">
+                        <ComboBoxItem>Limiting</ComboBoxItem>
+                        <ComboBoxItem IsSelected="True">Mesh</ComboBoxItem>
+                        <ComboBoxItem>Context</ComboBoxItem>
+                    </ComboBox>
+                    <Button Grid.Column="2" Grid.Row="0" x:Name="buildbtn" Content="Build" Style="{StaticResource ButtonStyle}" />
+
+                    <Label Grid.Column="0" Grid.Row="1" Content="{Binding FindLabelText}" Width="Auto" Style="{StaticResource BaseLabelStyle}"/>
+                    <TextBox Grid.Column="1" Grid.Row="1" x:Name="searchtb" MinWidth="85" HorizontalAlignment="Stretch" Text="{Binding ResourceText, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxStyle}"/>
+                    <Button Grid.Column="2" Grid.Row="1" x:Name="searchbtn" Content="Find"  Style="{StaticResource ButtonStyle}"/>
+                    <Label Grid.ColumnSpan="3" Grid.Row="2" x:Name="notifylbl" Content="{Binding NotificationText}"  Style="{StaticResource BaseLabelStyle}" 
+                           Foreground="Blue" FontSize="8"/>
+                </Grid>
+            </Grid>
         </Grid>
-    </Grid>
+        <GridSplitter VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                  Grid.Column="1" ResizeBehavior="PreviousAndNext"
+                  Width="3"/>
+
+            <!-- Display column -->
+            <Grid Grid.Column="2" Background="LightGray">
+                <WindowsFormsHost x:Name="gviewerhost" Grid.Row="0" Margin="0,0,0,0">
+                    <gv:GViewer x:Name="gviewer"></gv:GViewer>
+                </WindowsFormsHost>
+            </Grid>
+        </Grid>
 </UserControl>

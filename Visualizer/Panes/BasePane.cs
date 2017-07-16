@@ -80,6 +80,7 @@ namespace Visualizer.Panes
         public BasePane(SccmConnector connector)
         {
             this._connector = connector;
+            this.NotificationText = string.Empty;
         }
 
         protected void OnTextBoxFocused(object sender, RoutedEventArgs e)
@@ -113,7 +114,7 @@ namespace Visualizer.Panes
                 }
                 Thread.Sleep(500);
             }
-            this.NotificationText = null;
+            this.NotificationText = string.Empty;
         }
 
         protected abstract void BuildGraph();

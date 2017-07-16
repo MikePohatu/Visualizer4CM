@@ -56,6 +56,7 @@ namespace Visualizer.Panes
                     if (mode == "Context")
                     {
                         if (this._filteredview == true) { graph = TreeBuilder.BuildCollectionTreeAllCollections(this._library); }
+                        else { graph = this._graph; }
                         this._filteredview = false;
                         this._highlightedcollections = col.HighlightCollectionPathList();
                     }
@@ -74,10 +75,7 @@ namespace Visualizer.Panes
             }
             else
             {
-                if (this._filteredview == true)
-                {
-                    this._filteredview = false;
-                }
+                this._filteredview = false;
                 graph = TreeBuilder.BuildCollectionTreeAllCollections(this._library);
             }
             return graph;
