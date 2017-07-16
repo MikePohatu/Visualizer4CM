@@ -45,7 +45,24 @@ namespace Visualizer
                 }
             }
 
-            if (e.PropertyName.Equals("IsMemberPresent"))
+            else if (e.PropertyName.Equals("IsLimitingCollection"))
+            {
+                SccmCollection col = (SccmCollection)sender;
+                if (col.IsLimitingCollection == true)
+                {
+                    this.Attr.LineWidth = _highlightedlinewidth;
+                    this.Attr.Color = Color.Blue;
+                    //this.ChangeOutEdges(Color.Green, _highlightedlinewidth);
+                }
+                else
+                {
+                    this.Attr.LineWidth = 1;
+                    this.Attr.Color = Color.Black;
+                    //this.ChangeOutEdges(Color.Black,1);
+                }
+            }
+
+            else if (e.PropertyName.Equals("IsMemberPresent"))
             {
                 SccmCollection col = (SccmCollection)sender;
                 if (col.IsMemberPresent == true)

@@ -53,6 +53,17 @@ namespace viewmodel
             }
         }
 
+        private bool _islimitingcollection;
+        public bool IsLimitingCollection
+        {
+            get { return this._islimitingcollection; }
+            set
+            {
+                this._islimitingcollection = value;
+                this.OnPropertyChanged(this, "IsLimitingCollection");
+            }
+        }
+
         private bool _ismemberpresent;
         public bool IsMemberPresent
         {
@@ -104,7 +115,25 @@ namespace viewmodel
 
             if (this.LimitingCollection != null)
             {
-                highlightedcols = this.LimitingCollection.HighlightCollectionPathList();
+                highlightedcols = this.LimitingCollection.HighlightLimitingCollectionPathList();
+                highlightedcols.Add(this);
+            }
+            else
+            {
+                highlightedcols = new List<SccmCollection>();
+                highlightedcols.Add(this);
+            }
+            return highlightedcols;
+        }
+
+        public List<SccmCollection> HighlightLimitingCollectionPathList()
+        {
+            this.IsLimitingCollection = true;
+            List<SccmCollection> highlightedcols;
+
+            if (this.LimitingCollection != null)
+            {
+                highlightedcols = this.LimitingCollection.HighlightLimitingCollectionPathList();
                 highlightedcols.Add(this);
             }
             else
