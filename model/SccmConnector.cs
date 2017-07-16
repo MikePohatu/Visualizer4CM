@@ -273,7 +273,7 @@ namespace viewmodel
         {
             try
             {
-                string query = "select * from SMS_FullCollectionMembership WHERE Name='" +  name + "'";
+                string query = "select * from SMS_FullCollectionMembership WHERE Name LIKE '" +  name + "'";
                 SccmDevice cmresource = new SccmDevice();
                 int count = 0;
                 // Run query
@@ -302,7 +302,7 @@ namespace viewmodel
         {
             try
             {
-                string query = "select * from SMS_FullCollectionMembership WHERE SMSID='" + name.Replace(@"\",@"\\") + "'";
+                string query = "select * from SMS_FullCollectionMembership WHERE SMSID LIKE '" + name.Replace(@"\",@"\\") + "'";
                 SccmUser cmresource = new SccmUser();
                 int count = 0;
                 // Run query
