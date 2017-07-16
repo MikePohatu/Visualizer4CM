@@ -32,17 +32,6 @@ namespace Visualizer.Panes
             }
         }
 
-        protected string _collectiontext;
-        public string CollectionText
-        {
-            get { return this._collectiontext; }
-            set
-            {
-                this._collectiontext = value.ToUpper();
-                this.OnPropertyChanged(this, "CollectionText");
-            }
-        }
-
         protected string _header;
         public string Header
         {
@@ -65,6 +54,17 @@ namespace Visualizer.Panes
             }
         }
 
+        protected string _findtext;
+        public string FindText
+        {
+            get { return this._findtext; }
+            set
+            {
+                this._findtext = value;
+                this.OnPropertyChanged(this, "FindText");
+            }
+        }
+
         protected bool _controlsenabled = true;
         public bool ControlsEnabled
         {
@@ -73,6 +73,17 @@ namespace Visualizer.Panes
             {
                 this._controlsenabled = value;
                 this.OnPropertyChanged(this, "ControlsEnabled");
+            }
+        }
+
+        protected string _searchtext;
+        public string SearchText
+        {
+            get { return this._searchtext; }
+            set
+            {
+                this._searchtext = value;
+                this.OnPropertyChanged(this, "SearchText");
             }
         }
 

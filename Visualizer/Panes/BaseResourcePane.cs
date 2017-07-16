@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Msagl.Drawing;
 using viewmodel;
 using System.Threading;
-
+using Microsoft.ConfigurationManagement.ManagementProvider;
 
 namespace Visualizer.Panes
 {
@@ -21,14 +21,27 @@ namespace Visualizer.Panes
         protected ResourceTabControl _pane;
         public ResourceTabControl Pane { get { return this._pane; } }
 
-        protected string _resourcetext;
-        public string ResourceText
+        protected CollectionType CollectionsType { get; set; }
+
+        protected List<SccmCollection> _searchresults;
+        public List<SccmCollection> SearchResults
         {
-            get { return this._resourcetext; }
+            get { return this._searchresults; }
             set
             {
-                this._resourcetext = value;
-                this.OnPropertyChanged(this, "ResourceText");
+                this._searchresults = value;
+                this.OnPropertyChanged(this, "SearchResults");
+            }
+        }
+
+        protected SccmCollection _selectedresult;
+        public SccmCollection SelectedResult
+        {
+            get { return this._selectedresult; }
+            set
+            {
+                this._selectedresult = value;
+                this.OnPropertyChanged(this, "SelectedResult");
             }
         }
 
@@ -37,20 +50,21 @@ namespace Visualizer.Panes
             this._pane = new ResourceTabControl();
             MsaglHelpers.ConfigureCollectionsGViewer(this._pane.gviewer);
             this._pane.DataContext = this;
-            this._pane.buildtb.KeyUp += this.OnBuildKeyUp;
             this._pane.buildbtn.Click += this.OnBuildButtonPressed;
             this._pane.gviewer.AsyncLayoutProgress += this.OnProgressUpdate;
             //this._pane.abortbtn.Click += OnAbortButtonClick;
-            this._pane.searchbtn.Click += this.OnFindButtonPressed;
-            this._pane.searchtb.KeyUp += this.OnFindKeyUp;
+            this._pane.findbtn.Click += this.OnFindButtonPressed;
+            this._pane.findresourcetb.KeyUp += this.OnFindKeyUp;
+            this._pane.searchbtn.Click += this.OnSearchButtonPressed;
+            this._pane.searchtb.KeyUp += this.OnSearchKeyUp;
         }
 
-        public Graph FindCollectionID(string collectionid, string mode)
+        public Graph BuildGraphTree(string rootcollectionid, string mode)
         {
             Graph graph = null;
-            if (string.IsNullOrWhiteSpace(collectionid) == false)
+            if (string.IsNullOrWhiteSpace(rootcollectionid) == false)
             {
-                SccmCollection col = this._library.GetCollection(collectionid);
+                SccmCollection col = this._library.GetCollection(rootcollectionid);
                 if (col != null)
                 {
                     if (mode == "Context")
@@ -63,12 +77,12 @@ namespace Visualizer.Panes
                     else if (mode == "Mesh")
                     {
                         this._filteredview = true;
-                        graph = TreeBuilder.BuildCollectionTreeMeshMode(this._connector, this._library, collectionid);
+                        graph = TreeBuilder.BuildCollectionTreeMeshMode(this._connector, this._library, rootcollectionid);
                     }
                     else if (mode == "Limiting")
                     {
                         this._filteredview = true;
-                        graph = TreeBuilder.BuildCollectionTreeLimitingMode(this._library, collectionid);
+                        graph = TreeBuilder.BuildCollectionTreeLimitingMode(this._library, rootcollectionid);
                     }
                     col.IsHighlighted = true;
                 }
@@ -98,10 +112,22 @@ namespace Visualizer.Panes
             this.ClearHighlightedCollections();
             string mode = this._pane.modecombo.Text;
             Task.Run(() => this.NotifyProgress("Building"));
-            await Task.Run(() => this._graph = this.FindCollectionID(this._collectiontext, mode));
+
+            string collectionid = this._selectedresult?.ID;
+
+            await Task.Run(() => this._graph = this.BuildGraphTree(collectionid, mode));
             await Task.Run(() => this.UpdatePaneToTabControl());
             this._processing = false;
             this.ControlsEnabled = true;
+        }
+
+        protected void OnSearchButtonPressed(object sender, RoutedEventArgs e) { this.UpdateSearchResults(); }
+        protected void OnSearchKeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                this.UpdateSearchResults();
+            }
         }
 
         protected void OnFindButtonPressed(object sender, RoutedEventArgs e) { this.Find(); }
@@ -122,6 +148,19 @@ namespace Visualizer.Panes
         protected void Redraw()
         {
             this._pane.gviewer.Invalidate();
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Await.Warning", "CS4014:Await.Warning")]
+        private async void UpdateSearchResults()
+        {
+            this.ControlsEnabled = false;
+            this._processing = true;
+
+            Task.Run(() => this.NotifyProgress("Searching"));
+            await Task.Run(() => this.SearchResults = this._connector.GetCollectionsFromSearch(this._searchtext,this.CollectionsType));
+
+            this._processing = false;
+            this.ControlsEnabled = true;
         }
     }
 }

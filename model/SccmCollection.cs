@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.ConfigurationManagement.ManagementProvider;
 
 namespace viewmodel
 {
@@ -6,6 +7,7 @@ namespace viewmodel
     {
         public string LimitingCollectionID { get; set; }
         public SccmCollection LimitingCollection { get; set; }
+        public CollectionType Type { get; set; }
 
         private string _comment;
         public string Comment
@@ -80,7 +82,19 @@ namespace viewmodel
             this._name = name;
             this._id = id;
             this.LimitingCollectionID = limitingcollectionid;
-            this.IsHighlighted = false;       
+            this.IsHighlighted = false;
+        }
+
+        public SccmCollection(IResultObject resource)
+        {
+            this.ID = resource["CollectionID"].StringValue;
+            this.Name = resource["Name"].StringValue;
+            this.LimitingCollectionID = resource["LimitToCollectionID"].StringValue;
+            this.Comment = resource["Comment"].StringValue;
+            this.IncludeExcludeCollectionCount = resource["IncludeExcludeCollectionsCount"].IntegerValue;
+            int typeint = resource["CollectionType"].IntegerValue;
+            this.Type = (CollectionType)typeint;
+            
         }
 
         public List<SccmCollection> HighlightCollectionPathList()

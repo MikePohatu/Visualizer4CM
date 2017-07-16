@@ -13,16 +13,6 @@ namespace Visualizer.Panes
         protected ApplicationTabControl _pane;
         public ApplicationTabControl Pane { get { return this._pane; } }
 
-        protected string _searchtext;
-        public string SearchText
-        {
-            get { return this._searchtext; }
-            set
-            {
-                this._searchtext = value;
-                this.OnPropertyChanged(this, "SearchText");
-            }
-        }
         protected List<SccmApplication> _searchresults;
         public List<SccmApplication> SearchResults
         {
@@ -33,6 +23,7 @@ namespace Visualizer.Panes
                 this.OnPropertyChanged(this, "SearchResults");
             }
         }
+
         protected SccmApplication _selectedresult;
         public SccmApplication SelectedResult
         {

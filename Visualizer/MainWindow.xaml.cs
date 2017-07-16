@@ -69,7 +69,6 @@ namespace Visualizer
             loginwindow.Close();
             this._site = loginviewmodel.Site;
             this._connector.QueryAll(this._site);
-            this._userpane = new UserPane(this._connector);
 
             this._devicepane = new DevicePane(this._connector);
             TabItem devtabitem = new TabItem();

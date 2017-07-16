@@ -13,24 +13,25 @@ namespace VisualizerTests
     [TestFixture]
     public class SccmConnectorTests
     {
+        
         [Test]
-        [TestCase("Notepad++-copy", ExpectedResult = 16797702)]
-        [TestCase("Notepad+", ExpectedResult = 16797698)]
-        public int GetApplicationID(string appname)
+        [TestCase("Notepad++-copy", ExpectedResult = "16797710")]
+        [TestCase("Notepad+", ExpectedResult = "16797698")]
+        public string GetApplicationID(string appname)
         {
             SccmConnector connector = this.CreateAndConnectConnector();
-            List<int> appids = connector.GetApplicationsListFromSearch(appname);
-            foreach (int id in appids) { return id; }
-            return -1;
+            List<SccmApplication> apps = connector.GetApplicationsListFromSearch(appname);
+            foreach (SccmApplication app in apps) { return app.CIID; }
+            return null;
         }
 
         [Test]
         [TestCase("SMS00001", ExpectedResult = null)]
         [TestCase("00100014", ExpectedResult = "SMS00001")]
-        public string GetCollectionLimitingIDTest(string collectionid)
+        public string GetCollectionLibraryLimitingIDTest(string collectionid)
         {
             SccmConnector connector = this.CreateAndConnectConnector();
-            CollectionLibrary library = connector.GetDeviceCollectionLibrary();
+            CollectionLibrary library = connector.GetCollectionLibrary(CollectionType.Device);
             return library?.GetCollection(collectionid)?.LimitingCollectionID;
         }
 
@@ -42,6 +43,16 @@ namespace VisualizerTests
             SccmDevice device = connector.GetDevice(devicename);
             return device?.ID;
 
+        }
+
+        [Test]
+        [TestCase("All Systems", CollectionType.Device, ExpectedResult = "SMS00001")]
+        public string GetCollectionsFromSearchTest(string search, CollectionType type)
+        {
+            SccmConnector connector = this.CreateAndConnectConnector();
+            List<SccmCollection> collections = connector.GetCollectionsFromSearch(search,type);
+            foreach (SccmCollection col in collections) { return col.ID; }
+            return null;
         }
 
         private SccmConnector CreateAndConnectConnector()

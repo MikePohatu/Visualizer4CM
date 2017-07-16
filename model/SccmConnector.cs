@@ -36,35 +36,27 @@ namespace viewmodel
         {
             try
             {
-                this._devlibrary = this.GetDeviceCollectionLibrary();
-                this._userlibrary = this.GetUserCollectionLibrary();
+                this._devlibrary = this.GetCollectionLibrary(CollectionType.Device);
+                this._userlibrary = this.GetCollectionLibrary(CollectionType.User);
             }
             catch { return; }
         }
 
-
-        public CollectionLibrary GetDeviceCollectionLibrary()
+        public CollectionLibrary GetCollectionLibrary(CollectionType type)
         {
             try
             {
                 // This query selects all collections
-                string query = "select * from SMS_Collection WHERE CollectionType='2'";
+                string query = "select * from SMS_Collection WHERE CollectionType='" + (int)type + "'";
                 CollectionLibrary library = new CollectionLibrary();
 
                 // Run query
                 using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
-                { 
+                {
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
                     {
-                        SccmCollection collection = new SccmCollection();
-                        collection.ID = resource["CollectionID"].StringValue;
-                        collection.Name = resource["Name"].StringValue;
-                        collection.LimitingCollectionID = resource["LimitToCollectionID"].StringValue;
-                        collection.Comment = resource["Comment"].StringValue;
-                        collection.IncludeExcludeCollectionCount = resource["IncludeExcludeCollectionsCount"].IntegerValue;
-
-                        library.AddCollection(collection);
+                        library.AddCollection(new SccmCollection(resource));
                     }
                 }
                 return library;
@@ -74,14 +66,13 @@ namespace viewmodel
                 return null;
             }
         }
-
-        public CollectionLibrary GetUserCollectionLibrary()
+        public List<SccmCollection> GetCollectionsFromSearch(string search, CollectionType type)
         {
             try
             {
                 // This query selects all collections
-                string query = "select * from SMS_Collection WHERE CollectionType='1'";
-                CollectionLibrary library = new CollectionLibrary();
+                string query = "select * from SMS_Collection WHERE CollectionType='" + (int)type + "' AND Name LIKE '%" + search + "%'";
+                List<SccmCollection> newlist = new List<SccmCollection>();
 
                 // Run query
                 using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
@@ -89,16 +80,10 @@ namespace viewmodel
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
                     {
-                        SccmCollection collection = new SccmCollection();
-                        collection.ID = resource["CollectionID"].StringValue;
-                        collection.Name = resource["Name"].StringValue;
-                        collection.LimitingCollectionID = resource["LimitToCollectionID"].StringValue;
-                        collection.Comment = resource["Comment"].StringValue;
-
-                        library.AddCollection(collection);
+                        newlist.Add(new SccmCollection(resource));
                     }
                 }
-                return library;
+                return newlist;
             }
             catch
             {
