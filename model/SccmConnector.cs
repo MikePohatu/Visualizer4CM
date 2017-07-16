@@ -47,7 +47,7 @@ namespace viewmodel
             try
             {
                 // This query selects all collections
-                string query = "select * from SMS_Collection WHERE CollectionType='" + (int)type + "'";
+                string query = "select * from SMS_Collection WHERE CollectionType='" + (int)type + "' ORDER BY Name";
                 CollectionLibrary library = new CollectionLibrary();
 
                 // Run query
@@ -71,7 +71,7 @@ namespace viewmodel
             try
             {
                 // This query selects all collections
-                string query = "select * from SMS_Collection WHERE CollectionType='" + (int)type + "' AND Name LIKE '%" + search + "%'";
+                string query = "select * from SMS_Collection WHERE CollectionType='" + (int)type + "' AND Name LIKE '%" + search + "%' ORDER BY Name";
                 List<SccmCollection> newlist = new List<SccmCollection>();
 
                 // Run query
@@ -165,7 +165,7 @@ namespace viewmodel
 
             try
             {
-                string query = "select * from SMS_Application WHERE IsLatest='TRUE' AND (" + queryapplist + ")";
+                string query = "select * from SMS_Application WHERE IsLatest='TRUE' AND (" + queryapplist + ") ORDER BY LocalizedDisplayName";
 
                 // Run query
                 using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
@@ -191,8 +191,8 @@ namespace viewmodel
                 // This query selects all collections
 
                 string query;
-                if (string.IsNullOrWhiteSpace(search)) { query = "select * from SMS_Application WHERE IsLatest='TRUE'"; }
-                else { query = "select * from SMS_Application WHERE LocalizedDisplayName LIKE '%" + search + "%' AND IsLatest='TRUE'"; }
+                if (string.IsNullOrWhiteSpace(search)) { query = "select * from SMS_Application WHERE IsLatest='TRUE' ORDER BY LocalizedDisplayName"; }
+                else { query = "select * from SMS_Application WHERE LocalizedDisplayName LIKE '%" + search + "%' AND IsLatest='TRUE' ORDER BY LocalizedDisplayName"; }
 
                 // Run query
                 using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
