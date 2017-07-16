@@ -19,8 +19,6 @@ namespace Visualizer.Panes
         protected Graph _graph;
         public Graph Graph { get { return this._graph; } }
 
-        
-
         protected string _notificationtext;
         public string NotificationText
         {

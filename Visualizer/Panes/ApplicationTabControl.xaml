@@ -8,19 +8,7 @@
              mc:Ignorable="d" 
                   d:DesignHeight="300" d:DesignWidth="600"
       Height="Auto" Width="Auto">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <Style x:Key="BaseLabelStyle" TargetType="{x:Type Control}">
-                <Setter Property="Control.Padding" Value="2"/>
-                <Setter Property="Control.Margin" Value="5"/>
-            </Style>
-            <Style x:Key="BaseControlStyle" TargetType="{x:Type Control}">
-                <Setter Property="Control.Padding" Value="2"/>
-                <Setter Property="Control.Margin" Value="5"/>
-                <Setter Property="Control.IsEnabled" Value="{Binding ControlsEnabled}"/>
-            </Style>
-        </ResourceDictionary>
-    </UserControl.Resources>
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"/>
@@ -35,20 +23,32 @@
                 <RowDefinition Height="*"></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
             </Grid.RowDefinitions>
-            <StackPanel Orientation="Vertical" Grid.Row="0">
-                <Label Content="Search" Width="Auto" Style="{StaticResource BaseLabelStyle}"/>
-                <TextBox x:Name="searchtb" Width="Auto" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource BaseControlStyle}"/>
-                <Button x:Name="searchbtn" Width="50" Content="Search" HorizontalAlignment="Right" Style="{StaticResource BaseControlStyle}"/>
-            </StackPanel>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Label x:Name="searchlbl" Grid.Row="0" Content="Search" Width="Auto" Style="{DynamicResource LabelStyle}"/>
+                <TextBox x:Name="searchtb" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Width="Auto" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource BaseControlStyle}"/>
+                <Button x:Name="searchbtn" Grid.Row="2" Grid.Column="2" Width="50" Content="Search" HorizontalAlignment="Right" Style="{DynamicResource ButtonStyle}"/>
+                <Button x:Name="buildbtn" Grid.Row="2" Grid.Column="3" Width="50" Content="Build" HorizontalAlignment="Right" Style="{DynamicResource ButtonStyle}"/>
+            </Grid>
+
             <ListBox x:Name="searchresultslb" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Row="1" MinHeight="130" ScrollViewer.CanContentScroll="True" 
                          ItemsSource="{Binding SearchResults}" SelectedItem="{Binding SelectedResult, Mode=TwoWay}"
                         SelectedValuePath="CIID" DisplayMemberPath="Name"
-                         Style="{StaticResource BaseControlStyle}" />
+                         Style="{DynamicResource BaseControlStyle}" />
 
             <StackPanel Orientation="Vertical" Grid.Row="2">
-                <Button x:Name="buildbtn" Width="50" Content="Build" HorizontalAlignment="Right" Style="{StaticResource BaseControlStyle}"/>
+                
                 <!--<Button x:Name="abortbtn" Width="50" Content="Abort"  Style="{StaticResource BaseControlStyle}" Margin="3"/>-->
-                <Label x:Name="notifylbl" Height="25" Content="{Binding NotificationText}" Style="{StaticResource BaseLabelStyle}" Foreground="Blue"/>
+                <Label x:Name="notifylbl" Height="25" Content="{Binding NotificationText}" Style="{DynamicResource LabelStyle}" Foreground="Blue"/>
             </StackPanel>
         </Grid>
 

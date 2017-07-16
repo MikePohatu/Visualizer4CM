@@ -4,6 +4,44 @@
              xmlns:local="clr-namespace:Visualizer"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <Style x:Key="BaseControlStyle" TargetType="{x:Type Control}">
+                <Setter Property="IsEnabled" Value="{Binding ControlsEnabled}"/>
+                <Setter Property="Padding" Value="2"/>
+                <Setter Property="Margin" Value="2"/>
+            </Style>
+            
+            <Style x:Key="LabelStyle" TargetType="{x:Type Control}" BasedOn="{StaticResource BaseControlStyle}">
+                <Setter Property="Padding" Value="2"/>
+                <Setter Property="Margin" Value="2"/>
+            </Style>
+            
+            <Style x:Key="ListBoxStyle" TargetType="{x:Type ListBox}" BasedOn="{StaticResource BaseControlStyle}">
+                <Setter Property="IsEnabled" Value="{Binding ControlsEnabled}"/>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="VerticalAlignment" Value="Stretch"/>
+                <Setter Property="ScrollViewer.CanContentScroll" Value="True"/>
+            </Style>
+            
+            <Style x:Key="ComboBoxStyle" TargetType="{x:Type Control}" BasedOn="{StaticResource BaseControlStyle}">
+                <Setter Property="IsEnabled" Value="{Binding ControlsEnabled}"/>
+            </Style>
+
+            <Style x:Key="TextBoxStyle" TargetType="{x:Type Control}" BasedOn="{StaticResource BaseControlStyle}">
+                <Setter Property="Padding" Value="2"/>
+                <Setter Property="Margin" Value="2"/>
+                <Setter Property="IsEnabled" Value="{Binding ControlsEnabled}"/>
+                <Setter Property="Height" Value="25"/>
+            </Style>
+
+            <Style x:Key="ButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource BaseControlStyle}">
+                <Setter Property="Padding" Value="1"/>
+                <Setter Property="Margin" Value="2"/>
+                <Setter Property="IsEnabled" Value="{Binding ControlsEnabled}"/>
+                <Setter Property="Width" Value="60"/>
+                <Setter Property="Height" Value="25"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+            </Style>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

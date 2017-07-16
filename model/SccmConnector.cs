@@ -269,13 +269,12 @@ namespace viewmodel
         //    return null;
         //}
 
-        public SccmDevice GetDevice(string devicename)
+        public SccmDevice GetDevice(string name)
         {
             try
             {
-                // This query selects all collections
-                string query = "select * from SMS_FullCollectionMembership WHERE Name='" + devicename + "'";
-                SccmDevice device = new SccmDevice();
+                string query = "select * from SMS_FullCollectionMembership WHERE Name='" +  name + "'";
+                SccmDevice cmresource = new SccmDevice();
                 int count = 0;
                 // Run query
                 using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
@@ -285,19 +284,47 @@ namespace viewmodel
                     {
                         if (count == 0)
                         {
-                            device.ID = resource["ResourceID"].StringValue;
-                            device.Name = resource["Name"].StringValue;
+                            cmresource.ID = resource["ResourceID"].StringValue;
+                            cmresource.Name = resource["Name"].StringValue;
                             count++;
-                        }                   
-                        device.CollectionIDs.Add(resource["CollectionID"].StringValue);
+                        }
+                        cmresource.CollectionIDs.Add(resource["CollectionID"].StringValue);
                     }
                 }
-                return device;
+                if (count != 0) { return cmresource; }
             }
             catch
+            { }
+            return null;
+        }
+
+        public SccmUser GetUser(string name)
+        {
+            try
             {
-                return null;
+                string query = "select * from SMS_FullCollectionMembership WHERE SMSID='" + name.Replace(@"\",@"\\") + "'";
+                SccmUser cmresource = new SccmUser();
+                int count = 0;
+                // Run query
+                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
+                {
+                    // Enumerate through the collection of objects returned by the query.
+                    foreach (IResultObject resource in results)
+                    {
+                        if (count == 0)
+                        {
+                            cmresource.ID = resource["ResourceID"].StringValue;
+                            cmresource.Name = resource["Name"].StringValue;
+                            count++;
+                        }
+                        cmresource.CollectionIDs.Add(resource["CollectionID"].StringValue);
+                    }
+                }
+                if (count != 0) { return cmresource; }
             }
+            catch
+            { }
+            return null;
         }
     }
 }

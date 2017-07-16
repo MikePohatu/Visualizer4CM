@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace viewmodel
 {
-    public class SccmUser
+    public class SccmUser : SccmResource
     {
-        public string ID { get; set; }
-        public string Name { get; set; }
+
     }
 }

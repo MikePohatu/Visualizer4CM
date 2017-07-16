@@ -19,12 +19,12 @@ namespace Visualizer.Panes
             this.ClearHighlightedCollections();
             if (string.IsNullOrWhiteSpace(this._findtext) == false)
             {
-                SccmDevice dev = this._connector.GetDevice(this._findtext.Trim());
-                this._highlightedcollections = TreeBuilder.HighlightCollectionMembers(this._graph, dev.CollectionIDs);
+                SccmUser user = this._connector.GetUser(this._findtext.Trim());
+                if (user != null) { this._highlightedcollections = TreeBuilder.HighlightCollectionMembers(this._graph, user.CollectionIDs); }
             }
             else
             {
-                SccmCollection col = this._library.GetCollection(this._findtext);
+                SccmCollection col = this._library.GetCollection(this.@_findtext);
                 if (col != null) { col.IsHighlighted = true; }
             }
             this.Redraw();

@@ -55,6 +55,7 @@
     <Compile Include="SccmConnector.cs" />
     <Compile Include="SccmDevice.cs" />
     <Compile Include="SccmApplication.cs" />
+    <Compile Include="SccmResource.cs" />
     <Compile Include="SccmUser.cs" />
     <Compile Include="ViewModelBase.cs" />
     <Compile Include="XmlHandler.cs" />

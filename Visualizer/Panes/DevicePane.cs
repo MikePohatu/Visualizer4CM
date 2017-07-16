@@ -26,7 +26,7 @@ namespace Visualizer.Panes
             if (string.IsNullOrWhiteSpace(this._findtext) == false)
             {
                 SccmDevice dev = this._connector.GetDevice(this._findtext.Trim());
-                this._highlightedcollections = TreeBuilder.HighlightCollectionMembers(this._graph, dev.CollectionIDs);
+                if (dev != null) { this._highlightedcollections = TreeBuilder.HighlightCollectionMembers(this._graph, dev.CollectionIDs); }
             }
             else
             {
