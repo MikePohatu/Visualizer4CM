@@ -55,7 +55,7 @@
                     <!--<Button x:Name="abortbtn" Width="50" Content="Abort"  Style="{StaticResource BaseControlStyle}" Margin="3"/>-->
                 </StackPanel>
 
-                <ListBox Grid.Row="1" x:Name="searchresultslb"  
+                <ListBox Grid.Row="1" x:Name="searchresultslb" MinHeight="130"
                          ItemsSource="{Binding SearchResults}" SelectedItem="{Binding SelectedResult, Mode=TwoWay}"
                         SelectedValuePath="CIID" DisplayMemberPath="Name"
                          Style="{DynamicResource ListBoxStyle}" />

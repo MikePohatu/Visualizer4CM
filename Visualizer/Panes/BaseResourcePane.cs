@@ -16,7 +16,7 @@ namespace Visualizer.Panes
     {
         protected CollectionLibrary _library;
         protected List<SccmCollection> _highlightedcollections = new List<SccmCollection>();
-        protected bool _filteredview = false;
+        protected bool _filteredview = true;
 
         protected ResourceTabControl _pane;
         public ResourceTabControl Pane { get { return this._pane; } }

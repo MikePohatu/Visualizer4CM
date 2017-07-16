@@ -40,10 +40,10 @@
                 <Button x:Name="buildbtn" Grid.Row="2" Grid.Column="3" Width="50" Content="Build" HorizontalAlignment="Right" Style="{DynamicResource ButtonStyle}"/>
             </Grid>
 
-            <ListBox x:Name="searchresultslb" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Row="1" MinHeight="130" ScrollViewer.CanContentScroll="True" 
+            <ListBox x:Name="searchresultslb" Grid.Row="1" MinHeight="130"
                          ItemsSource="{Binding SearchResults}" SelectedItem="{Binding SelectedResult, Mode=TwoWay}"
                         SelectedValuePath="CIID" DisplayMemberPath="Name"
-                         Style="{DynamicResource BaseControlStyle}" />
+                         Style="{DynamicResource ListBoxStyle}" />
 
             <StackPanel Orientation="Vertical" Grid.Row="2">
                 
