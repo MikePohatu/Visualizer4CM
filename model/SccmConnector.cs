@@ -239,6 +239,37 @@ namespace viewmodel
             return relationships;
         }
 
+        public List<SccmDeployment> GetApplicationDeployments(string applicationciid)
+        {
+            List<SccmDeployment> deployments = new List<SccmDeployment>();
+
+            try
+            {
+                // This query selects all relationships of the specified app ID
+                string query = "select * from SMS_DeploymentInfo WHERE FromApplicationCIID='" + applicationciid + "'";
+
+                // Run query
+                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
+                {
+                    // Enumerate through the collection of objects returned by the query.
+                    foreach (IResultObject resource in results)
+                    {
+                        SccmDeployment dep = new SccmDeployment();
+                        dep.CollectionID = resource["CollectionID"].StringValue;
+                        dep.CollectionName = resource["CollectionID"].StringValue;
+                        dep.DeploymentID = resource["CollectionID"].StringValue;
+                        dep.DeploymentIntent = resource["CollectionID"].IntegerValue;
+                        dep.DeploymentName = resource["CollectionID"].StringValue;
+                        dep.DeploymentType = resource["CollectionID"].IntegerValue;
+                        dep.DeploymentTypeID = resource["CollectionID"].IntegerValue;
+                        deployments.Add(dep);
+                    }
+                }
+            }
+            catch { }
+            return deployments;
+        }
+
         //public SccmApplication GetApplication(string ciid)
         //{
         //    try
