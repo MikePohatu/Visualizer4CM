@@ -154,12 +154,11 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\model\viewmodel.csproj">
+    <ProjectReference Include="..\viewmodel\viewmodel.csproj">
       <Project>{4984f353-541c-4ab7-ae8f-c22fc4b52ff1}</Project>
       <Name>viewmodel</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
