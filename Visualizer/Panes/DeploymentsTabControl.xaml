@@ -1,0 +1,94 @@
+﻿<UserControl x:Class="Visualizer.Panes.DeploymentsTabControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Visualizer.Panes"
+             xmlns:gv="clr-namespace:Microsoft.Msagl.GraphViewerGdi;assembly=Microsoft.Msagl.GraphViewerGDI"
+             mc:Ignorable="d" 
+                  d:DesignHeight="400" d:DesignWidth="600"
+      Height="Auto" Width="Auto">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition MinWidth="265" Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0">
+            <Grid Grid.Row="1" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition MinHeight="130" Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Tree build area-->
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <Label x:Name="searchlbl" Grid.Row="0" Content="Search" Width="Auto" Style="{StaticResource LabelStyle}"/>
+                    <TextBox x:Name="searchtb" Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Width="Auto" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource BaseControlStyle}"/>
+                    <Button x:Name="searchbtn" Grid.Row="1" Grid.Column="2" Content="Search" HorizontalAlignment="Right" Style="{DynamicResource ButtonStyle}"/>
+                    
+                    <Label Grid.Column="0" Grid.Row="2" Content="Search mode:" Width="Auto" Style="{DynamicResource LabelStyle}"/>
+                    <ComboBox Grid.Column="1" Grid.Row="2" x:Name="modecombo" Width="85" HorizontalAlignment="Right" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Padding="5,2,2,2" 
+                              Style="{DynamicResource BaseControlStyle}">
+                        <ComboBoxItem>CI</ComboBoxItem>
+                        <ComboBoxItem IsSelected="True">Collection</ComboBoxItem>
+                        <ComboBoxItem>Deployment</ComboBoxItem>
+                    </ComboBox>
+                    <Button Grid.Column="2" Grid.Row="3" x:Name="buildbtn" Content="Build" Style="{DynamicResource ButtonStyle}" />
+                </Grid>
+                <StackPanel Grid.Row="0" Orientation="Vertical" VerticalAlignment="Top">
+                    
+                    <!--<Button x:Name="abortbtn" Width="50" Content="Abort"  Style="{StaticResource BaseControlStyle}" Margin="3"/>-->
+                </StackPanel>
+
+                <ListBox Grid.Row="1" x:Name="searchresultslb" MinHeight="130"
+                         ItemsSource="{Binding SearchResults}" SelectedItem="{Binding SelectedResult, Mode=TwoWay}"
+                        SelectedValuePath="CIID" DisplayMemberPath="Name"
+                         Style="{DynamicResource ListBoxStyle}" />
+                
+                <!-- Device search area-->
+
+                <Grid Grid.Row="2" Margin="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Label Grid.ColumnSpan="3" Grid.Row="2" x:Name="notifylbl" Content="{Binding NotificationText}"  Style="{DynamicResource LabelStyle}" Foreground="Blue"/>
+                </Grid>
+            </Grid>
+        </Grid>
+        <GridSplitter VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                  Grid.Column="1" ResizeBehavior="PreviousAndNext"
+                  Width="3"/>
+
+            <!-- Display column -->
+            <Grid Grid.Column="2" Background="LightGray">
+                <WindowsFormsHost x:Name="gviewerhost" Grid.Row="0" Margin="0,0,0,0">
+                    <gv:GViewer x:Name="gviewer"></gv:GViewer>
+                </WindowsFormsHost>
+            </Grid>
+        </Grid>
+</UserControl>

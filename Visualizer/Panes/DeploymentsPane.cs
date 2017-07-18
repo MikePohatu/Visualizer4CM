@@ -195,7 +195,11 @@ namespace Visualizer.Panes
             this._processing = true;
 
             Task.Run(() => this.NotifyProgress("Searching"));
-            await Task.Run(() => this.SearchResults = this._connector.GetCollectionsFromSearch(this._searchtext, this.CollectionsType));
+            if (this._pane.modecombo.Text == "Collection")
+            { await Task.Run(() => this.SearchResults = this._connector.GetCollectionsFromSearch(this._searchtext, this.CollectionsType)); }
+
+            //else if (this._pane.modecombo.Text == "CI")
+            //{ await Task.Run(() => this.SearchResults = this._connector.GetApplicationsListFromSearch(this._searchtext)); }
 
             this._processing = false;
             this.ControlsEnabled = true;
