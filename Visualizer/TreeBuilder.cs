@@ -217,9 +217,8 @@ namespace Visualizer
                 if (graph.FindNode(deployment.DeploymentID) == null)
                 {
                     graph.AddNode(new DeploymentNode(deployment.DeploymentID, deployment));
+                    Edge newedge = graph.AddEdge(rootcollectionid, deployment.DeploymentID);
                 }
-
-                Edge newedge = graph.AddEdge(rootcollectionid, deployment.DeploymentID);
             }
         }
     }
