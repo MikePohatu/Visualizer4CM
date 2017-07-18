@@ -12,7 +12,7 @@ using Microsoft.ConfigurationManagement.ManagementProvider;
 
 namespace Visualizer.Panes
 {
-    public abstract class BaseResourcePane: BasePane
+    public abstract class BaseCollectionPane: BasePane
     {
         protected CollectionLibrary _library;
         protected List<SccmCollection> _highlightedcollections = new List<SccmCollection>();
@@ -45,7 +45,7 @@ namespace Visualizer.Panes
             }
         }
 
-        public BaseResourcePane(SccmConnector connector):base(connector)
+        public BaseCollectionPane(SccmConnector connector):base(connector)
         {
             this._pane = new ResourceTabControl();
             MsaglHelpers.ConfigureCollectionsGViewer(this._pane.gviewer);

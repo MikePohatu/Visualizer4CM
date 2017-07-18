@@ -78,10 +78,12 @@
       <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="ApplicationNode.cs" />
+    <Compile Include="DeploymentNode.cs" />
     <Compile Include="CollectionNode.cs" />
     <Compile Include="MsaglHelpers.cs" />
     <Compile Include="Panes\BasePane.cs" />
-    <Compile Include="Panes\BaseResourcePane.cs" />
+    <Compile Include="Panes\BaseCollectionPane.cs" />
+    <Compile Include="Panes\DeploymentsPane.cs" />
     <Compile Include="Panes\DevicePane.cs" />
     <Compile Include="Panes\ApplicationTabControl.xaml.cs">
       <DependentUpon>ApplicationTabControl.xaml</DependentUpon>

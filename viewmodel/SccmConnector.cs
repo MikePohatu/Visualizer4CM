@@ -66,6 +66,32 @@ namespace viewmodel
                 return null;
             }
         }
+
+        public CollectionLibrary GetAllCollectionsLibrary()
+        {
+            try
+            {
+                // This query selects all collections
+                string query = "select * from SMS_Collection ORDER BY Name";
+                CollectionLibrary library = new CollectionLibrary();
+
+                // Run query
+                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
+                {
+                    // Enumerate through the collection of objects returned by the query.
+                    foreach (IResultObject resource in results)
+                    {
+                        library.AddCollection(new SccmCollection(resource));
+                    }
+                }
+                return library;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         public List<SccmCollection> GetCollectionsFromSearch(string search, CollectionType type)
         {
             try
@@ -239,14 +265,14 @@ namespace viewmodel
             return relationships;
         }
 
-        public List<SccmDeployment> GetApplicationDeployments(string applicationciid)
+        public List<SccmDeployment> GetCIDeployments(string ciid)
         {
             List<SccmDeployment> deployments = new List<SccmDeployment>();
-
+            
             try
             {
                 // This query selects all relationships of the specified app ID
-                string query = "select * from SMS_DeploymentInfo WHERE FromApplicationCIID='" + applicationciid + "'";
+                string query = "select * from SMS_DeploymentInfo WHERE TargetID='" + ciid + "'";
 
                 // Run query
                 using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
@@ -254,14 +280,31 @@ namespace viewmodel
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
                     {
-                        SccmDeployment dep = new SccmDeployment();
-                        dep.CollectionID = resource["CollectionID"].StringValue;
-                        dep.CollectionName = resource["CollectionID"].StringValue;
-                        dep.DeploymentID = resource["CollectionID"].StringValue;
-                        dep.DeploymentIntent = resource["CollectionID"].IntegerValue;
-                        dep.DeploymentName = resource["CollectionID"].StringValue;
-                        dep.DeploymentType = resource["CollectionID"].IntegerValue;
-                        dep.DeploymentTypeID = resource["CollectionID"].IntegerValue;
+                        SccmDeployment dep = new SccmDeployment(resource);
+                        deployments.Add(dep);
+                    }
+                }
+            }
+            catch { }
+            return deployments;
+        }
+
+        public List<SccmDeployment> GetCollectionDeployments(string collectionid)
+        {
+            List<SccmDeployment> deployments = new List<SccmDeployment>();
+
+            try
+            {
+                // This query selects all relationships of the specified app ID
+                string query = "select * from SMS_DeploymentInfo WHERE CollectionID='" + collectionid + "'";
+
+                // Run query
+                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
+                {
+                    // Enumerate through the collection of objects returned by the query.
+                    foreach (IResultObject resource in results)
+                    {
+                        SccmDeployment dep = new SccmDeployment(resource);                        
                         deployments.Add(dep);
                     }
                 }

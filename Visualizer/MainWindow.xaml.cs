@@ -18,6 +18,7 @@ namespace Visualizer
         private UserPane _userpane;
         private DevicePane _devicepane;
         private ApplicationPane _apppane;
+        private DeploymentsPane _deploymentpane;
         private List<SccmCollection> _highlightedcollections;
         private SccmConnector _connector;
         private string _site;
@@ -88,6 +89,12 @@ namespace Visualizer
             apptabitem.Header = this._apppane.Header;
             apptabitem.Content = this._apppane.Pane;
             maintabctrl.Items.Add(apptabitem);
+
+            this._deploymentpane = new DeploymentsPane(this._connector);
+            TabItem deptabitem = new TabItem();
+            deptabitem.Header = this._deploymentpane.Header;
+            deptabitem.Content = this._deploymentpane.Pane;
+            maintabctrl.Items.Add(deptabitem);
         }
 
         

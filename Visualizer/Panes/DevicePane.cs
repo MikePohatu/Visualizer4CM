@@ -10,7 +10,7 @@ using Microsoft.ConfigurationManagement.ManagementProvider;
 
 namespace Visualizer.Panes
 {
-    public class DevicePane: BaseResourcePane
+    public class DevicePane: BaseCollectionPane
     {
         public DevicePane(SccmConnector connector): base(connector)
         {

@@ -4,7 +4,7 @@ using Microsoft.ConfigurationManagement.ManagementProvider;
 
 namespace Visualizer.Panes
 {
-    public class UserPane: BaseResourcePane
+    public class UserPane: BaseCollectionPane
     {
         public UserPane(SccmConnector connector): base(connector)
         {

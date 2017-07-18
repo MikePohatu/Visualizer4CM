@@ -199,5 +199,28 @@ namespace Visualizer
 
             }
         }
+
+        public static Graph BuildCollectionDeploymentsTree(SccmConnector connector, SccmCollection collection, List<SccmDeployment> deployments)
+        {
+            Graph graph = new Graph();
+
+            //build the graph
+            graph.AddNode(new CollectionNode(collection.ID, collection));
+            BuildCollectionDeploymentLinks(connector, graph, collection.ID, deployments);
+            return graph;
+        }
+
+        private static void BuildCollectionDeploymentLinks(SccmConnector connector, Graph graph, string rootcollectionid, List<SccmDeployment> deployments)
+        {
+            foreach (SccmDeployment deployment in deployments)
+            {
+                if (graph.FindNode(deployment.DeploymentID) == null)
+                {
+                    graph.AddNode(new DeploymentNode(deployment.DeploymentID, deployment));
+                }
+
+                Edge newedge = graph.AddEdge(rootcollectionid, deployment.DeploymentID);
+            }
+        }
     }
 }
