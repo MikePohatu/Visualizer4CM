@@ -42,22 +42,6 @@ namespace Visualizer.Panes
             //this._library = connector.GetAllCollectionsLibrary();
         }
 
-        protected void Find()
-        {
-            //this.ClearHighlightedCollections();
-            //if (string.IsNullOrWhiteSpace(this._findtext) == false)
-            //{
-            //    SccmDevice dev = this._connector.GetDevice(this._findtext.Trim());
-            //    if (dev != null) { this._highlightedcollections = TreeBuilder.HighlightCollectionMembers(this._graph, dev.CollectionIDs); }
-            //}
-            //else
-            //{
-            //    SccmCollection col = this._library.GetCollection(this._findtext);
-            //    if (col != null) { col.IsHighlighted = true; }
-            //}
-            //this.Redraw();
-        }
-
         protected void ClearHighlightedCollections()
         {
             foreach (SccmCollection col in this._highlightedcollections)
@@ -76,27 +60,22 @@ namespace Visualizer.Panes
             }
         }
 
-        protected void OnFindButtonPressed(object sender, RoutedEventArgs e) { this.Find(); }
-        protected void OnFindKeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                this.Find();
-            }
-        }
-
         protected virtual void OnGViewerMouseDoubleClick(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             GViewer viewer = (GViewer)sender;
             object selected = viewer.SelectedObject;
             if (selected != null)
             {
-                this.SelectedNode = selected as Node;
+                this.SelectedNode = selected as SccmNode;
                 if (this.SelectedNode != null)
                 {
                     if (e.Button == System.Windows.Forms.MouseButtons.Left)
                     {
-                        this.SearchText = this.SelectedNode.Id;
+                        this.SearchText = this.SelectedNode.SccmObject.Name;
+                        if (this.SelectedNode.SccmObject is SccmCollection) { this._pane.modecombo.Text = "Collection"; }
+                        else if (this.SelectedNode.SccmObject is SccmApplication) { this._pane.modecombo.Text = "Application"; }
+                        else if (this.SelectedNode.SccmObject is SccmSoftwareUpdate) { this._pane.modecombo.Text = "Update"; }
+                        else if (this.SelectedNode.SccmObject is SccmDeployment) { this._pane.modecombo.Text = "Deployment"; }
                     }
                 }
                 
@@ -163,20 +142,14 @@ namespace Visualizer.Panes
                     
 
                     this.UpdateProgressMessage("Building tree");
-                    //await Task.Run(() => this._graph = this.BuildGraphTree(this._selectedresult.ID, mode, deployments));
                     await Task.Run(() => 
                     {
-                        if (string.IsNullOrWhiteSpace(this._selectedresult.ID) == false)
+                        if (this._selectedresult != null)
                         {
-                            ISccmObject root = this._selectedresult;
-                            if (root != null)
-                            {
-                                if (root is SccmCollection) { this._graph = TreeBuilder.BuildCollectionDeploymentsTree(this._connector, (SccmCollection)root, deployments); }
-                                //else if (root is SccmDeployment) { this._graph = TreeBuilder.BuildCollectionDeploymentsTree(this._connector, (SccmCollection)root, deployments); }
-                                else { this._graph = TreeBuilder.BuildCIDeploymentsTree(this._connector, root, deployments); }
+                            if (this._selectedresult is SccmCollection) { this._graph = TreeBuilder.BuildCollectionDeploymentsTree(this._connector, (SccmCollection)this._selectedresult, deployments); }
+                            else { this._graph = TreeBuilder.BuildCIDeploymentsTree(this._connector, this._selectedresult, deployments); }
 
-                                root.IsHighlighted = true;
-                            }
+                            this._selectedresult.IsHighlighted = true;
                         }
                     });
 

@@ -19,7 +19,7 @@ namespace Visualizer.Panes
         protected Graph _graph;
         public Graph Graph { get { return this._graph; } }
 
-        protected Node SelectedNode { get; set; }
+        protected SccmNode SelectedNode { get; set; }
 
         protected string _notificationtext;
         public string NotificationText
@@ -170,7 +170,7 @@ namespace Visualizer.Panes
             object selected = viewer.SelectedObject;
             if (selected != null)
             {
-                this.SelectedNode = selected as Node;
+                this.SelectedNode = selected as SccmNode;
                 if (this.SelectedNode != null)
                 {
                     if (e.Button == System.Windows.Forms.MouseButtons.Right) { this.OnGViewerMouseRightClick(); }

@@ -215,10 +215,10 @@ namespace Visualizer
         {
             foreach (SccmDeployment deployment in deployments)
             {
-                if (graph.FindNode(deployment.DeploymentID) == null)
+                if (graph.FindNode(deployment.TargetName) == null)
                 {
-                    graph.AddNode(new SccmNode(deployment.DeploymentID, deployment));
-                    Edge newedge = graph.AddEdge(deployment.DeploymentID, rootcollectionid);
+                    graph.AddNode(new SccmNode(deployment.TargetName, Factory.GetSccmObject(deployment)));
+                    Edge newedge = graph.AddEdge(deployment.TargetName, rootcollectionid);
                 }
             }
         }
