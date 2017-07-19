@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
+using System;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Msagl.Drawing;
+using Microsoft.Msagl.GraphViewerGdi;
 using viewmodel;
 using Microsoft.ConfigurationManagement.ManagementProvider;
 
@@ -28,7 +30,8 @@ namespace Visualizer.Panes
             MsaglHelpers.ConfigureCollectionsGViewer(this._pane.gviewer);
             this._pane.DataContext = this;
             this._pane.buildbtn.Click += this.OnBuildButtonPressed;
-            this._pane.gviewer.AsyncLayoutProgress += this.OnProgressUpdate;
+            this._pane.gviewer.MouseClick += this.OnGViewerMouseClicked;
+            this._pane.gviewer.MouseDoubleClick += this.OnGViewerMouseDoubleClick;
             //this._pane.abortbtn.Click += OnAbortButtonClick;
             this._pane.searchbtn.Click += this.OnSearchButtonPressed;
             this._pane.searchtb.KeyUp += this.OnSearchKeyUp;
@@ -79,6 +82,24 @@ namespace Visualizer.Panes
             if (e.Key == Key.Enter)
             {
                 this.Find();
+            }
+        }
+
+        protected virtual void OnGViewerMouseDoubleClick(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            GViewer viewer = (GViewer)sender;
+            object selected = viewer.SelectedObject;
+            if (selected != null)
+            {
+                this.SelectedNode = selected as Node;
+                if (this.SelectedNode != null)
+                {
+                    if (e.Button == System.Windows.Forms.MouseButtons.Left)
+                    {
+                        this.SearchText = this.SelectedNode.Id;
+                    }
+                }
+                
             }
         }
 

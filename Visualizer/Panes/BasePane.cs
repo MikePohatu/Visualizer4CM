@@ -4,8 +4,8 @@ using System.Windows;
 using System.Windows.Input;
 using System;
 using Microsoft.Msagl.Drawing;
+using Microsoft.Msagl.GraphViewerGdi;
 using viewmodel;
-using System.Threading.Tasks;
 using System.Threading;
 
 namespace Visualizer.Panes
@@ -18,6 +18,8 @@ namespace Visualizer.Panes
 
         protected Graph _graph;
         public Graph Graph { get { return this._graph; } }
+
+        protected Node SelectedNode { get; set; }
 
         protected string _notificationtext;
         public string NotificationText
@@ -162,6 +164,20 @@ namespace Visualizer.Panes
             this.BuildGraph();
         }
 
+        protected void OnGViewerMouseClicked(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            GViewer viewer = (GViewer)sender;
+            object selected = viewer.SelectedObject;
+            if (selected != null)
+            {
+                this.SelectedNode = selected as Node;
+                if (this.SelectedNode != null)
+                {
+                    if (e.Button == System.Windows.Forms.MouseButtons.Right) { this.OnGViewerMouseRightClick(); }
+                }
+            }
+        }
+
         protected void OnProgressUpdate(object sender, EventArgs e)
         {
             if (this._progresscount < 2)
@@ -178,6 +194,8 @@ namespace Visualizer.Panes
             this.NotificationText = newmessage;
             this._progresscount = 0;
         }
+
+        protected virtual void OnGViewerMouseRightClick() { }
 
         //protected void OnAbortButtonClick(object sender, RoutedEventArgs e)
         //{
