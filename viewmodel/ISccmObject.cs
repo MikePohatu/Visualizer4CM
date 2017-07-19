@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 
 namespace viewmodel
 {
     public interface ISccmObject
     {
+        event PropertyChangedEventHandler PropertyChanged;
         string ID { get; }
         string Name { get; }
         bool IsHighlighted { get; set; }

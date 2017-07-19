@@ -205,7 +205,7 @@ namespace Visualizer
             Graph graph = new Graph();
 
             //build the graph
-            graph.AddNode(new CollectionNode(collection.ID, collection));
+            graph.AddNode(new SccmNode(collection.ID, collection));
             BuildCollectionDeploymentLinks(connector, graph, collection.ID, deployments);
             collection.IsHighlighted = true;
             return graph;
@@ -217,7 +217,7 @@ namespace Visualizer
             {
                 if (graph.FindNode(deployment.DeploymentID) == null)
                 {
-                    graph.AddNode(new DeploymentNode(deployment.DeploymentID, deployment));
+                    graph.AddNode(new SccmNode(deployment.DeploymentID, deployment));
                     Edge newedge = graph.AddEdge(deployment.DeploymentID, rootcollectionid);
                 }
             }
@@ -228,8 +228,8 @@ namespace Visualizer
             Graph graph = new Graph();
 
             //build the graph
-            graph.AddNode(new CiNode(ci.ID, ci));
-            BuildCollectionDeploymentLinks(connector, graph, ci.ID, deployments);
+            graph.AddNode(new SccmNode(ci.ID, ci));
+            BuildCIDeploymentLinks(connector, graph, ci.ID, deployments);
             ci.IsHighlighted = true;
             return graph;
         }
@@ -238,10 +238,10 @@ namespace Visualizer
         {
             foreach (SccmDeployment deployment in deployments)
             {
-                if (graph.FindNode(deployment.DeploymentID) == null)
+                if (graph.FindNode(deployment.CollectionID) == null)
                 {
-                    graph.AddNode(new DeploymentNode(deployment.DeploymentID, deployment));
-                    Edge newedge = graph.AddEdge(rootid, deployment.DeploymentID);
+                    graph.AddNode(new SccmNode(deployment.CollectionID, new SccmCollection(deployment.CollectionID,deployment.CollectionName,string.Empty)));
+                    Edge newedge = graph.AddEdge(rootid, deployment.CollectionID);
                 }
             }
         }

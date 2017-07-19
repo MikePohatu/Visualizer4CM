@@ -192,28 +192,5 @@ namespace Visualizer.Panes
                 this.NotificationText = "Please select a search result";
             }
         }
-
-        //public Graph BuildGraphTree(string rootid, string mode, List<SccmDeployment> deployments)
-        //{
-        //    Graph graph = null;
-        //    if (string.IsNullOrWhiteSpace(rootid) == false)
-        //    {
-        //        ISccmObject root = this._library.GetCollection(rootid);
-        //        if (root != null)
-        //        {
-        //            if (root is SccmCollection) { graph = TreeBuilder.BuildCollectionDeploymentsTree(this._connector, (SccmCollection)root, deployments); }
-        //            else if (root is SccmDeployment) { graph = TreeBuilder.BuildCollectionDeploymentsTree(this._connector, (SccmCollection)root, deployments); }
-        //            else { graph = TreeBuilder.BuildCollectionDeploymentsTree(this._connector, (SccmCollection)root, deployments); }
-
-        //            root.IsHighlighted = true;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        this._filteredview = false;
-        //        graph = TreeBuilder.BuildCollectionTreeAllCollections(this._library);
-        //    }
-        //    return graph;
-        //}
     }
 }
