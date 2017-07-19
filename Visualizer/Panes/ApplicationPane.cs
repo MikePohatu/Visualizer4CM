@@ -3,6 +3,7 @@ using System.Windows.Input;
 using System.Collections.Generic;
 using viewmodel;
 using System.Threading.Tasks;
+using Microsoft.Msagl.GraphViewerGdi;
 
 namespace Visualizer.Panes
 {
@@ -47,33 +48,7 @@ namespace Visualizer.Panes
             this._pane.searchbtn.Click += this.OnSearchButtonPressed;
             this._pane.searchtb.KeyUp += this.OnSearchKeyUp;
             this._pane.gviewer.AsyncLayoutProgress += this.OnProgressUpdate;
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Await.Warning", "CS4014:Await.Warning")]
-        protected override async void BuildGraph()
-        {             
-            if (this.SelectedResult != null)
-            {
-                this.ControlsEnabled = false;
-                this._processing = true;
-                if (this._highlightedapplication != null) { this._highlightedapplication.IsHighlighted = false; }
-
-                Task.Run(() => this.NotifyProgress("Building"));                
-                await Task.Run(() => this._graph = TreeBuilder.BuildApplicationTree(this._connector, this.SelectedResult));
-
-                this.UpdateProgressMessage("Updating view");
-                await Task.Run(() => this.UpdatePaneToTabControl());
-
-                this._highlightedapplication = this.SelectedResult;
-                this.SelectedResult.IsHighlighted = true;
-                this.Redraw();
-                this._processing = false;
-                this.ControlsEnabled = true;
-            }
-            else
-            {
-                this.NotificationText = "Please select a search result";
-            }
+            this._pane.gviewer.MouseDoubleClick += this.OnGViewerMouseDoubleClick;
         }
 
         protected void UpdatePaneToTabControl()
@@ -110,6 +85,50 @@ namespace Visualizer.Panes
 
             this._processing = false;
             this.ControlsEnabled = true;
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Await.Warning", "CS4014:Await.Warning")]
+        protected override async void BuildGraph()
+        {
+            if (this.SelectedResult != null)
+            {
+                this.ControlsEnabled = false;
+                this._processing = true;
+                if (this._highlightedapplication != null) { this._highlightedapplication.IsHighlighted = false; }
+
+                Task.Run(() => this.NotifyProgress("Building"));
+                await Task.Run(() => this._graph = TreeBuilder.BuildApplicationTree(this._connector, this.SelectedResult));
+
+                this.UpdateProgressMessage("Updating view");
+                await Task.Run(() => this.UpdatePaneToTabControl());
+
+                this._highlightedapplication = this.SelectedResult;
+                this.SelectedResult.IsHighlighted = true;
+                this.Redraw();
+                this._processing = false;
+                this.ControlsEnabled = true;
+            }
+            else
+            {
+                this.NotificationText = "Please select a search result";
+            }
+        }
+
+        protected virtual void OnGViewerMouseDoubleClick(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            GViewer viewer = (GViewer)sender;
+            object selected = viewer.SelectedObject;
+            if (selected != null)
+            {
+                this.SelectedNode = selected as SccmNode;
+                if (this.SelectedNode != null)
+                {
+                    if (e.Button == System.Windows.Forms.MouseButtons.Left)
+                    {
+                        this.SearchText = this.SelectedNode.SccmObject.Name;
+                    }
+                }
+            }
         }
     }
 }

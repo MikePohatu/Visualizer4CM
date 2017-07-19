@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows;
 using System.Threading.Tasks;
 using Microsoft.Msagl.Drawing;
+using Microsoft.Msagl.GraphViewerGdi;
 using viewmodel;
 using System.Threading;
 using Microsoft.ConfigurationManagement.ManagementProvider;
@@ -52,47 +53,12 @@ namespace Visualizer.Panes
             this._pane.DataContext = this;
             this._pane.buildbtn.Click += this.OnBuildButtonPressed;
             this._pane.gviewer.AsyncLayoutProgress += this.OnProgressUpdate;
+            this._pane.gviewer.MouseDoubleClick += this.OnGViewerMouseDoubleClick;
             //this._pane.abortbtn.Click += OnAbortButtonClick;
             this._pane.findbtn.Click += this.OnFindButtonPressed;
             this._pane.findresourcetb.KeyUp += this.OnFindKeyUp;
             this._pane.searchbtn.Click += this.OnSearchButtonPressed;
             this._pane.searchtb.KeyUp += this.OnSearchKeyUp;
-        }
-
-        public Graph BuildGraphTree(string rootcollectionid, string mode)
-        {
-            Graph graph = null;
-            if (string.IsNullOrWhiteSpace(rootcollectionid) == false)
-            {
-                SccmCollection col = this._library.GetCollection(rootcollectionid);
-                if (col != null)
-                {
-                    if (mode == "Context")
-                    {
-                        if (this._filteredview == true) { graph = TreeBuilder.BuildCollectionTreeAllCollections(this._library); }
-                        else { graph = this._graph; }
-                        this._filteredview = false;
-                        this._highlightedcollections = col.HighlightCollectionPathList();
-                    }
-                    else if (mode == "Mesh")
-                    {
-                        this._filteredview = true;
-                        graph = TreeBuilder.BuildCollectionTreeMeshMode(this._connector, this._library, rootcollectionid);
-                    }
-                    else if (mode == "Limiting")
-                    {
-                        this._filteredview = true;
-                        graph = TreeBuilder.BuildCollectionTreeLimitingMode(this._library, rootcollectionid);
-                    }
-                    col.IsHighlighted = true;
-                }
-            }
-            else
-            {
-                this._filteredview = false;
-                graph = TreeBuilder.BuildCollectionTreeAllCollections(this._library);
-            }
-            return graph;
         }
 
         protected void ClearHighlightedCollections()
@@ -102,23 +68,6 @@ namespace Visualizer.Panes
                 col.IsHighlighted = false;
             }
             this._highlightedcollections.Clear();
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Await.Warning", "CS4014:Await.Warning")]
-        protected override async void BuildGraph()
-        {
-            this.ControlsEnabled = false;
-            this._processing = true;
-            this.ClearHighlightedCollections();
-            string mode = this._pane.modecombo.Text;
-            Task.Run(() => this.NotifyProgress("Building"));
-
-            string collectionid = this._selectedresult?.ID;
-
-            await Task.Run(() => this._graph = this.BuildGraphTree(collectionid, mode));
-            await Task.Run(() => this.UpdatePaneToTabControl());
-            this._processing = false;
-            this.ControlsEnabled = true;
         }
 
         protected void OnSearchButtonPressed(object sender, RoutedEventArgs e) { this.UpdateSearchResults(); }
@@ -161,6 +110,76 @@ namespace Visualizer.Panes
 
             this._processing = false;
             this.ControlsEnabled = true;
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Await.Warning", "CS4014:Await.Warning")]
+        protected override async void BuildGraph()
+        {
+            this.ControlsEnabled = false;
+            this._processing = true;
+            this.ClearHighlightedCollections();
+            string mode = this._pane.modecombo.Text;
+            Task.Run(() => this.NotifyProgress("Building"));
+
+            string collectionid = this._selectedresult?.ID;
+
+            await Task.Run(() => this._graph = this.BuildGraphTree(collectionid, mode));
+            await Task.Run(() => this.UpdatePaneToTabControl());
+            this._processing = false;
+            this.ControlsEnabled = true;
+        }
+
+        public Graph BuildGraphTree(string rootcollectionid, string mode)
+        {
+            Graph graph = null;
+            if (string.IsNullOrWhiteSpace(rootcollectionid) == false)
+            {
+                SccmCollection col = this._library.GetCollection(rootcollectionid);
+                if (col != null)
+                {
+                    if (mode == "Context")
+                    {
+                        if (this._filteredview == true) { graph = TreeBuilder.BuildCollectionTreeAllCollections(this._library); }
+                        else { graph = this._graph; }
+                        this._filteredview = false;
+                        this._highlightedcollections = col.HighlightCollectionPathList();
+                    }
+                    else if (mode == "Mesh")
+                    {
+                        this._filteredview = true;
+                        graph = TreeBuilder.BuildCollectionTreeMeshMode(this._connector, this._library, rootcollectionid);
+                    }
+                    else if (mode == "Limiting")
+                    {
+                        this._filteredview = true;
+                        graph = TreeBuilder.BuildCollectionTreeLimitingMode(this._library, rootcollectionid);
+                    }
+                    col.IsHighlighted = true;
+                }
+            }
+            else
+            {
+                this._filteredview = false;
+                graph = TreeBuilder.BuildCollectionTreeAllCollections(this._library);
+            }
+            return graph;
+        }
+
+        protected virtual void OnGViewerMouseDoubleClick(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            GViewer viewer = (GViewer)sender;
+            object selected = viewer.SelectedObject;
+            if (selected != null)
+            {
+                this.SelectedNode = selected as SccmNode;
+                if (this.SelectedNode != null)
+                {
+                    if (e.Button == System.Windows.Forms.MouseButtons.Left)
+                    {
+                        this.SearchText = this.SelectedNode.SccmObject.Name;
+                    }
+                }
+            }
         }
     }
 }

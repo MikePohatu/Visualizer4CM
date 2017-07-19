@@ -77,8 +77,7 @@ namespace Visualizer.Panes
                         else if (this.SelectedNode.SccmObject is SccmSoftwareUpdate) { this._pane.modecombo.Text = "Update"; }
                         else if (this.SelectedNode.SccmObject is SccmDeployment) { this._pane.modecombo.Text = "Deployment"; }
                     }
-                }
-                
+                }               
             }
         }
 

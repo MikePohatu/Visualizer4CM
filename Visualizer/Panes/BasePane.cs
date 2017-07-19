@@ -185,8 +185,7 @@ namespace Visualizer.Panes
                 this.NotificationText = this.NotificationText + ".";
                 this._progresscount++;
             }
-            else { this.NotificationText = null; }
-
+            else { this.NotificationText = string.Empty; }
         }
 
         protected void UpdateProgressMessage(string newmessage)

@@ -64,7 +64,7 @@ namespace Visualizer
         protected void SetLayout()
         {
             string type = string.Empty;
-            if (this._sccmobject is SccmApplication) { this.Attr.Color = Color.PaleGreen; type = "Application"; }
+            if (this._sccmobject is SccmApplication) { this.Attr.Color = Color.SandyBrown; type = "Application"; }
             else if (this._sccmobject is SccmDeployment) { this.Attr.Color = Color.LightBlue; type = "Deployment"; }
             else if (this._sccmobject is SccmCollection) { this.Attr.Color = Color.RoyalBlue; type = "Collection"; }
             else if (this._sccmobject is SccmSoftwareUpdate) { this.Attr.Color = Color.Gold; type = "Software Update"; }
