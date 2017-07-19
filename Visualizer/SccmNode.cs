@@ -6,9 +6,10 @@ using viewmodel;
 namespace Visualizer
 {
     public class SccmNode : Node
-    {       
-        const int _highlightedlinewidth = 3;
-        private ISccmObject _sccmobject;
+    {
+        protected int _highlightedlinewidth = 3;
+
+        protected ISccmObject _sccmobject;
         public ISccmObject SccmObject
         {
             get { return this._sccmobject; }
@@ -44,14 +45,28 @@ namespace Visualizer
                     //this.ChangeOutEdges(Color.Black,1);
                 }
             }
+            else if (e.PropertyName.Equals("IsHighlighted"))
+            {
+                ISccmObject col = (ISccmObject)sender;
+                if (col.IsHighlighted == true)
+                {
+                    this.Attr.LineWidth = _highlightedlinewidth;
+                    this.Attr.Color = Color.Green;
+                }
+                else
+                {
+                    this.Attr.LineWidth = 1;
+                    this.Attr.Color = Color.Black;
+                }
+            }
         }
 
-        private void SetLayout()
+        protected void SetLayout()
         {
             string type = string.Empty;
             if (this._sccmobject is SccmApplication) { this.Attr.Color = Color.PaleGreen; type = "Application"; }
             else if (this._sccmobject is SccmDeployment) { this.Attr.Color = Color.LightBlue; type = "Deployment"; }
-            else if (this._sccmobject is SccmCollection) { this.Attr.Color = Color.Cyan; type = "Collection"; }
+            else if (this._sccmobject is SccmCollection) { this.Attr.Color = Color.RoyalBlue; type = "Collection"; }
             else if (this._sccmobject is SccmSoftwareUpdate) { this.Attr.Color = Color.Gold; type = "Software Update"; }
 
             this.LabelText = this._sccmobject.Name + Environment.NewLine + type + ": " + this._sccmobject.ID;

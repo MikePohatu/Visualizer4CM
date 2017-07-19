@@ -139,7 +139,7 @@ namespace Visualizer
             Graph graph = new Graph();
 
             //build the graph
-            graph.AddNode(new ApplicationNode(application.ID, application));
+            graph.AddNode(new SccmNode(application.ID, application));
             BuildApplicationMeshLinks(connector, graph, application);
             return graph;
         }
@@ -174,7 +174,7 @@ namespace Visualizer
                     if (applications.TryGetValue(rel.FromApplicationCIID,out fromapp))
                     {
                         if (fromapp.IsLatest == false) { continue; }
-                        graph.AddNode(new ApplicationNode(fromapp.ID, fromapp));
+                        graph.AddNode(new SccmNode(fromapp.ID, fromapp));
                     }
                     else { continue; }
                 }
@@ -185,7 +185,7 @@ namespace Visualizer
                     if (applications.TryGetValue(rel.ToApplicationCIID, out toapp))
                     {
                         if (toapp.IsLatest == false) { continue; }
-                        graph.AddNode(new ApplicationNode(toapp.ID, toapp));
+                        graph.AddNode(new SccmNode(toapp.ID, toapp));
                     }
                     else { continue; }
                 }
