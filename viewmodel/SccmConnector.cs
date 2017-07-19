@@ -322,14 +322,14 @@ namespace viewmodel
             return relationships;
         }
 
-        public List<SccmDeployment> GetCIDeployments(string ciname)
+        public List<SccmDeploymentSummary> GetCIDeployments(string ciname)
         {
-            List<SccmDeployment> deployments = new List<SccmDeployment>();
+            List<SccmDeploymentSummary> deployments = new List<SccmDeploymentSummary>();
             
             try
             {
                 // This query selects all relationships of the specified app ID
-                string query = "select * from SMS_DeploymentInfo WHERE TargetName='" + ciname + "'";
+                string query = "select * from SMS_DeploymentSummary WHERE SoftwareName='" + ciname + "'";
 
                 // Run query
                 using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
@@ -337,7 +337,7 @@ namespace viewmodel
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
                     {
-                        SccmDeployment dep = new SccmDeployment(resource);
+                        SccmDeploymentSummary dep = new SccmDeploymentSummary(resource);
                         deployments.Add(dep);
                     }
                 }
@@ -346,14 +346,14 @@ namespace viewmodel
             return deployments;
         }
 
-        public List<SccmDeployment> GetCollectionDeployments(string collectionid)
+        public List<SccmDeploymentSummary> GetCollectionDeployments(string collectionid)
         {
-            List<SccmDeployment> deployments = new List<SccmDeployment>();
+            List<SccmDeploymentSummary> deployments = new List<SccmDeploymentSummary>();
 
             try
             {
                 // This query selects all relationships of the specified app ID
-                string query = "select * from SMS_DeploymentInfo WHERE CollectionID='" + collectionid + "'";
+                string query = "select * from SMS_DeploymentSummary WHERE CollectionID='" + collectionid + "'";
 
                 // Run query
                 using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
@@ -361,7 +361,7 @@ namespace viewmodel
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
                     {
-                        SccmDeployment dep = new SccmDeployment(resource);                        
+                        SccmDeploymentSummary dep = new SccmDeploymentSummary(resource);                        
                         deployments.Add(dep);
                     }
                 }
@@ -370,9 +370,9 @@ namespace viewmodel
             return deployments;
         }
 
-        public List<SccmDeployment> GetDeploymentsFromSearch(string deploymentname)
+        public List<SccmDeploymentSummary> GetDeploymentsFromSearch(string deploymentname)
         {
-            List<SccmDeployment> deployments = new List<SccmDeployment>();
+            List<SccmDeploymentSummary> deployments = new List<SccmDeploymentSummary>();
 
             try
             {
@@ -385,7 +385,7 @@ namespace viewmodel
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
                     {
-                        SccmDeployment dep = new SccmDeployment(resource);
+                        SccmDeploymentSummary dep = new SccmDeploymentSummary(resource);
                         deployments.Add(dep);
                     }
                 }
@@ -409,61 +409,13 @@ namespace viewmodel
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
                     {
-                        SccmDeployment dep = new SccmDeployment(resource);
+                        SccmDeploymentSummary dep = new SccmDeploymentSummary(resource);
                         deployments.Add(dep);
                     }
                 }
             }
             catch { }
             return deployments;
-        }
-
-        public List<ISccmObject> GetCIDeploymentsSccmObjectsFromSearch(string ciname)
-        {
-            List<ISccmObject> deployments = new List<ISccmObject>();
-
-            try
-            {
-                // This query selects all relationships of the specified app ID
-                string query = "select * from SMS_DeploymentInfo WHERE TargetName LIKE '%" + ciname + "%' ORDER BY DeploymentName";
-
-                // Run query
-                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
-                {
-                    // Enumerate through the collection of objects returned by the query.
-                    foreach (IResultObject resource in results)
-                    {
-                        SccmDeployment dep = new SccmDeployment(resource);
-                        deployments.Add(dep);
-                    }
-                }
-            }
-            catch { }
-            return deployments;
-        }
-
-        public List<ISccmObject> GetCISccmObjectsFromSearch(string ciname)
-        {
-            List<ISccmObject> CIs = new List<ISccmObject>();
-
-            try
-            {
-                // This query selects all relationships of the specified app ID
-                string query = "select * from SMS_ConfigurationItemBaseClass WHERE LocalizedDisplayName LIKE '%" + ciname + "%'";
-
-                // Run query
-                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
-                {
-                    // Enumerate through the collection of objects returned by the query.
-                    foreach (IResultObject resource in results)
-                    {
-                        SccmDeployableItem dep = new SccmDeployableItem(resource);
-                        CIs.Add(dep);
-                    }
-                }
-            }
-            catch { }
-            return CIs;
         }
 
         public List<ISccmObject> GetSoftwareUpdateSccmObjectsFromSearch(string ciname)

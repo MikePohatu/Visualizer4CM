@@ -33,8 +33,8 @@ namespace Visualizer
         {
             if (e.PropertyName.Equals("Type"))
             {
-                SccmDeployment deployment = (SccmDeployment)sender;
-                if (deployment.DeploymentType == SccmDeployment.CIType.Application) {
+                SccmDeploymentSummary deployment = (SccmDeploymentSummary)sender;
+                if (deployment.FeatureType == SccmDeploymentSummary.CIType.Application) {
                     this.Attr.LineWidth = _highlightedlinewidth;
                     this.Attr.Color = Color.Aquamarine;
                     //this.ChangeOutEdges(Color.Green, _highlightedlinewidth);
@@ -65,7 +65,7 @@ namespace Visualizer
         {
             string type = string.Empty;
             if (this._sccmobject is SccmApplication) { this.Attr.Color = Color.SandyBrown; type = "Application"; }
-            else if (this._sccmobject is SccmDeployment) { this.Attr.Color = Color.LightBlue; type = "Deployment"; }
+            else if (this._sccmobject is SccmDeploymentSummary) { this.Attr.Color = Color.LightBlue; type = "Deployment"; }
             else if (this._sccmobject is SccmCollection) { this.Attr.Color = Color.RoyalBlue; type = "Collection"; }
             else if (this._sccmobject is SccmSoftwareUpdate) { this.Attr.Color = Color.Gold; type = "Software Update"; }
 

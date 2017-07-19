@@ -8,29 +8,29 @@ namespace viewmodel
 {
     public static class Factory
     {
-        public static ISccmObject GetSccmObject(SccmDeployment deployment)
+        public static ISccmObject GetSccmObject(SccmDeploymentSummary deployment)
         {
-            if (deployment.DeploymentType == SccmDeployment.CIType.Application)
+            if (deployment.FeatureType == SccmDeploymentSummary.CIType.Application)
             {
                 var newitem = new SccmApplication();
-                newitem.Name = deployment.TargetName;
-                newitem.ID = deployment.TargetID;
+                newitem.Name = deployment.SoftwareName;
+                newitem.ID = deployment.CIID;
                 return newitem;
             }
 
-            else if (deployment.DeploymentType == SccmDeployment.CIType.SoftwareUpdate)
+            else if (deployment.FeatureType == SccmDeploymentSummary.CIType.SoftwareUpdate)
             {
                 var newitem = new SccmSoftwareUpdate();
-                newitem.Name = deployment.TargetName;
-                newitem.ID = deployment.TargetID;
+                newitem.Name = deployment.SoftwareName;
+                newitem.ID = deployment.CIID;
                 return newitem;
             }
 
-            else if (deployment.DeploymentType == SccmDeployment.CIType.TaskSequence)
+            else if (deployment.FeatureType == SccmDeploymentSummary.CIType.TaskSequence)
             {
                 var newitem = new SccmTaskSequence();
-                newitem.Name = deployment.TargetName;
-                newitem.ID = deployment.TargetID;
+                newitem.Name = deployment.SoftwareName;
+                newitem.ID = deployment.CIID;
                 return newitem;
             }
             return null;

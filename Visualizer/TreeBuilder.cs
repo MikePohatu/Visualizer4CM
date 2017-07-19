@@ -200,7 +200,7 @@ namespace Visualizer
             }
         }
 
-        public static Graph BuildCollectionDeploymentsTree(SccmConnector connector, SccmCollection collection, List<SccmDeployment> deployments)
+        public static Graph BuildCollectionDeploymentsTree(SccmConnector connector, SccmCollection collection, List<SccmDeploymentSummary> deployments)
         {
             Graph graph = new Graph();
 
@@ -211,19 +211,19 @@ namespace Visualizer
             return graph;
         }
 
-        private static void BuildCollectionDeploymentLinks(SccmConnector connector, Graph graph, string rootcollectionid, List<SccmDeployment> deployments)
+        private static void BuildCollectionDeploymentLinks(SccmConnector connector, Graph graph, string rootcollectionid, List<SccmDeploymentSummary> deployments)
         {
-            foreach (SccmDeployment deployment in deployments)
+            foreach (SccmDeploymentSummary deployment in deployments)
             {
-                if (graph.FindNode(deployment.TargetName) == null)
+                if (graph.FindNode(deployment.SoftwareName) == null)
                 {
-                    graph.AddNode(new SccmNode(deployment.TargetName, Factory.GetSccmObject(deployment)));
-                    Edge newedge = graph.AddEdge(deployment.TargetName, rootcollectionid);
+                    graph.AddNode(new SccmNode(deployment.SoftwareName, Factory.GetSccmObject(deployment)));
+                    Edge newedge = graph.AddEdge(deployment.SoftwareName, rootcollectionid);
                 }
             }
         }
 
-        public static Graph BuildCIDeploymentsTree(SccmConnector connector, ISccmObject ci, List<SccmDeployment> deployments)
+        public static Graph BuildCIDeploymentsTree(SccmConnector connector, ISccmObject ci, List<SccmDeploymentSummary> deployments)
         {
             Graph graph = new Graph();
 
@@ -234,9 +234,9 @@ namespace Visualizer
             return graph;
         }
 
-        private static void BuildCIDeploymentLinks(SccmConnector connector, Graph graph, string rootid, List<SccmDeployment> deployments)
+        private static void BuildCIDeploymentLinks(SccmConnector connector, Graph graph, string rootid, List<SccmDeploymentSummary> deployments)
         {
-            foreach (SccmDeployment deployment in deployments)
+            foreach (SccmDeploymentSummary deployment in deployments)
             {
                 if (graph.FindNode(deployment.CollectionID) == null)
                 {

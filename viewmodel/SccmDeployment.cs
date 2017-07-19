@@ -7,9 +7,12 @@ using Microsoft.ConfigurationManagement.ManagementProvider;
 
 namespace viewmodel
 {
-    public class SccmDeployment: ViewModelBase, ISccmObject
+    /// <summary>
+    /// Class represents the SMS_DeploymentSummary WMI class
+    /// </summary>
+    public class SccmDeploymentSummary: ViewModelBase, ISccmObject
     {
-        public enum CIType { Package=2, Application=31, SoftwareUpdate=37, TaskSequence=7 }
+        public enum CIType { Package=2, Application=1, SoftwareUpdate=5, TaskSequence=7 }
 
         protected string _collectionid;
         public string CollectionID
@@ -56,83 +59,83 @@ namespace viewmodel
             }
         }
 
-        protected string _deploymentname;
-        public string DeploymentName
-        {
-            get { return this._deploymentname; }
-            set
-            {
-                this._deploymentname = value;
-                this.OnPropertyChanged(this, "DeploymentName");
-            }
-        }
-        public string Name { get { return this._deploymentname; } }
+        //protected string _deploymentname;
+        //public string DeploymentName
+        //{
+        //    get { return this._deploymentname; }
+        //    set
+        //    {
+        //        this._deploymentname = value;
+        //        this.OnPropertyChanged(this, "DeploymentName");
+        //    }
+        //}
+        public string Name { get { return this._deploymentid; } }
 
-        protected CIType _deploymenttype;
-        public CIType DeploymentType 
+        protected CIType _featuretype;
+        public CIType FeatureType
         {
-            get { return this._deploymenttype; }
+            get { return this._featuretype; }
             set
             {
-                this._deploymenttype = value;
-                this.OnPropertyChanged(this, "DeploymentType");
-            }
-        }
-
-        protected int _deploymenttypeid;
-        public int DeploymentTypeID
-        {
-            get { return this._deploymenttypeid; }
-            set
-            {
-                this._deploymenttypeid = value;
-                this.OnPropertyChanged(this, "DeploymentTypeID");
+                this._featuretype = value;
+                this.OnPropertyChanged(this, "FeatureType");
             }
         }
 
-        protected string _targetid;
-        public string TargetID
+        //protected int _deploymenttypeid;
+        //public int DeploymentTypeID
+        //{
+        //    get { return this._deploymenttypeid; }
+        //    set
+        //    {
+        //        this._deploymenttypeid = value;
+        //        this.OnPropertyChanged(this, "DeploymentTypeID");
+        //    }
+        //}
+
+        protected string _ciid;
+        public string CIID
         {
-            get { return this._targetid; }
+            get { return this._ciid; }
             set
             {
-                this._targetid = value;
-                this.OnPropertyChanged(this, "TargetID");
+                this._ciid = value;
+                this.OnPropertyChanged(this, "CIID");
             }
         }
 
-        protected string _targetname;
-        public string TargetName
+        protected string _softwarename;
+        public string SoftwareName
         {
-            get { return this._targetname; }
+            get { return this._softwarename; }
             set
             {
-                this._targetname = value;
-                this.OnPropertyChanged(this, "TargetName");
+                this._softwarename = value;
+                this.OnPropertyChanged(this, "SoftwareName");
             }
         }
 
-        protected int _targetsecuritytypeid;
-        public int TargetSecurityTypeID
-        {
-            get { return this._targetsecuritytypeid; }
-            set
-            {
-                this._targetsecuritytypeid = value;
-                this.OnPropertyChanged(this, "TargetSecurityTypeID");
-            }
-        }
+        //protected int _targetsecuritytypeid;
+        //public int TargetSecurityTypeID
+        //{
+        //    get { return this._targetsecuritytypeid; }
+        //    set
+        //    {
+        //        this._targetsecuritytypeid = value;
+        //        this.OnPropertyChanged(this, "TargetSecurityTypeID");
+        //    }
+        //}
 
-        protected string _targetsubname;
-        public string TargetSubName
-        {
-            get { return this._targetsubname; }
-            set
-            {
-                this._targetsubname = value;
-                this.OnPropertyChanged(this, "TargetSubName");
-            }
-        }
+        //protected string _targetsubname;
+        //public string TargetSubName
+        //{
+        //    get { return this._targetsubname; }
+        //    set
+        //    {
+        //        this._targetsubname = value;
+        //        this.OnPropertyChanged(this, "TargetSubName");
+        //    }
+        //}
 
         private bool _ishighlighted;
         public bool IsHighlighted
@@ -145,20 +148,22 @@ namespace viewmodel
             }
         }
 
-        public SccmDeployment() { }
-        public SccmDeployment(IResultObject resource)
+        public SccmDeploymentSummary() { }
+        public SccmDeploymentSummary(IResultObject resource)
         {
             this.CollectionID = resource["CollectionID"].StringValue;
             this.CollectionName = resource["CollectionName"].StringValue;
             this.DeploymentID = resource["DeploymentID"].StringValue;
             this.DeploymentIntent = resource["DeploymentIntent"].IntegerValue;
-            this.DeploymentName = resource["DeploymentName"].StringValue;
-            this.DeploymentType = (CIType)resource["DeploymentType"].IntegerValue;
-            this.DeploymentTypeID = resource["DeploymentTypeID"].IntegerValue;
-            this.TargetID = resource["TargetID"].StringValue;
-            this.TargetName = resource["TargetName"].StringValue;
-            this.TargetSubName = resource["TargetSubName"].StringValue;
-            this.TargetSecurityTypeID = resource["TargetSecurityTypeID"].IntegerValue;
+            this.SoftwareName = resource["SoftwareName"].StringValue;
+            this.CIID = resource["CI_ID"].StringValue;
+            this.SoftwareName = resource["SoftwareName"].StringValue;
+            this.FeatureType = (CIType)resource["FeatureType"].IntegerValue;
+            //this.DeploymentTypeID = resource["DeploymentTypeID"].IntegerValue;
+            
+            
+            //this.TargetSubName = resource["TargetSubName"].StringValue;
+            //this.TargetSecurityTypeID = resource["TargetSecurityTypeID"].IntegerValue;
         }
     }
 }

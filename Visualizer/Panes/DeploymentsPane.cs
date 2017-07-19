@@ -75,7 +75,7 @@ namespace Visualizer.Panes
                         if (this.SelectedNode.SccmObject is SccmCollection) { this._pane.modecombo.Text = "Collection"; }
                         else if (this.SelectedNode.SccmObject is SccmApplication) { this._pane.modecombo.Text = "Application"; }
                         else if (this.SelectedNode.SccmObject is SccmSoftwareUpdate) { this._pane.modecombo.Text = "Update"; }
-                        else if (this.SelectedNode.SccmObject is SccmDeployment) { this._pane.modecombo.Text = "Deployment"; }
+                        else if (this.SelectedNode.SccmObject is SccmDeploymentSummary) { this._pane.modecombo.Text = "Deployment"; }
                     }
                 }               
             }
@@ -129,7 +129,7 @@ namespace Visualizer.Panes
                     this.ClearHighlightedCollections();
 
                     Task.Run(() => this.NotifyProgress("Querying server"));
-                    List<SccmDeployment> deployments = null;
+                    List<SccmDeploymentSummary> deployments = null;
                     if (this._selectedresult is SccmCollection)
                     {
                         await Task.Run(() => deployments = this._connector.GetCollectionDeployments(this._selectedresult.ID));
