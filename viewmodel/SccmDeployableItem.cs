@@ -7,9 +7,11 @@ using Microsoft.ConfigurationManagement.ManagementProvider;
 
 namespace viewmodel
 {
-    public class SccmApplication: ViewModelBase, ISccmObject
+    public class SccmDeployableItem : ViewModelBase, ISccmObject
     {
-        private string _id;
+        public enum CIType { Package=2, Application=31, SoftwareUpdate=37, TaskSequence=7 }
+
+        protected string _id;
         public string ID
         {
             get { return this._id; }
@@ -19,7 +21,8 @@ namespace viewmodel
                 this.OnPropertyChanged(this, "ID");
             }
         }
-        private string _name;
+
+        protected string _name;
         public string Name
         {
             get { return this._name; }
@@ -29,6 +32,7 @@ namespace viewmodel
                 this.OnPropertyChanged(this, "Name");
             }
         }
+
         private bool _ishighlighted;
         public bool IsHighlighted
         {
@@ -40,27 +44,11 @@ namespace viewmodel
             }
         }
 
-        public bool IsDeployed { get; set; }
-        public bool IsEnabled { get; set; }
-        public bool IsSuperseded { get; set; }
-        public bool IsSuperseding { get; set; }
-        public bool IsLatest { get; set; }
-
-        public SccmApplication() { }
-        public SccmApplication(IResultObject resource)
+        public SccmDeployableItem() { }
+        public SccmDeployableItem(IResultObject resource)
         {
             this.ID = resource["CI_ID"].IntegerValue.ToString();
             this.Name = resource["LocalizedDisplayName"].StringValue;
-            this.IsDeployed = resource["IsDeployed"].BooleanValue;
-            this.IsEnabled = resource["IsEnabled"].BooleanValue;
-            this.IsSuperseded = resource["IsSuperseded"].BooleanValue;
-            this.IsSuperseding = resource["IsSuperseding"].BooleanValue;
-            this.IsLatest = resource["IsLatest"].BooleanValue;
-        }
-
-        public new string ToString()
-        {
-            return this._name;
         }
     }
 }

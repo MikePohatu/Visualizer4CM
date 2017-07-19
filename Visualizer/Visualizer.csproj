@@ -78,6 +78,7 @@
       <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="ApplicationNode.cs" />
+    <Compile Include="CiNode.cs" />
     <Compile Include="DeploymentNode.cs" />
     <Compile Include="CollectionNode.cs" />
     <Compile Include="MsaglHelpers.cs" />

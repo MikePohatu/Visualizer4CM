@@ -7,7 +7,7 @@ using Microsoft.ConfigurationManagement.ManagementProvider;
 
 namespace viewmodel
 {
-    public class SccmDeployment: ViewModelBase
+    public class SccmDeployment: ViewModelBase, ISccmObject
     {
         public enum CIType { Package=2, Application=31, SoftwareUpdate=37, TaskSequence=7 }
 
@@ -43,6 +43,7 @@ namespace viewmodel
                 this.OnPropertyChanged(this, "DeploymentID");
             }
         }
+        public string ID { get { return this._deploymentid; } }
 
         protected int _deploymentintent;
         public int DeploymentIntent
@@ -65,6 +66,7 @@ namespace viewmodel
                 this.OnPropertyChanged(this, "DeploymentName");
             }
         }
+        public string Name { get { return this._deploymentname; } }
 
         protected CIType _deploymenttype;
         public CIType DeploymentType 
@@ -129,6 +131,17 @@ namespace viewmodel
             {
                 this._targetsubname = value;
                 this.OnPropertyChanged(this, "TargetSubName");
+            }
+        }
+
+        private bool _ishighlighted;
+        public bool IsHighlighted
+        {
+            get { return this._ishighlighted; }
+            set
+            {
+                this._ishighlighted = value;
+                this.OnPropertyChanged(this, "IsHighlighted");
             }
         }
 

@@ -21,10 +21,8 @@ namespace Visualizer.Panes
         protected ResourceTabControl _pane;
         public ResourceTabControl Pane { get { return this._pane; } }
 
-        protected CollectionType CollectionsType { get; set; }
-
-        protected List<SccmCollection> _searchresults;
-        public List<SccmCollection> SearchResults
+        protected new List<SccmCollection> _searchresults;
+        public new List<SccmCollection> SearchResults
         {
             get { return this._searchresults; }
             set
@@ -34,8 +32,8 @@ namespace Visualizer.Panes
             }
         }
 
-        protected SccmCollection _selectedresult;
-        public SccmCollection SelectedResult
+        protected new SccmCollection _selectedresult;
+        public new SccmCollection SelectedResult
         {
             get { return this._selectedresult; }
             set
@@ -44,6 +42,8 @@ namespace Visualizer.Panes
                 this.OnPropertyChanged(this, "SelectedResult");
             }
         }
+
+        protected CollectionType CollectionsType { get; set; }
 
         public BaseCollectionPane(SccmConnector connector):base(connector)
         {

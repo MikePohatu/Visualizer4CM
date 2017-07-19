@@ -5,26 +5,26 @@ using viewmodel;
 
 namespace Visualizer
 {
-    public class DeploymentNode : Node
+    public class CiNode : Node
     {       
         const int _highlightedlinewidth = 5;
-        private SccmDeployment _deployment;
-        public SccmDeployment Deployment
+        private ISccmObject _ci;
+        public ISccmObject CI
         {
-            get { return this._deployment; }
-            set { this._deployment = value; }
+            get { return this._ci; }
+            set { this._ci = value; }
         }
 
-        public DeploymentNode(string id, SccmDeployment deployment) :base(id)
+        public CiNode(string id, ISccmObject ci) :base(id)
         {
-            this._deployment = deployment;
-            this._deployment.PropertyChanged += this.OnPropertyChanged;
+            this._ci = ci;
+            //this._ci.PropertyChanged += this.OnPropertyChanged;
             this.Attr.Shape = Shape.Box;
             this.Attr.XRadius = 3;
             this.Attr.YRadius = 3;
             this.Attr.Padding = 3;
             this.Attr.LabelMargin = 5;
-            this.LabelText = deployment.DeploymentName + Environment.NewLine + deployment.DeploymentType.ToString();
+            this.LabelText = ci.Name + Environment.NewLine + ci.ID;
             this.SetColor();
             //this.Attr.FillColor = Color.Green;
         }
@@ -49,10 +49,10 @@ namespace Visualizer
 
         private void SetColor()
         {
-            if (this._deployment.DeploymentType == SccmDeployment.CIType.Application) { this.Attr.Color = Color.PaleGreen; }
-            else if (this._deployment.DeploymentType == SccmDeployment.CIType.TaskSequence) { this.Attr.Color = Color.Orchid; }
-            else if (this._deployment.DeploymentType == SccmDeployment.CIType.Package) { this.Attr.Color = Color.AliceBlue; }
-            else if (this._deployment.DeploymentType == SccmDeployment.CIType.SoftwareUpdate) { this.Attr.Color = Color.Gold; }
+            //if (this._ci.DeploymentType == SccmDeployment.CIType.Application) { this.Attr.Color = Color.PaleGreen; }
+            //else if (this._ci.DeploymentType == SccmDeployment.CIType.TaskSequence) { this.Attr.Color = Color.Orchid; }
+            //else if (this._ci.DeploymentType == SccmDeployment.CIType.Package) { this.Attr.Color = Color.AliceBlue; }
+            //else if (this._ci.DeploymentType == SccmDeployment.CIType.SoftwareUpdate) { this.Attr.Color = Color.Gold; }
         }
     }
 }

@@ -23,7 +23,7 @@ namespace Visualizer
             this.Attr.YRadius = 3;
             this.Attr.Padding = 3;
             this.Attr.LabelMargin = 5;
-            this.LabelText = application.Name + Environment.NewLine + application.CIID;
+            this.LabelText = application.Name + Environment.NewLine + application.ID;
             this._application = application;
             //this.Attr.FillColor = Color.Green;
         }

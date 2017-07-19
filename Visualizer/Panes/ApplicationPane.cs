@@ -13,8 +13,8 @@ namespace Visualizer.Panes
         protected ApplicationTabControl _pane;
         public ApplicationTabControl Pane { get { return this._pane; } }
 
-        protected List<SccmApplication> _searchresults;
-        public List<SccmApplication> SearchResults
+        protected new List<SccmApplication> _searchresults;
+        public new List<SccmApplication> SearchResults
         {
             get { return this._searchresults; }
             set
@@ -24,8 +24,8 @@ namespace Visualizer.Panes
             }
         }
 
-        protected SccmApplication _selectedresult;
-        public SccmApplication SelectedResult
+        protected new SccmApplication _selectedresult;
+        public new SccmApplication SelectedResult
         {
             get { return this._selectedresult; }
             set

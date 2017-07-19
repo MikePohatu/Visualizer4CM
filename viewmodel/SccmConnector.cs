@@ -117,6 +117,37 @@ namespace viewmodel
             }
         }
 
+        /// <summary>
+        /// Does a collection search, but returns a list of ISccmObjects
+        /// </summary>
+        /// <param name="search"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public List<ISccmObject> GetCollectionSccmObjectsFromSearch(string search, CollectionType type)
+        {
+            try
+            {
+                // This query selects all collections
+                string query = "select * from SMS_Collection WHERE CollectionType='" + (int)type + "' AND Name LIKE '%" + search + "%' ORDER BY Name";
+                List<ISccmObject> newlist = new List<ISccmObject>();
+
+                // Run query
+                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
+                {
+                    // Enumerate through the collection of objects returned by the query.
+                    foreach (IResultObject resource in results)
+                    {
+                        newlist.Add(new SccmCollection(resource));
+                    }
+                }
+                return newlist;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         public List<SccmCollectionRelationship> GetCollectionDependencies(string collectionid)
         {
             List<SccmCollectionRelationship> relationships = new List<SccmCollectionRelationship>();
@@ -158,7 +189,7 @@ namespace viewmodel
                     foreach (IResultObject resource in results)
                     {
                         SccmApplication app = new SccmApplication(resource);
-                        applications.Add(app.CIID,app);
+                        applications.Add(app.ID,app);
                     }
                 }
                 
@@ -200,7 +231,7 @@ namespace viewmodel
                     foreach (IResultObject resource in results)
                     {
                         SccmApplication app = new SccmApplication(resource);
-                        applications.Add(app.CIID, app);
+                        applications.Add(app.ID, app);
                     }
                 }
 
@@ -212,6 +243,32 @@ namespace viewmodel
         public List<SccmApplication> GetApplicationsListFromSearch(string search)
         {
             List<SccmApplication> applications = new List<SccmApplication>();
+            try
+            {
+                // This query selects all collections
+
+                string query;
+                if (string.IsNullOrWhiteSpace(search)) { query = "select * from SMS_Application WHERE IsLatest='TRUE' ORDER BY LocalizedDisplayName"; }
+                else { query = "select * from SMS_Application WHERE LocalizedDisplayName LIKE '%" + search + "%' AND IsLatest='TRUE' ORDER BY LocalizedDisplayName"; }
+
+                // Run query
+                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
+                {
+                    // Enumerate through the collection of objects returned by the query.
+                    foreach (IResultObject resource in results)
+                    {
+                        SccmApplication app = new SccmApplication(resource);
+                        applications.Add(app);
+                    }
+                }
+            }
+            catch { }
+            return applications;
+        }
+
+        public List<ISccmObject> GetApplicationsSccmObjectsListFromSearch(string search)
+        {
+            List<ISccmObject> applications = new List<ISccmObject>();
             try
             {
                 // This query selects all collections
@@ -265,14 +322,14 @@ namespace viewmodel
             return relationships;
         }
 
-        public List<SccmDeployment> GetCIDeployments(string ciid)
+        public List<SccmDeployment> GetCIDeployments(string ciname)
         {
             List<SccmDeployment> deployments = new List<SccmDeployment>();
             
             try
             {
                 // This query selects all relationships of the specified app ID
-                string query = "select * from SMS_DeploymentInfo WHERE TargetID='" + ciid + "'";
+                string query = "select * from SMS_DeploymentInfo WHERE TargetName='" + ciname + "'";
 
                 // Run query
                 using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
@@ -311,6 +368,126 @@ namespace viewmodel
             }
             catch { }
             return deployments;
+        }
+
+        public List<SccmDeployment> GetDeploymentsFromSearch(string deploymentname)
+        {
+            List<SccmDeployment> deployments = new List<SccmDeployment>();
+
+            try
+            {
+                // This query selects all relationships of the specified app ID
+                string query = "select * from SMS_DeploymentInfo WHERE CollectionID='" + deploymentname + "'";
+
+                // Run query
+                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
+                {
+                    // Enumerate through the collection of objects returned by the query.
+                    foreach (IResultObject resource in results)
+                    {
+                        SccmDeployment dep = new SccmDeployment(resource);
+                        deployments.Add(dep);
+                    }
+                }
+            }
+            catch { }
+            return deployments;
+        }
+
+        public List<ISccmObject> GetDeploymentSccmObjectsFromSearch(string deploymentname)
+        {
+            List<ISccmObject> deployments = new List<ISccmObject>();
+
+            try
+            {
+                // This query selects all relationships of the specified app ID
+                string query = "select * from SMS_DeploymentInfo WHERE DeploymentName LIKE '%" + deploymentname + "%' ORDER BY DeploymentName";
+
+                // Run query
+                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
+                {
+                    // Enumerate through the collection of objects returned by the query.
+                    foreach (IResultObject resource in results)
+                    {
+                        SccmDeployment dep = new SccmDeployment(resource);
+                        deployments.Add(dep);
+                    }
+                }
+            }
+            catch { }
+            return deployments;
+        }
+
+        public List<ISccmObject> GetCIDeploymentsSccmObjectsFromSearch(string ciname)
+        {
+            List<ISccmObject> deployments = new List<ISccmObject>();
+
+            try
+            {
+                // This query selects all relationships of the specified app ID
+                string query = "select * from SMS_DeploymentInfo WHERE TargetName LIKE '%" + ciname + "%' ORDER BY DeploymentName";
+
+                // Run query
+                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
+                {
+                    // Enumerate through the collection of objects returned by the query.
+                    foreach (IResultObject resource in results)
+                    {
+                        SccmDeployment dep = new SccmDeployment(resource);
+                        deployments.Add(dep);
+                    }
+                }
+            }
+            catch { }
+            return deployments;
+        }
+
+        public List<ISccmObject> GetCISccmObjectsFromSearch(string ciname)
+        {
+            List<ISccmObject> CIs = new List<ISccmObject>();
+
+            try
+            {
+                // This query selects all relationships of the specified app ID
+                string query = "select * from SMS_ConfigurationItemBaseClass WHERE LocalizedDisplayName LIKE '%" + ciname + "%'";
+
+                // Run query
+                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
+                {
+                    // Enumerate through the collection of objects returned by the query.
+                    foreach (IResultObject resource in results)
+                    {
+                        SccmDeployableItem dep = new SccmDeployableItem(resource);
+                        CIs.Add(dep);
+                    }
+                }
+            }
+            catch { }
+            return CIs;
+        }
+
+        public List<ISccmObject> GetSoftwareUpdateSccmObjectsFromSearch(string ciname)
+        {
+            List<ISccmObject> CIs = new List<ISccmObject>();
+
+            try
+            {
+                // This query selects all relationships of the specified app ID
+                string query = "select * from SMS_SoftwareUpdate WHERE LocalizedDisplayName LIKE '%" + ciname + "%' ORDER BY LocalizedDisplayName";
+
+                // Run query
+                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
+                {
+                    // Enumerate through the collection of objects returned by the query.
+                    foreach (IResultObject resource in results)
+                    {
+                        SccmDeployableItem dep = new SccmDeployableItem(resource);
+                        CIs.Add(dep);
+                    }
+                }
+            }
+            catch { }
+            return CIs;
         }
 
         //public SccmApplication GetApplication(string ciid)

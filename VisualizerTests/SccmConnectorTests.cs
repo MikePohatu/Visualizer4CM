@@ -21,7 +21,7 @@ namespace VisualizerTests
         {
             SccmConnector connector = this.CreateAndConnectConnector();
             List<SccmApplication> apps = connector.GetApplicationsListFromSearch(appname);
-            foreach (SccmApplication app in apps) { return app.CIID; }
+            foreach (SccmApplication app in apps) { return app.ID; }
             return null;
         }
 

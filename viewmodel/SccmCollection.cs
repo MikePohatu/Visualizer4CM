@@ -3,7 +3,7 @@ using Microsoft.ConfigurationManagement.ManagementProvider;
 
 namespace viewmodel
 {
-    public class SccmCollection: ViewModelBase
+    public class SccmCollection: ViewModelBase, ISccmObject
     {
         public string LimitingCollectionID { get; set; }
         public SccmCollection LimitingCollection { get; set; }

@@ -42,7 +42,7 @@
 
             <ListBox x:Name="searchresultslb" Grid.Row="1" MinHeight="130"
                          ItemsSource="{Binding SearchResults}" SelectedItem="{Binding SelectedResult, Mode=TwoWay}"
-                        SelectedValuePath="CIID" DisplayMemberPath="Name"
+                        SelectedValuePath="ID" DisplayMemberPath="Name"
                          Style="{DynamicResource ListBoxStyle}" />
 
             <StackPanel Orientation="Vertical" Grid.Row="2">

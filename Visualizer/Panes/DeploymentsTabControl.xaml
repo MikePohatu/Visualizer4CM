@@ -46,9 +46,10 @@
                     <Label Grid.Column="0" Grid.Row="2" Content="Search mode:" Width="Auto" Style="{DynamicResource LabelStyle}"/>
                     <ComboBox Grid.Column="1" Grid.Row="2" x:Name="modecombo" Width="85" HorizontalAlignment="Right" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Padding="5,2,2,2" 
                               Style="{DynamicResource BaseControlStyle}">
-                        <ComboBoxItem>CI</ComboBoxItem>
+                        <ComboBoxItem>Application</ComboBoxItem>
                         <ComboBoxItem IsSelected="True">Collection</ComboBoxItem>
                         <ComboBoxItem>Deployment</ComboBoxItem>
+                        <ComboBoxItem>Update</ComboBoxItem>
                     </ComboBox>
                     <Button Grid.Column="2" Grid.Row="3" x:Name="buildbtn" Content="Build" Style="{DynamicResource ButtonStyle}" />
                 </Grid>
@@ -59,7 +60,7 @@
 
                 <ListBox Grid.Row="1" x:Name="searchresultslb" MinHeight="130"
                          ItemsSource="{Binding SearchResults}" SelectedItem="{Binding SelectedResult, Mode=TwoWay}"
-                        SelectedValuePath="CIID" DisplayMemberPath="Name"
+                        SelectedValuePath="ID" DisplayMemberPath="Name"
                          Style="{DynamicResource ListBoxStyle}" />
                 
                 <!-- Device search area-->

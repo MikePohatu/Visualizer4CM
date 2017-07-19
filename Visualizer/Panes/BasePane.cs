@@ -85,6 +85,28 @@ namespace Visualizer.Panes
             }
         }
 
+        protected List<ISccmObject> _searchresults;
+        public List<ISccmObject> SearchResults
+        {
+            get { return this._searchresults; }
+            set
+            {
+                this._searchresults = value;
+                this.OnPropertyChanged(this, "SearchResults");
+            }
+        }
+
+        protected ISccmObject _selectedresult;
+        public ISccmObject SelectedResult
+        {
+            get { return this._selectedresult; }
+            set
+            {
+                this._selectedresult = value;
+                this.OnPropertyChanged(this, "SelectedResult");
+            }
+        }
+
         // Constructor
         public BasePane(SccmConnector connector)
         {

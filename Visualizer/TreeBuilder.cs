@@ -139,7 +139,7 @@ namespace Visualizer
             Graph graph = new Graph();
 
             //build the graph
-            graph.AddNode(new ApplicationNode(application.CIID, application));
+            graph.AddNode(new ApplicationNode(application.ID, application));
             BuildApplicationMeshLinks(connector, graph, application);
             return graph;
         }
@@ -147,7 +147,7 @@ namespace Visualizer
         private static void BuildApplicationMeshLinks(SccmConnector connector, Graph graph, SccmApplication application)
         {
             
-            List<SccmApplicationRelationship> relationships = connector.GetApplicationRelationships(application.CIID);
+            List<SccmApplicationRelationship> relationships = connector.GetApplicationRelationships(application.ID);
             Dictionary<string, string> relatedapplicationids = new Dictionary<string, string>();
 
             foreach (SccmApplicationRelationship relationship in relationships)
@@ -174,7 +174,7 @@ namespace Visualizer
                     if (applications.TryGetValue(rel.FromApplicationCIID,out fromapp))
                     {
                         if (fromapp.IsLatest == false) { continue; }
-                        graph.AddNode(new ApplicationNode(fromapp.CIID, fromapp));
+                        graph.AddNode(new ApplicationNode(fromapp.ID, fromapp));
                     }
                     else { continue; }
                 }
@@ -185,7 +185,7 @@ namespace Visualizer
                     if (applications.TryGetValue(rel.ToApplicationCIID, out toapp))
                     {
                         if (toapp.IsLatest == false) { continue; }
-                        graph.AddNode(new ApplicationNode(toapp.CIID, toapp));
+                        graph.AddNode(new ApplicationNode(toapp.ID, toapp));
                     }
                     else { continue; }
                 }
@@ -207,6 +207,7 @@ namespace Visualizer
             //build the graph
             graph.AddNode(new CollectionNode(collection.ID, collection));
             BuildCollectionDeploymentLinks(connector, graph, collection.ID, deployments);
+            collection.IsHighlighted = true;
             return graph;
         }
 
@@ -217,7 +218,30 @@ namespace Visualizer
                 if (graph.FindNode(deployment.DeploymentID) == null)
                 {
                     graph.AddNode(new DeploymentNode(deployment.DeploymentID, deployment));
-                    Edge newedge = graph.AddEdge(rootcollectionid, deployment.DeploymentID);
+                    Edge newedge = graph.AddEdge(deployment.DeploymentID, rootcollectionid);
+                }
+            }
+        }
+
+        public static Graph BuildCIDeploymentsTree(SccmConnector connector, ISccmObject ci, List<SccmDeployment> deployments)
+        {
+            Graph graph = new Graph();
+
+            //build the graph
+            graph.AddNode(new CiNode(ci.ID, ci));
+            BuildCollectionDeploymentLinks(connector, graph, ci.ID, deployments);
+            ci.IsHighlighted = true;
+            return graph;
+        }
+
+        private static void BuildCIDeploymentLinks(SccmConnector connector, Graph graph, string rootid, List<SccmDeployment> deployments)
+        {
+            foreach (SccmDeployment deployment in deployments)
+            {
+                if (graph.FindNode(deployment.DeploymentID) == null)
+                {
+                    graph.AddNode(new DeploymentNode(deployment.DeploymentID, deployment));
+                    Edge newedge = graph.AddEdge(rootid, deployment.DeploymentID);
                 }
             }
         }
