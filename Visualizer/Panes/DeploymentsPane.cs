@@ -74,7 +74,7 @@ namespace Visualizer.Panes
                         this.SearchText = this.SelectedNode.SccmObject.Name;
                         if (this.SelectedNode.SccmObject is SccmCollection) { this._pane.modecombo.Text = "Collection"; }
                         else if (this.SelectedNode.SccmObject is SccmApplication) { this._pane.modecombo.Text = "Application"; }
-                        else if (this.SelectedNode.SccmObject is SccmSoftwareUpdate) { this._pane.modecombo.Text = "Update"; }
+                        else if (this.SelectedNode.SccmObject is SccmSoftwareUpdateGroup) { this._pane.modecombo.Text = "Update Group"; }
                         else if (this.SelectedNode.SccmObject is SccmDeploymentSummary) { this._pane.modecombo.Text = "Deployment"; }
                     }
                 }               
