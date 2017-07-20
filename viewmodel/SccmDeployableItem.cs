@@ -9,7 +9,7 @@ namespace viewmodel
 {
     public class SccmDeployableItem : ViewModelBase, ISccmObject
     {
-        public enum CIType { Package=2, Application=31, SoftwareUpdate=37, TaskSequence=7 }
+        public enum CIType { Package=2, Application=31, SoftwareUpdate=37, TaskSequence=7, SoftwareUpdateGroup = 5 }
 
         protected string _id;
         public string ID
@@ -47,8 +47,8 @@ namespace viewmodel
         public SccmDeployableItem() { }
         public SccmDeployableItem(IResultObject resource)
         {
-            this.ID = resource["CI_ID"].IntegerValue.ToString();
-            this.Name = resource["LocalizedDisplayName"].StringValue;
+            this.ID = ResultObjectHandler.GetString(resource, "CI_ID");
+            this.Name = ResultObjectHandler.GetString(resource, "LocalizedDisplayName");
         }
     }
 }

@@ -63,13 +63,14 @@ namespace Visualizer
 
         protected void SetLayout()
         {
-            string type = string.Empty;
-            if (this._sccmobject is SccmApplication) { this.Attr.Color = Color.SandyBrown; type = "Application"; }
-            else if (this._sccmobject is SccmDeploymentSummary) { this.Attr.Color = Color.LightBlue; type = "Deployment"; }
-            else if (this._sccmobject is SccmCollection) { this.Attr.Color = Color.RoyalBlue; type = "Collection"; }
-            else if (this._sccmobject is SccmSoftwareUpdate) { this.Attr.Color = Color.Gold; type = "Software Update"; }
+            string prefix = string.Empty;
+            if (this._sccmobject is SccmApplication) { this.Attr.Color = Color.SandyBrown; prefix = "Application: "; }
+            else if (this._sccmobject is SccmDeploymentSummary) { this.Attr.Color = Color.LightBlue; prefix = "Deployment: "; }
+            else if (this._sccmobject is SccmCollection) { this.Attr.Color = Color.RoyalBlue; prefix = "Collection: "; }
+            else if (this._sccmobject is SccmSoftwareUpdate) { this.Attr.Color = Color.Gold; prefix = "Software Update Group: "; }
+            else if (this._sccmobject is SccmTaskSequence) { this.Attr.Color = Color.Thistle; prefix = "Task Sequence: "; }
 
-            this.LabelText = this._sccmobject.Name + Environment.NewLine + type + ": " + this._sccmobject.ID;
+            this.LabelText = this._sccmobject.Name + Environment.NewLine + prefix + this._sccmobject.ID;
         }
     }
 }

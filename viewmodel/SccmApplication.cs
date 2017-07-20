@@ -49,13 +49,13 @@ namespace viewmodel
         public SccmApplication() { }
         public SccmApplication(IResultObject resource)
         {
-            this.ID = resource["CI_ID"].IntegerValue.ToString();
-            this.Name = resource["LocalizedDisplayName"].StringValue;
-            this.IsDeployed = resource["IsDeployed"].BooleanValue;
-            this.IsEnabled = resource["IsEnabled"].BooleanValue;
-            this.IsSuperseded = resource["IsSuperseded"].BooleanValue;
-            this.IsSuperseding = resource["IsSuperseding"].BooleanValue;
-            this.IsLatest = resource["IsLatest"].BooleanValue;
+            this.ID = ResultObjectHandler.GetString(resource, "CI_ID");
+            this.Name = ResultObjectHandler.GetString(resource, "LocalizedDisplayName");
+            this.IsDeployed = ResultObjectHandler.GetBool(resource, "IsDeployed");
+            this.IsEnabled = ResultObjectHandler.GetBool(resource, "IsEnabled");
+            this.IsSuperseded = ResultObjectHandler.GetBool(resource, "IsSuperseded");
+            this.IsSuperseding = ResultObjectHandler.GetBool(resource, "IsSuperseding");
+            this.IsLatest = ResultObjectHandler.GetBool(resource, "IsLatest");
         }
 
         public new string ToString()

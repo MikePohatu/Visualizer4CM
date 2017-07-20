@@ -98,12 +98,12 @@ namespace viewmodel
 
         public SccmCollection(IResultObject resource)
         {
-            this.ID = resource["CollectionID"].StringValue;
-            this.Name = resource["Name"].StringValue;
-            this.LimitingCollectionID = resource["LimitToCollectionID"].StringValue;
-            this.Comment = resource["Comment"].StringValue;
-            this.IncludeExcludeCollectionCount = resource["IncludeExcludeCollectionsCount"].IntegerValue;
-            int typeint = resource["CollectionType"].IntegerValue;
+            this.ID = ResultObjectHandler.GetString(resource,"CollectionID");
+            this.Name = ResultObjectHandler.GetString(resource, "Name");
+            this.LimitingCollectionID = ResultObjectHandler.GetString(resource, "LimitToCollectionID");
+            this.Comment = ResultObjectHandler.GetString(resource, "Comment");
+            this.IncludeExcludeCollectionCount = ResultObjectHandler.GetInt(resource, "IncludeExcludeCollectionsCount");
+            int typeint = ResultObjectHandler.GetInt(resource, "CollectionType");
             this.Type = (CollectionType)typeint;
             
         }

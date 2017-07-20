@@ -18,7 +18,7 @@ namespace viewmodel
                 return newitem;
             }
 
-            else if (deployment.FeatureType == SccmDeploymentSummary.CIType.SoftwareUpdate)
+            else if (deployment.FeatureType == SccmDeploymentSummary.CIType.SoftwareUpdateGroup)
             {
                 var newitem = new SccmSoftwareUpdate();
                 newitem.Name = deployment.SoftwareName;
@@ -30,7 +30,7 @@ namespace viewmodel
             {
                 var newitem = new SccmTaskSequence();
                 newitem.Name = deployment.SoftwareName;
-                newitem.ID = deployment.CIID;
+                newitem.ID = deployment.PackageID;
                 return newitem;
             }
             return null;

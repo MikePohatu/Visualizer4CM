@@ -107,7 +107,7 @@ namespace Visualizer.Panes
             else if (this._pane.modecombo.Text == "Application")
             { await Task.Run(() => this.SearchResults = this._connector.GetApplicationsSccmObjectsListFromSearch(this._searchtext)); }
 
-            else if (this._pane.modecombo.Text == "Update")
+            else if (this._pane.modecombo.Text == "Update Group")
             { await Task.Run(() => this.SearchResults = this._connector.GetSoftwareUpdateSccmObjectsFromSearch(this._searchtext)); }
 
             this._processing = false;
@@ -136,9 +136,8 @@ namespace Visualizer.Panes
                     }
                     else if ((this._selectedresult is SccmDeployableItem) || (this._selectedresult is SccmApplication) || (this._selectedresult is SccmSoftwareUpdate))
                     {
-                        await Task.Run(() => deployments = this._connector.GetCIDeployments(this._selectedresult.Name));
+                        await Task.Run(() => deployments = this._connector.GetSoftwareItemDeployments(this._selectedresult.Name));
                     }
-                    
 
                     this.UpdateProgressMessage("Building tree");
                     await Task.Run(() => 

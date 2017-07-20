@@ -12,7 +12,7 @@ namespace viewmodel
     /// </summary>
     public class SccmDeploymentSummary: ViewModelBase, ISccmObject
     {
-        public enum CIType { Package=2, Application=1, SoftwareUpdate=5, TaskSequence=7 }
+        public enum CIType { Package=2, Application=1, SoftwareUpdateGroup=5, TaskSequence=7 }
 
         protected string _collectionid;
         public string CollectionID
@@ -59,16 +59,16 @@ namespace viewmodel
             }
         }
 
-        //protected string _deploymentname;
-        //public string DeploymentName
-        //{
-        //    get { return this._deploymentname; }
-        //    set
-        //    {
-        //        this._deploymentname = value;
-        //        this.OnPropertyChanged(this, "DeploymentName");
-        //    }
-        //}
+        protected string _packageid;
+        public string PackageID
+        {
+            get { return this._packageid; }
+            set
+            {
+                this._packageid = value;
+                this.OnPropertyChanged(this, "PackageID");
+            }
+        }
         public string Name { get { return this._deploymentid; } }
 
         protected CIType _featuretype;
@@ -151,19 +151,15 @@ namespace viewmodel
         public SccmDeploymentSummary() { }
         public SccmDeploymentSummary(IResultObject resource)
         {
-            this.CollectionID = resource["CollectionID"].StringValue;
-            this.CollectionName = resource["CollectionName"].StringValue;
-            this.DeploymentID = resource["DeploymentID"].StringValue;
-            this.DeploymentIntent = resource["DeploymentIntent"].IntegerValue;
-            this.SoftwareName = resource["SoftwareName"].StringValue;
-            this.CIID = resource["CI_ID"].StringValue;
-            this.SoftwareName = resource["SoftwareName"].StringValue;
-            this.FeatureType = (CIType)resource["FeatureType"].IntegerValue;
-            //this.DeploymentTypeID = resource["DeploymentTypeID"].IntegerValue;
-            
-            
-            //this.TargetSubName = resource["TargetSubName"].StringValue;
-            //this.TargetSecurityTypeID = resource["TargetSecurityTypeID"].IntegerValue;
+            this.CollectionID = ResultObjectHandler.GetString(resource,"CollectionID");
+            this.CollectionName = ResultObjectHandler.GetString(resource, "CollectionName");
+            this.DeploymentID = ResultObjectHandler.GetString(resource, "DeploymentID");
+            this.DeploymentIntent = ResultObjectHandler.GetInt(resource,"DeploymentIntent");
+            this.SoftwareName = ResultObjectHandler.GetString(resource, "SoftwareName");
+            this.PackageID = ResultObjectHandler.GetString(resource, "PackageID");
+            this.CIID = ResultObjectHandler.GetString(resource,"CI_ID");
+            this.SoftwareName = ResultObjectHandler.GetString(resource, "SoftwareName");
+            this.FeatureType = (CIType)ResultObjectHandler.GetInt(resource,"FeatureType");
         }
     }
 }

@@ -30,28 +30,27 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     
                     <Label x:Name="searchlbl" Grid.Row="0" Content="Search" Width="Auto" Style="{StaticResource LabelStyle}"/>
-                    <TextBox x:Name="searchtb" Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Width="Auto" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource BaseControlStyle}"/>
-                    <Button x:Name="searchbtn" Grid.Row="1" Grid.Column="2" Content="Search" HorizontalAlignment="Right" Style="{DynamicResource ButtonStyle}"/>
-                    
-                    <Label Grid.Column="0" Grid.Row="2" Content="Search mode:" Width="Auto" Style="{DynamicResource LabelStyle}"/>
-                    <ComboBox Grid.Column="1" Grid.Row="2" x:Name="modecombo" Width="85" HorizontalAlignment="Right" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Padding="5,2,2,2" 
+                    <ComboBox Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="0" x:Name="modecombo" Width="85" HorizontalAlignment="Right" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Padding="5,2,2,2" 
                               Style="{DynamicResource BaseControlStyle}">
                         <ComboBoxItem>Application</ComboBoxItem>
                         <ComboBoxItem IsSelected="True">Collection</ComboBoxItem>
-                        <ComboBoxItem>Deployment</ComboBoxItem>
-                        <ComboBoxItem>Update</ComboBoxItem>
+                        <!--<ComboBoxItem>Deployment</ComboBoxItem>-->
+                        <ComboBoxItem>Update Group</ComboBoxItem>
                     </ComboBox>
-                    <Button Grid.Column="2" Grid.Row="3" x:Name="buildbtn" Content="Build" Style="{DynamicResource ButtonStyle}" />
+                    <TextBox x:Name="searchtb" Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0" HorizontalAlignment="Stretch" Width="Auto" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource BaseControlStyle}"/>
+                    <Button x:Name="searchbtn" Grid.Row="1" Grid.Column="4" Content="Search" HorizontalAlignment="Right" Style="{DynamicResource ButtonStyle}"/>
+                    
+                    <Label Grid.Column="0" Grid.Row="2" Content="Search mode:" Width="Auto" Style="{DynamicResource LabelStyle}"/>
+                    
+                    <Button Grid.Column="2" Grid.Row="2" x:Name="buildbtn" Content="Build" HorizontalAlignment="Right" Style="{DynamicResource ButtonStyle}" />
                 </Grid>
                 <StackPanel Grid.Row="0" Orientation="Vertical" VerticalAlignment="Top">
                     

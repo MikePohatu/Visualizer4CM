@@ -322,7 +322,7 @@ namespace viewmodel
             return relationships;
         }
 
-        public List<SccmDeploymentSummary> GetCIDeployments(string ciname)
+        public List<SccmDeploymentSummary> GetSoftwareItemDeployments(string ciname)
         {
             List<SccmDeploymentSummary> deployments = new List<SccmDeploymentSummary>();
             
@@ -346,12 +346,63 @@ namespace viewmodel
             return deployments;
         }
 
-        public List<SccmDeploymentSummary> GetCollectionDeployments(string collectionid)
+        public List<SccmDeploymentInfo> GetSoftwareUpdateDeployment(string updatename)
+        {
+            List<SccmDeploymentInfo> deployments = new List<SccmDeploymentInfo>();
+
+            try
+            {
+                // This query selects all relationships of the specified app ID
+                string query = "select * from SMS_DeploymentInfo WHERE TargetName='" + updatename + "' AND DeploymentType='" + SccmDeploymentInfo.FeatureTypeValue.SoftwareUpdate + "'";
+
+                // Run query
+                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
+                {
+                    // Enumerate through the collection of objects returned by the query.
+                    foreach (IResultObject resource in results)
+                    {
+                        SccmDeploymentInfo dep = new SccmDeploymentInfo(resource);
+                        deployments.Add(dep);
+                    }
+                }
+            }
+            catch { }
+            return deployments;
+
+        }
+
+
+        public List<SccmDeploymentSummary> GetSoftwareUpdateGroupDeployments(string updategrouname)
         {
             List<SccmDeploymentSummary> deployments = new List<SccmDeploymentSummary>();
 
             try
             {
+                // This query selects all relationships of the specified app ID
+                string query = "select * from SMS_DeploymentSummary WHERE SoftwareName='" + updategrouname + "' AND FeatureType='" + SccmDeploymentSummary.CIType.SoftwareUpdateGroup + "'";
+
+                // Run query
+                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
+                {
+                    // Enumerate through the collection of objects returned by the query.
+                    foreach (IResultObject resource in results)
+                    {
+                        SccmDeploymentSummary dep = new SccmDeploymentSummary(resource);
+                        deployments.Add(dep);
+                    }
+                }
+            }
+            catch { }
+            return deployments;
+
+        }
+
+        public List<SccmDeploymentSummary> GetCollectionDeployments(string collectionid)
+        {
+            List<SccmDeploymentSummary> deployments = new List<SccmDeploymentSummary>();
+
+            //try
+            //{
                 // This query selects all relationships of the specified app ID
                 string query = "select * from SMS_DeploymentSummary WHERE CollectionID='" + collectionid + "'";
 
@@ -365,8 +416,8 @@ namespace viewmodel
                         deployments.Add(dep);
                     }
                 }
-            }
-            catch { }
+            //}
+            //catch { }
             return deployments;
         }
 
@@ -419,6 +470,30 @@ namespace viewmodel
         }
 
         public List<ISccmObject> GetSoftwareUpdateSccmObjectsFromSearch(string ciname)
+        {
+            List<ISccmObject> CIs = new List<ISccmObject>();
+
+            try
+            {
+                // This query selects all relationships of the specified app ID
+                string query = "select * from SMS_SoftwareUpdate WHERE LocalizedDisplayName LIKE '%" + ciname + "%' ORDER BY LocalizedDisplayName";
+
+                // Run query
+                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
+                {
+                    // Enumerate through the collection of objects returned by the query.
+                    foreach (IResultObject resource in results)
+                    {
+                        SccmDeployableItem dep = new SccmDeployableItem(resource);
+                        CIs.Add(dep);
+                    }
+                }
+            }
+            catch { }
+            return CIs;
+        }
+
+        public List<ISccmObject> GetSoftwareUpdateGroupSccmObjectsFromSearch(string ciname)
         {
             List<ISccmObject> CIs = new List<ISccmObject>();
 
