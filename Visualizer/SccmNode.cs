@@ -67,7 +67,7 @@ namespace Visualizer
             if (this._sccmobject is SccmApplication) { this.Attr.Color = Color.SandyBrown; prefix = "Application: "; }
             else if (this._sccmobject is SccmDeploymentSummary) { this.Attr.Color = Color.LightBlue; prefix = "Deployment: "; }
             else if (this._sccmobject is SccmCollection) { this.Attr.Color = Color.RoyalBlue; prefix = "Collection: "; }
-            else if (this._sccmobject is SccmSoftwareUpdate) { this.Attr.Color = Color.Gold; prefix = "Software Update Group: "; }
+            else if (this._sccmobject is SccmSoftwareUpdateGroup) { this.Attr.Color = Color.Gold; prefix = "SUG: "; }
             else if (this._sccmobject is SccmTaskSequence) { this.Attr.Color = Color.Thistle; prefix = "Task Sequence: "; }
 
             this.LabelText = this._sccmobject.Name + Environment.NewLine + prefix + this._sccmobject.ID;

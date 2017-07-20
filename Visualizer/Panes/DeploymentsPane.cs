@@ -110,6 +110,9 @@ namespace Visualizer.Panes
             else if (this._pane.modecombo.Text == "Update Group")
             { await Task.Run(() => this.SearchResults = this._connector.GetSoftwareUpdateGroupSccmObjectsFromSearch(this._searchtext)); }
 
+            else if (this._pane.modecombo.Text == "Update")
+            { await Task.Run(() => this.SearchResults = this._connector.GetSoftwareUpdateSccmObjectsFromSearch(this._searchtext)); }
+
             this._processing = false;
             this.ControlsEnabled = true;
         }
