@@ -108,7 +108,7 @@ namespace Visualizer.Panes
             { await Task.Run(() => this.SearchResults = this._connector.GetApplicationsSccmObjectsListFromSearch(this._searchtext)); }
 
             else if (this._pane.modecombo.Text == "Update Group")
-            { await Task.Run(() => this.SearchResults = this._connector.GetSoftwareUpdateSccmObjectsFromSearch(this._searchtext)); }
+            { await Task.Run(() => this.SearchResults = this._connector.GetSoftwareUpdateGroupSccmObjectsFromSearch(this._searchtext)); }
 
             this._processing = false;
             this.ControlsEnabled = true;
@@ -134,7 +134,7 @@ namespace Visualizer.Panes
                     {
                         await Task.Run(() => deployments = this._connector.GetCollectionDeployments(this._selectedresult.ID));
                     }
-                    else if ((this._selectedresult is SccmDeployableItem) || (this._selectedresult is SccmApplication) || (this._selectedresult is SccmSoftwareUpdate))
+                    else if (this._selectedresult is SccmDeployableItem)
                     {
                         await Task.Run(() => deployments = this._connector.GetSoftwareItemDeployments(this._selectedresult.Name));
                     }

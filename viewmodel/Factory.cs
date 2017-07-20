@@ -20,7 +20,7 @@ namespace viewmodel
 
             else if (deployment.FeatureType == SccmDeploymentSummary.CIType.SoftwareUpdateGroup)
             {
-                var newitem = new SccmSoftwareUpdate();
+                var newitem = new SccmSoftwareUpdateGroup();
                 newitem.Name = deployment.SoftwareName;
                 newitem.ID = deployment.CIID;
                 return newitem;

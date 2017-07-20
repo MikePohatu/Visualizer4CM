@@ -500,7 +500,7 @@ namespace viewmodel
             try
             {
                 // This query selects all relationships of the specified app ID
-                string query = "select * from SMS_SoftwareUpdate WHERE LocalizedDisplayName LIKE '%" + ciname + "%' ORDER BY LocalizedDisplayName";
+                string query = "select CI_ID,SoftwareName from SMS_DeploymentSummary WHERE SoftwareName LIKE '%" + ciname + "%' AND FeatureType='5'";
 
                 // Run query
                 using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
@@ -508,7 +508,9 @@ namespace viewmodel
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
                     {
-                        SccmDeployableItem dep = new SccmDeployableItem(resource);
+                        SccmDeployableItem dep = new SccmDeployableItem();
+                        dep.ID = ResultObjectHandler.GetString(resource, "CI_ID");
+                        dep.Name = ResultObjectHandler.GetString(resource, "SoftwareName");
                         CIs.Add(dep);
                     }
                 }
