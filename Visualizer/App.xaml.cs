@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace Visualizer
 {
@@ -25,11 +21,23 @@ namespace Visualizer
             this.HandleException(sender, e, e.StackTrace);
         }
 
+        public void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs args)
+        {
+            args.Handled = true;
+            Exception e = args.Exception;
+            this.HandleException(sender, e, e.StackTrace);
+        }
+        
         private void HandleException(object sender, Exception e, string AdditionalText)
         {
             string s = "Source: " + sender.ToString() + Environment.NewLine + Environment.NewLine + "Exception: " + e.Message + Environment.NewLine;
             if (!string.IsNullOrEmpty(AdditionalText)) { s = s + Environment.NewLine + AdditionalText; }
             MessageBox.Show(s, "Unhandled exception", MessageBoxButton.OK, MessageBoxImage.Error);
+
+            foreach (Window win in this.Windows)
+            {
+                win.Close();
+            }
         }
     }
 }

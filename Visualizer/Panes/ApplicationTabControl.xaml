@@ -36,8 +36,8 @@
                 </Grid.RowDefinitions>
                 <Label x:Name="searchlbl" Grid.Row="0" Content="Search" Width="Auto" Style="{DynamicResource LabelStyle}"/>
                 <TextBox x:Name="searchtb" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Width="Auto" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource BaseControlStyle}"/>
-                <Button x:Name="searchbtn" Grid.Row="2" Grid.Column="2" Width="50" Content="Search" HorizontalAlignment="Right" Style="{DynamicResource ButtonStyle}"/>
-                <Button x:Name="buildbtn" Grid.Row="2" Grid.Column="3" Width="50" Content="Build" HorizontalAlignment="Right" Style="{DynamicResource ButtonStyle}"/>
+                <Button x:Name="searchbtn" Grid.Row="2" Grid.Column="2" Content="Search" HorizontalAlignment="Right" Style="{DynamicResource ButtonStyle}"/>
+                <Button x:Name="buildbtn" Grid.Row="2" Grid.Column="3" Content="Build" HorizontalAlignment="Right" Style="{DynamicResource ButtonStyle}"/>
             </Grid>
 
             <ListBox x:Name="searchresultslb" Grid.Row="1" MinHeight="130"
