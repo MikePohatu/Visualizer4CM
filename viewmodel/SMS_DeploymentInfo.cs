@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.ConfigurationManagement.ManagementProvider;
-
-namespace viewmodel
+﻿namespace viewmodel
 {
     /// <summary>
     /// Class represents the SMS_DeploymentSummary WMI class
@@ -146,22 +139,6 @@ namespace viewmodel
                 this._ishighlighted = value;
                 this.OnPropertyChanged(this, "IsHighlighted");
             }
-        }
-
-        public SMS_DeploymentInfo() { }
-        public SMS_DeploymentInfo(IResultObject resource)
-        {
-            this.CollectionID = ResultObjectHandler.GetString(resource,"CollectionID");
-            this.CollectionName = ResultObjectHandler.GetString(resource, "CollectionName");
-            this.DeploymentID = ResultObjectHandler.GetString(resource, "DeploymentID");
-            this.DeploymentIntent = ResultObjectHandler.GetInt(resource,"DeploymentIntent");
-            this.DeploymentName = ResultObjectHandler.GetString(resource, "DeploymentName");
-            this.DeploymentType = ResultObjectHandler.GetInt(resource, "DeploymentType");
-            this.DeploymentTypeID = ResultObjectHandler.GetInt(resource, "DeploymentTypeID");
-            this.FeatureType = (SccmItemType)ResultObjectHandler.GetInt(resource, "FeatureType");
-            this.TargetID = ResultObjectHandler.GetString(resource, "TargetID");
-            this.TargetSecurityTypeID = ResultObjectHandler.GetInt(resource, "TargetSecurityTypeID");
-            this.TargetSubName = ResultObjectHandler.GetString(resource, "TargetSubName");
         }
     }
 }

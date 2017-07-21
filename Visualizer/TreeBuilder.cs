@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Msagl.Drawing;
 using viewmodel;
 
@@ -217,8 +214,12 @@ namespace Visualizer
             {
                 if (graph.FindNode(deployment.SoftwareName) == null)
                 {
-                    graph.AddNode(new SccmNode(deployment.SoftwareName, Factory.GetSccmDeployableItem(deployment)));
-                    Edge newedge = graph.AddEdge(deployment.SoftwareName, rootcollectionid);
+                    SccmDeployableItem item = Factory.GetSccmDeployableItemFromDeploymentSummary(deployment);
+                    if (item != null)
+                    {
+                        graph.AddNode(new SccmNode(deployment.SoftwareName, item));
+                        Edge newedge = graph.AddEdge(deployment.SoftwareName, rootcollectionid);
+                    }
                 }
             }
         }
@@ -240,7 +241,7 @@ namespace Visualizer
             {
                 if (graph.FindNode(deployment.CollectionID) == null)
                 {
-                    graph.AddNode(new SccmNode(deployment.CollectionID, new SccmCollection(deployment.CollectionID,deployment.CollectionName,string.Empty)));
+                    graph.AddNode(new CollectionNode(deployment.CollectionID, new SccmCollection(deployment.CollectionID,deployment.CollectionName,string.Empty)));
                     Edge newedge = graph.AddEdge(rootid, deployment.CollectionID);
                 }
             }

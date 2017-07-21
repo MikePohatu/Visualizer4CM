@@ -1,12 +1,7 @@
-﻿using System.Windows.Controls;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
-using System;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using viewmodel;
 using Microsoft.ConfigurationManagement.ManagementProvider;
@@ -15,7 +10,6 @@ namespace Visualizer.Panes
 {
     public class DeploymentsPane : BasePane
     {
-        //protected CollectionLibrary _library;
         protected List<SccmCollection> _highlightedcollections = new List<SccmCollection>();
         protected bool _filteredview = true;
 
@@ -32,14 +26,11 @@ namespace Visualizer.Panes
             this._pane.buildbtn.Click += this.OnBuildButtonPressed;
             this._pane.gviewer.MouseClick += this.OnGViewerMouseClicked;
             this._pane.gviewer.MouseDoubleClick += this.OnGViewerMouseDoubleClick;
-            //this._pane.abortbtn.Click += OnAbortButtonClick;
             this._pane.searchbtn.Click += this.OnSearchButtonPressed;
             this._pane.searchtb.KeyUp += this.OnSearchKeyUp;
 
             this.CollectionsType = CollectionType.Device;
             this._header = "Deployments";
-            //this._findlabeltext = "blah:";
-            //this._library = connector.GetAllCollectionsLibrary();
         }
 
         protected void ClearHighlightedCollections()

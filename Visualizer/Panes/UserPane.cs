@@ -1,5 +1,4 @@
-﻿using System.Windows;
-using viewmodel;
+﻿using viewmodel;
 using Microsoft.ConfigurationManagement.ManagementProvider;
 
 namespace Visualizer.Panes

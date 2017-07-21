@@ -96,18 +96,6 @@ namespace viewmodel
             this.IsHighlighted = false;
         }
 
-        public SccmCollection(IResultObject resource)
-        {
-            this.ID = ResultObjectHandler.GetString(resource,"CollectionID");
-            this.Name = ResultObjectHandler.GetString(resource, "Name");
-            this.LimitingCollectionID = ResultObjectHandler.GetString(resource, "LimitToCollectionID");
-            this.Comment = ResultObjectHandler.GetString(resource, "Comment");
-            this.IncludeExcludeCollectionCount = ResultObjectHandler.GetInt(resource, "IncludeExcludeCollectionsCount");
-            int typeint = ResultObjectHandler.GetInt(resource, "CollectionType");
-            this.Type = (CollectionType)typeint;
-            
-        }
-
         public List<SccmCollection> HighlightCollectionPathList()
         {
             this.IsHighlighted = true;

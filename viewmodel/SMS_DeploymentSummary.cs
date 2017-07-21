@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.ConfigurationManagement.ManagementProvider;
-
-namespace viewmodel
+﻿namespace viewmodel
 {
     /// <summary>
     /// Class represents the SMS_DeploymentSummary WMI class
@@ -80,17 +73,6 @@ namespace viewmodel
             }
         }
 
-        //protected int _deploymenttypeid;
-        //public int DeploymentTypeID
-        //{
-        //    get { return this._deploymenttypeid; }
-        //    set
-        //    {
-        //        this._deploymenttypeid = value;
-        //        this.OnPropertyChanged(this, "DeploymentTypeID");
-        //    }
-        //}
-
         protected string _ciid;
         public string CIID
         {
@@ -113,28 +95,6 @@ namespace viewmodel
             }
         }
 
-        //protected int _targetsecuritytypeid;
-        //public int TargetSecurityTypeID
-        //{
-        //    get { return this._targetsecuritytypeid; }
-        //    set
-        //    {
-        //        this._targetsecuritytypeid = value;
-        //        this.OnPropertyChanged(this, "TargetSecurityTypeID");
-        //    }
-        //}
-
-        //protected string _targetsubname;
-        //public string TargetSubName
-        //{
-        //    get { return this._targetsubname; }
-        //    set
-        //    {
-        //        this._targetsubname = value;
-        //        this.OnPropertyChanged(this, "TargetSubName");
-        //    }
-        //}
-
         private bool _ishighlighted;
         public bool IsHighlighted
         {
@@ -144,20 +104,6 @@ namespace viewmodel
                 this._ishighlighted = value;
                 this.OnPropertyChanged(this, "IsHighlighted");
             }
-        }
-
-        public SMS_DeploymentSummary() { }
-        public SMS_DeploymentSummary(IResultObject resource)
-        {
-            this.CollectionID = ResultObjectHandler.GetString(resource,"CollectionID");
-            this.CollectionName = ResultObjectHandler.GetString(resource, "CollectionName");
-            this.DeploymentID = ResultObjectHandler.GetString(resource, "DeploymentID");
-            this.DeploymentIntent = ResultObjectHandler.GetInt(resource,"DeploymentIntent");
-            this.SoftwareName = ResultObjectHandler.GetString(resource, "SoftwareName");
-            this.PackageID = ResultObjectHandler.GetString(resource, "PackageID");
-            this.CIID = ResultObjectHandler.GetString(resource,"CI_ID");
-            this.SoftwareName = ResultObjectHandler.GetString(resource, "SoftwareName");
-            this.FeatureType = (SccmItemType)ResultObjectHandler.GetInt(resource,"FeatureType");
         }
     }
 }

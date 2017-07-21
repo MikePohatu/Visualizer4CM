@@ -1,10 +1,5 @@
-﻿using System;
-using System.Windows;
-using System.Xml.Linq;
-using Visualizer;
+﻿using System.Windows;
 using NUnit.Framework;
-using Microsoft.ConfigurationManagement.ManagementProvider;
-using Microsoft.ConfigurationManagement.ManagementProvider.WqlQueryEngine;
 using viewmodel;
 
 namespace VisualizerTests

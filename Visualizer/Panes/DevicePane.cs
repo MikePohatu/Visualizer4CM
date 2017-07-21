@@ -1,11 +1,4 @@
-﻿using System.Windows.Controls;
-using System.Collections.Generic;
-using System.Windows;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Msagl.Drawing;
-using viewmodel;
+﻿using viewmodel;
 using Microsoft.ConfigurationManagement.ManagementProvider;
 
 namespace Visualizer.Panes

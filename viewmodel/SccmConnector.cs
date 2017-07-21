@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using Microsoft.ConfigurationManagement.ManagementProvider;
 using Microsoft.ConfigurationManagement.ManagementProvider.WqlQueryEngine;
 
@@ -56,7 +51,8 @@ namespace viewmodel
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
                     {
-                        library.AddCollection(new SccmCollection(resource));
+                        SccmCollection col = Factory.GetCollectionFromSMS_CollectionResults(resource);
+                        library.AddCollection(col);
                     }
                 }
                 return library;
@@ -81,7 +77,8 @@ namespace viewmodel
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
                     {
-                        library.AddCollection(new SccmCollection(resource));
+                        SccmCollection col = Factory.GetCollectionFromSMS_CollectionResults(resource);
+                        library.AddCollection(col);
                     }
                 }
                 return library;
@@ -106,7 +103,8 @@ namespace viewmodel
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
                     {
-                        newlist.Add(new SccmCollection(resource));
+                        SccmCollection col = Factory.GetCollectionFromSMS_CollectionResults(resource);
+                        newlist.Add(col);
                     }
                 }
                 return newlist;
@@ -137,7 +135,8 @@ namespace viewmodel
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
                     {
-                        newlist.Add(new SccmCollection(resource));
+                        SccmCollection col = Factory.GetCollectionFromSMS_CollectionResults(resource);
+                        newlist.Add(col);
                     }
                 }
                 return newlist;
@@ -188,7 +187,7 @@ namespace viewmodel
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
                     {
-                        SccmApplication app = new SccmApplication(resource);
+                        SccmApplication app = Factory.GetApplicationFromSMS_ApplicationResults(resource);
                         applications.Add(app.ID,app);
                     }
                 }
@@ -230,7 +229,7 @@ namespace viewmodel
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
                     {
-                        SccmApplication app = new SccmApplication(resource);
+                        SccmApplication app = Factory.GetApplicationFromSMS_ApplicationResults(resource);
                         applications.Add(app.ID, app);
                     }
                 }
@@ -257,7 +256,7 @@ namespace viewmodel
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
                     {
-                        SccmApplication app = new SccmApplication(resource);
+                        SccmApplication app = Factory.GetApplicationFromSMS_ApplicationResults(resource);
                         applications.Add(app);
                     }
                 }
@@ -283,7 +282,7 @@ namespace viewmodel
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
                     {
-                        SccmApplication app = new SccmApplication(resource);
+                        SccmApplication app = Factory.GetApplicationFromSMS_ApplicationResults(resource);
                         applications.Add(app);
                     }
                 }
@@ -308,12 +307,7 @@ namespace viewmodel
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
                     {
-                        SccmApplicationRelationship apprel = new SccmApplicationRelationship();
-                        apprel.FromApplicationCIID = resource["FromApplicationCIID"].IntegerValue.ToString();
-                        apprel.ToApplicationCIID = resource["ToApplicationCIID"].IntegerValue.ToString();
-                        apprel.ToDeploymentTypeCIID = resource["ToDeploymentTypeCIID"].IntegerValue.ToString();
-                        apprel.FromDeploymentTypeCIID = resource["FromDeploymentTypeCIID"].IntegerValue.ToString();
-                        apprel.SetType(resource["TypeFlag"].IntegerValue);
+                        SccmApplicationRelationship apprel = Factory.GetAppRelationshipFromSMS_AppDependenceRelationResults(resource);
                         relationships.Add(apprel);
                     }
                 }              
@@ -337,7 +331,7 @@ namespace viewmodel
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
                     {
-                        SMS_DeploymentSummary dep = new SMS_DeploymentSummary(resource);
+                        SMS_DeploymentSummary dep = Factory.GetDeploymentSummaryFromSMS_DeploymentSummaryResults(resource);
                         deployments.Add(dep);
                     }
                 }
@@ -362,7 +356,7 @@ namespace viewmodel
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
                     {
-                        SMS_DeploymentInfo dep = new SMS_DeploymentInfo(resource);
+                        SMS_DeploymentInfo dep = Factory.GetDeploymentInfoFromSMS_DeploymentInfoResults(resource);
                         deployments.Add(dep);
                     }
                 }
@@ -389,7 +383,7 @@ namespace viewmodel
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
                     {
-                        SMS_DeploymentSummary dep = new SMS_DeploymentSummary(resource);
+                        SMS_DeploymentSummary dep = Factory.GetDeploymentSummaryFromSMS_DeploymentSummaryResults(resource);
                         deployments.Add(dep);
                     }
                 }
@@ -414,7 +408,7 @@ namespace viewmodel
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
                     {
-                        SMS_DeploymentSummary dep = new SMS_DeploymentSummary(resource);                        
+                    SMS_DeploymentSummary dep = Factory.GetDeploymentSummaryFromSMS_DeploymentSummaryResults(resource);                       
                         deployments.Add(dep);
                     }
                 }
@@ -438,7 +432,7 @@ namespace viewmodel
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
                     {
-                        SMS_DeploymentSummary dep = new SMS_DeploymentSummary(resource);
+                        SMS_DeploymentInfo dep = Factory.GetDeploymentInfoFromSMS_DeploymentInfoResults(resource);
                         deployments.Add(dep);
                     }
                 }
@@ -462,7 +456,7 @@ namespace viewmodel
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
                     {
-                        SMS_DeploymentSummary dep = new SMS_DeploymentSummary(resource);
+                        SMS_DeploymentInfo dep = Factory.GetDeploymentInfoFromSMS_DeploymentInfoResults(resource);
                         deployments.Add(dep);
                     }
                 }

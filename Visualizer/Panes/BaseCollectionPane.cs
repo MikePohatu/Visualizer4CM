@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows.Input;
-using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Threading.Tasks;
 using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using viewmodel;
-using System.Threading;
 using Microsoft.ConfigurationManagement.ManagementProvider;
 
 namespace Visualizer.Panes

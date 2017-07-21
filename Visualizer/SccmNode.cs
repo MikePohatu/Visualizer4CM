@@ -7,7 +7,8 @@ namespace Visualizer
 {
     public class SccmNode : Node
     {
-        protected int _highlightedlinewidth = 3;
+        protected int _highlightedlinewidth = 5;
+        protected int _normallinewidth = 3;
 
         protected ISccmObject _sccmobject;
         public ISccmObject SccmObject
@@ -36,12 +37,12 @@ namespace Visualizer
                 ISccmObject col = (ISccmObject)sender;
                 if (col.IsHighlighted == true)
                 {
-                    this.Attr.LineWidth = _highlightedlinewidth;
+                    this.Attr.LineWidth = this._highlightedlinewidth;
                     this.Attr.Color = Color.Green;
                 }
                 else
                 {
-                    this.Attr.LineWidth = 1;
+                    this.Attr.LineWidth = this._normallinewidth;
                     this.Attr.Color = Color.Black;
                 }
             }
