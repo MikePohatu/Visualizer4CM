@@ -41,7 +41,7 @@
             </Grid>
 
             <ListBox x:Name="searchresultslb" Grid.Row="1" MinHeight="130"
-                         ItemsSource="{Binding SearchResults}" SelectedItem="{Binding SelectedResult, Mode=TwoWay}"
+                         ItemsSource="{Binding SearchResults}" SelectedItem="{Binding SelectedResult, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         SelectedValuePath="ID" Style="{DynamicResource ListBoxStyle}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>

@@ -1,5 +1,6 @@
 ﻿namespace viewmodel
 {
+    public enum TaskSequenceType { Generic = 1, OSD = 2 }
     public enum SccmItemType {
         Application = 1,
         Package = 2,
@@ -14,6 +15,9 @@
         ConfigurationPolicy=11,
         SoftwareUpdate = 37,
         Device,
-        User
+        User,
+        Collection,
+        SMS_DeploymentInfo,
+        SMS_DeploymentSummary
     }
 }

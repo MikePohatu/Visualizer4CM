@@ -48,6 +48,7 @@ namespace Visualizer.Panes
             MsaglHelpers.ConfigureCollectionsGViewer(this._pane.gviewer);
             this._pane.DataContext = this;
             this._pane.buildbtn.Click += this.OnBuildButtonPressed;
+            this._pane.searchresultslb.MouseDoubleClick += this.OnSearchResultsListDoubleClick;
             this._pane.gviewer.AsyncLayoutProgress += this.OnProgressUpdate;
             this._pane.gviewer.MouseDoubleClick += this.OnGViewerMouseDoubleClick;
             //this._pane.abortbtn.Click += OnAbortButtonClick;

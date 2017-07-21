@@ -32,7 +32,7 @@ namespace Visualizer
                 }
                 else
                 {
-                    this.Attr.LineWidth = 1;
+                    this.Attr.LineWidth = _normallinewidth;
                     this.Attr.Color = Color.Black;
                 }
             }

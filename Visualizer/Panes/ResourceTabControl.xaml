@@ -56,7 +56,7 @@
                 </StackPanel>
 
                 <ListBox Grid.Row="1" x:Name="searchresultslb" MinHeight="130"
-                         ItemsSource="{Binding SearchResults}" SelectedItem="{Binding SelectedResult, Mode=TwoWay}"
+                         ItemsSource="{Binding SearchResults}" SelectedItem="{Binding SelectedResult, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         SelectedValuePath="CIID"
                          Style="{DynamicResource ListBoxStyle}">
                     <ListBox.ItemTemplate>

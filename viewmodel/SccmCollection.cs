@@ -5,9 +5,10 @@ namespace viewmodel
 {
     public class SccmCollection: ViewModelBase, ISccmObject
     {
+        public SccmItemType Type { get { return SccmItemType.Collection; } }
         public string LimitingCollectionID { get; set; }
         public SccmCollection LimitingCollection { get; set; }
-        public CollectionType Type { get; set; }
+        public CollectionType CollectionType { get; set; }
 
         private string _comment;
         public string Comment

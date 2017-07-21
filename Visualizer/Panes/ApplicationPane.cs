@@ -45,6 +45,7 @@ namespace Visualizer.Panes
             this._pane.DataContext = this;
             this._pane.searchbtn.KeyUp += this.OnBuildKeyUp;
             this._pane.buildbtn.Click += this.OnBuildButtonPressed;
+            this._pane.searchresultslb.MouseDoubleClick += this.OnSearchResultsListDoubleClick;
             this._pane.searchbtn.Click += this.OnSearchButtonPressed;
             this._pane.searchtb.KeyUp += this.OnSearchKeyUp;
             //this._pane.gviewer.AsyncLayoutProgress += this.OnProgressUpdate;

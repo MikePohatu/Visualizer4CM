@@ -518,35 +518,29 @@ namespace viewmodel
             return CIs;
         }
 
-        //public SccmApplication GetApplication(string ciid)
-        //{
-        //    try
-        //    {
-        //        // This query selects all collections
-        //        string query = "select * from SMS_Application WHERE IsLatest='TRUE' AND CI_ID='" + ciid + "'";
+        public List<ISccmObject> GetTaskSequenceSccmObjectsFromSearch(string search)
+        {
+            List<ISccmObject> items = new List<ISccmObject>();
+            try
+            {
+                string query;
+                if (string.IsNullOrWhiteSpace(search)) { query = "select * from SMS_TaskSequencePackage ORDER BY Name"; }
+                else { query = "select * from SMS_TaskSequencePackage WHERE Name LIKE '%" + search + "%' ORDER BY Name"; }
 
-        //        // Run query
-        //        using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
-        //        {
-        //            // Enumerate through the collection of objects returned by the query.
-        //            foreach (IResultObject resource in results)
-        //            {
-        //                SccmApplication app = new SccmApplication();
-        //                app.CIID = resource["CI_ID"].IntegerValue.ToString();
-        //                app.Name = resource["LocalizedDisplayName"].StringValue;
-        //                app.IsDeployed = resource["IsDeployed"].BooleanValue;
-        //                app.IsEnabled = resource["IsEnabled"].BooleanValue;
-        //                app.IsSuperseded = resource["IsSuperseded"].BooleanValue;
-        //                app.IsSuperseding = resource["IsSuperseding"].BooleanValue;
-        //                app.IsLatest = resource["IsLatest"].BooleanValue;
-        //                return app;
-        //            }
-        //        }
-
-        //    }
-        //    catch { }
-        //    return null;
-        //}
+                // Run query
+                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
+                {
+                    // Enumerate through the collection of objects returned by the query.
+                    foreach (IResultObject resource in results)
+                    {
+                        SccmTaskSequence app = Factory.GetTaskSequenceFromSMS_TaskSequenceResults(resource);
+                        items.Add(app);
+                    }
+                }
+            }
+            catch { }
+            return items;
+        }
 
         public SccmDevice GetDevice(string name)
         {

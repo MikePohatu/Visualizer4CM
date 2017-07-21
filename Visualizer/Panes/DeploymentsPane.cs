@@ -24,6 +24,7 @@ namespace Visualizer.Panes
             MsaglHelpers.ConfigureCollectionsGViewer(this._pane.gviewer);
             this._pane.DataContext = this;
             this._pane.buildbtn.Click += this.OnBuildButtonPressed;
+            this._pane.searchresultslb.MouseDoubleClick += this.OnSearchResultsListDoubleClick;
             this._pane.gviewer.MouseClick += this.OnGViewerMouseClicked;
             this._pane.gviewer.MouseDoubleClick += this.OnGViewerMouseDoubleClick;
             this._pane.searchbtn.Click += this.OnSearchButtonPressed;
@@ -68,6 +69,7 @@ namespace Visualizer.Panes
                         else if (this.SelectedNode.SccmObject is SccmSoftwareUpdateGroup) { this._pane.modecombo.Text = "Update Group"; }
                         else if (this.SelectedNode.SccmObject is SMS_DeploymentSummary) { this._pane.modecombo.Text = "Deployment"; }
                         else if (this.SelectedNode.SccmObject is SccmSoftwareUpdate) { this._pane.modecombo.Text = "Update"; }
+                        else if (this.SelectedNode.SccmObject is SccmTaskSequence) { this._pane.modecombo.Text = "Task Sequence"; }
                     }
                 }               
             }
@@ -104,6 +106,9 @@ namespace Visualizer.Panes
 
             else if (this._pane.modecombo.Text == "Update")
             { await Task.Run(() => this.SearchResults = this._connector.GetSoftwareUpdateSccmObjectsFromSearch(this._searchtext)); }
+
+            else if (this._pane.modecombo.Text == "Task Sequence")
+            { await Task.Run(() => this.SearchResults = this._connector.GetTaskSequenceSccmObjectsFromSearch(this._searchtext)); }
 
             this._processing = false;
             this.ControlsEnabled = true;

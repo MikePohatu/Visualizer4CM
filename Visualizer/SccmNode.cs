@@ -7,7 +7,7 @@ namespace Visualizer
 {
     public class SccmNode : Node
     {
-        protected int _highlightedlinewidth = 5;
+        protected int _highlightedlinewidth = 4;
         protected int _normallinewidth = 3;
 
         protected ISccmObject _sccmobject;
@@ -26,7 +26,8 @@ namespace Visualizer
             this.Attr.YRadius = 3;
             this.Attr.Padding = 3;
             this.Attr.LabelMargin = 5;
-            
+            this.Attr.LineWidth = this._normallinewidth;
+
             this.SetLayout();
         }
 
@@ -39,11 +40,13 @@ namespace Visualizer
                 {
                     this.Attr.LineWidth = this._highlightedlinewidth;
                     this.Attr.Color = Color.Green;
+                    //this.Attr.FillColor = Color.LightGreen;
                 }
                 else
                 {
                     this.Attr.LineWidth = this._normallinewidth;
                     this.Attr.Color = Color.Black;
+                    //this.Attr.Color = Color.White;
                 }
             }
         }
@@ -51,13 +54,44 @@ namespace Visualizer
         protected void SetLayout()
         {
             string prefix = string.Empty;
-            if (this._sccmobject is SccmApplication) { this.Attr.Color = Color.SandyBrown; prefix = "Application: "; }
-            else if (this._sccmobject is SMS_DeploymentSummary) { this.Attr.Color = Color.LightBlue; prefix = "Deployment: "; }
-            else if (this._sccmobject is SccmCollection) { this.Attr.Color = Color.RoyalBlue; prefix = "Collection: "; }
-            else if (this._sccmobject is SccmSoftwareUpdateGroup) { this.Attr.Color = Color.Gold; prefix = "SUG: "; }
-            else if (this._sccmobject is SccmTaskSequence) { this.Attr.Color = Color.Thistle; prefix = "Task Sequence: "; }
-            else if (this._sccmobject is SccmPackage) { this.Attr.Color = Color.Chocolate; prefix = "Package: "; }
-            else if (this._sccmobject is SccmConfigurationBaseline) { this.Attr.Color = Color.CornflowerBlue; prefix = "Baseline: "; }
+            //if (this._sccmobject is SccmApplication) { this.Attr.Color = Color.SandyBrown; prefix = "Application: "; }
+            ////else if (this._sccmobject is SMS_DeploymentSummary) { this.Attr.Color = Color.LightBlue; prefix = "Deployment: "; }
+            //else if (this._sccmobject is SccmCollection) { this.Attr.Color = Color.RoyalBlue; prefix = "Collection: "; }
+            //else if (this._sccmobject is SccmSoftwareUpdateGroup) { this.Attr.Color = Color.Gold; prefix = "SUG: "; }
+            //else if (this._sccmobject is SccmTaskSequence) { this.Attr.Color = Color.Thistle; prefix = "Task Sequence: "; }
+            //else if (this._sccmobject is SccmPackage) { this.Attr.Color = Color.Chocolate; prefix = "Package: "; }
+            //else if (this._sccmobject is SccmConfigurationBaseline) { this.Attr.Color = Color.CornflowerBlue; prefix = "Baseline: "; }
+
+            switch (this._sccmobject.Type)
+            {
+                case SccmItemType.Application:
+                    //this.Attr.Color = Color.SandyBrown;
+                    prefix = "Application: ";
+                    break;
+                case SccmItemType.Collection:
+                    //this.Attr.Color = Color.RoyalBlue;
+                    prefix = "Collection: ";
+                    break;
+                case SccmItemType.SoftwareUpdateGroup:
+                    //this.Attr.Color = Color.Gold;
+                    prefix = "SUG: ";
+                    break;
+                case SccmItemType.TaskSequence:
+                    //this.Attr.Color = Color.Thistle;
+                    prefix = "Task Sequence: ";
+                    break;
+                case SccmItemType.Package:
+                    //this.Attr.Color = Color.Chocolate;
+                    prefix = "Package: ";
+                    break;
+                case SccmItemType.ConfigurationBaseline:
+                    //this.Attr.Color = Color.CornflowerBlue;
+                    prefix = "Baseline: ";
+                    break;
+                default:
+                    break;
+
+            }
 
             this.LabelText = this._sccmobject.Name + Environment.NewLine + prefix + this._sccmobject.ID;
         }

@@ -135,7 +135,7 @@ namespace viewmodel
             item.Comment = ResultObjectHandler.GetString(resource, "Comment");
             item.IncludeExcludeCollectionCount = ResultObjectHandler.GetInt(resource, "IncludeExcludeCollectionsCount");
             int typeint = ResultObjectHandler.GetInt(resource, "CollectionType");
-            item.Type = (CollectionType)typeint;
+            item.CollectionType = (CollectionType)typeint;
 
             return item;
         }
@@ -184,6 +184,17 @@ namespace viewmodel
             item.TargetSecurityTypeID = ResultObjectHandler.GetInt(resource, "TargetSecurityTypeID");
             item.TargetSubName = ResultObjectHandler.GetString(resource, "TargetSubName");
 
+            return item;
+        }
+
+        public static SccmTaskSequence GetTaskSequenceFromSMS_TaskSequenceResults(IResultObject resource)
+        {
+            SccmTaskSequence item = new SccmTaskSequence();
+
+            item.ID = ResultObjectHandler.GetString(resource, "PackageID");
+            item.Name = ResultObjectHandler.GetString(resource, "Name");
+            int tstype = ResultObjectHandler.GetInt(resource, "Type");
+            item.TaskSequenceType = (TaskSequenceType)tstype;
             return item;
         }
     }

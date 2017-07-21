@@ -158,6 +158,14 @@ namespace Visualizer.Panes
                 this.BuildGraph();
             }
         }
+        protected void OnSearchResultsListDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+            {
+                //if (this._selectedresult != null) { this.BuildGraph(); }
+                this.BuildGraph();
+            }
+        }
 
         protected void OnBuildButtonPressed(object sender, RoutedEventArgs e)
         {

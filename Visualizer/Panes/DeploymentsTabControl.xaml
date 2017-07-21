@@ -52,6 +52,7 @@
                         <ComboBoxItem>Application</ComboBoxItem>
                         <ComboBoxItem IsSelected="True">Collection</ComboBoxItem>
                         <!--<ComboBoxItem>Deployment</ComboBoxItem>-->
+                        <ComboBoxItem>Task Sequence</ComboBoxItem>
                         <ComboBoxItem>Update</ComboBoxItem>
                         <ComboBoxItem>Update Group</ComboBoxItem>
                     </ComboBox>
@@ -62,7 +63,7 @@
                 </Grid>
 
                 <ListBox Grid.Row="2" x:Name="searchresultslb" MinHeight="130"
-                         ItemsSource="{Binding SearchResults}" SelectedItem="{Binding SelectedResult, Mode=TwoWay}"
+                         ItemsSource="{Binding SearchResults}" SelectedItem="{Binding SelectedResult, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         SelectedValuePath="ID" Style="{DynamicResource ListBoxStyle}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>

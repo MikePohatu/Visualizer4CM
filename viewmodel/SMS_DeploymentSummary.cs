@@ -5,6 +5,7 @@
     /// </summary>
     public class SMS_DeploymentSummary: ViewModelBase, IDeployment
     {
+        public SccmItemType Type { get { return SccmItemType.SMS_DeploymentSummary; } }
         protected string _collectionid;
         public string CollectionID
         {
