@@ -16,10 +16,11 @@ namespace Visualizer
 
         public CollectionNode(string id, SccmCollection collection) :base(id, collection)
         {
+            this._sccmobject.PropertyChanged += this.OnCollectionPropertyChanged;
             this._collection = collection;
         }
 
-        public new void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        public void OnCollectionPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName.Equals("IsLimitingCollection"))
             {

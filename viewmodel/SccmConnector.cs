@@ -569,8 +569,8 @@ namespace viewmodel
                     {
                         if (count == 0)
                         {
-                            cmresource.ID = resource["ResourceID"].StringValue;
-                            cmresource.Name = resource["Name"].StringValue;
+                            cmresource.ID = ResultObjectHandler.GetString(resource,"ResourceID");
+                            cmresource.Name = ResultObjectHandler.GetString(resource, "Name");
                             count++;
                         }
                         cmresource.CollectionIDs.Add(resource["CollectionID"].StringValue);

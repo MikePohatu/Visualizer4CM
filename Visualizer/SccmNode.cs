@@ -29,7 +29,7 @@ namespace Visualizer
             this.SetLayout();
         }
 
-        public void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        public virtual void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName.Equals("IsHighlighted"))
             {
