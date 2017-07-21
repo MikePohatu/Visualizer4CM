@@ -38,7 +38,7 @@ namespace Visualizer.Panes
 
             this.CollectionsType = CollectionType.Device;
             this._header = "Deployments";
-            this._findlabeltext = "blah:";
+            //this._findlabeltext = "blah:";
             //this._library = connector.GetAllCollectionsLibrary();
         }
 

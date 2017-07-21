@@ -11,7 +11,7 @@
     
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
+            <ColumnDefinition MinWidth="265" Width="265"/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
@@ -42,8 +42,13 @@
 
             <ListBox x:Name="searchresultslb" Grid.Row="1" MinHeight="130"
                          ItemsSource="{Binding SearchResults}" SelectedItem="{Binding SelectedResult, Mode=TwoWay}"
-                        SelectedValuePath="ID" DisplayMemberPath="Name"
-                         Style="{DynamicResource ListBoxStyle}" />
+                        SelectedValuePath="ID" Style="{DynamicResource ListBoxStyle}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock TextWrapping="NoWrap" HorizontalAlignment="Stretch" Text="{Binding Name}" ToolTip="{Binding Name}"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
 
             <StackPanel Orientation="Vertical" Grid.Row="2">
                 

@@ -11,7 +11,7 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition MinWidth="265" Width="Auto"/>
+            <ColumnDefinition MinWidth="265" Width="265"/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
@@ -57,9 +57,15 @@
 
                 <ListBox Grid.Row="1" x:Name="searchresultslb" MinHeight="130"
                          ItemsSource="{Binding SearchResults}" SelectedItem="{Binding SelectedResult, Mode=TwoWay}"
-                        SelectedValuePath="CIID" DisplayMemberPath="Name"
-                         Style="{DynamicResource ListBoxStyle}" />
-                
+                        SelectedValuePath="CIID"
+                         Style="{DynamicResource ListBoxStyle}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock TextWrapping="NoWrap" HorizontalAlignment="Stretch" Text="{Binding Name}" ToolTip="{Binding Name}"/>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
                 <!-- Device search area-->
 
                 <Grid Grid.Row="2" Margin="0">
