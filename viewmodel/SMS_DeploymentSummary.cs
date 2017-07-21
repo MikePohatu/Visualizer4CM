@@ -10,10 +10,8 @@ namespace viewmodel
     /// <summary>
     /// Class represents the SMS_DeploymentSummary WMI class
     /// </summary>
-    public class SccmDeploymentSummary: ViewModelBase, ISccmObject
+    public class SMS_DeploymentSummary: ViewModelBase, IDeployment
     {
-        public enum CIType { Package=2, Application=1, SoftwareUpdateGroup=5, TaskSequence=7 }
-
         protected string _collectionid;
         public string CollectionID
         {
@@ -71,8 +69,8 @@ namespace viewmodel
         }
         public string Name { get { return this._deploymentid; } }
 
-        protected CIType _featuretype;
-        public CIType FeatureType
+        protected SccmItemType _featuretype;
+        public SccmItemType FeatureType
         {
             get { return this._featuretype; }
             set
@@ -148,8 +146,8 @@ namespace viewmodel
             }
         }
 
-        public SccmDeploymentSummary() { }
-        public SccmDeploymentSummary(IResultObject resource)
+        public SMS_DeploymentSummary() { }
+        public SMS_DeploymentSummary(IResultObject resource)
         {
             this.CollectionID = ResultObjectHandler.GetString(resource,"CollectionID");
             this.CollectionName = ResultObjectHandler.GetString(resource, "CollectionName");
@@ -159,7 +157,7 @@ namespace viewmodel
             this.PackageID = ResultObjectHandler.GetString(resource, "PackageID");
             this.CIID = ResultObjectHandler.GetString(resource,"CI_ID");
             this.SoftwareName = ResultObjectHandler.GetString(resource, "SoftwareName");
-            this.FeatureType = (CIType)ResultObjectHandler.GetInt(resource,"FeatureType");
+            this.FeatureType = (SccmItemType)ResultObjectHandler.GetInt(resource,"FeatureType");
         }
     }
 }

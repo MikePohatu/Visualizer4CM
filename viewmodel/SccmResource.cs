@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace viewmodel
 {
-    public abstract class SccmResource
+    public abstract class SccmResource: SccmDeployableItem
     {
-        public string ID { get; set; }
-        public string Name { get; set; }
-
         protected List<string> _collectionids = new List<string>();
         public List<string> CollectionIDs
         {

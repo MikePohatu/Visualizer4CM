@@ -322,9 +322,9 @@ namespace viewmodel
             return relationships;
         }
 
-        public List<SccmDeploymentSummary> GetSoftwareItemDeployments(string ciname)
+        public List<IDeployment> GetSoftwareItemDeployments(string ciname)
         {
-            List<SccmDeploymentSummary> deployments = new List<SccmDeploymentSummary>();
+            List<IDeployment> deployments = new List<IDeployment>();
             
             try
             {
@@ -337,7 +337,7 @@ namespace viewmodel
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
                     {
-                        SccmDeploymentSummary dep = new SccmDeploymentSummary(resource);
+                        SMS_DeploymentSummary dep = new SMS_DeploymentSummary(resource);
                         deployments.Add(dep);
                     }
                 }
@@ -346,14 +346,15 @@ namespace viewmodel
             return deployments;
         }
 
-        public List<SccmDeploymentInfo> GetSoftwareUpdateDeployment(string updatename)
+        public List<IDeployment> GetSoftwareUpdateDeployments(string updatename)
         {
-            List<SccmDeploymentInfo> deployments = new List<SccmDeploymentInfo>();
+            List<IDeployment> deployments = new List<IDeployment>();
 
             try
             {
                 // This query selects all relationships of the specified app ID
-                string query = "select * from SMS_DeploymentInfo WHERE TargetName='" + updatename + "' AND DeploymentType='" + SccmDeploymentInfo.FeatureTypeValue.SoftwareUpdate + "'";
+                int type = (int)SccmItemType.SoftwareUpdate;
+                string query = "select * from SMS_DeploymentInfo WHERE TargetName='" + updatename + "' AND DeploymentType='" + type.ToString() + "'";
 
                 // Run query
                 using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
@@ -361,7 +362,7 @@ namespace viewmodel
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
                     {
-                        SccmDeploymentInfo dep = new SccmDeploymentInfo(resource);
+                        SMS_DeploymentInfo dep = new SMS_DeploymentInfo(resource);
                         deployments.Add(dep);
                     }
                 }
@@ -372,14 +373,15 @@ namespace viewmodel
         }
 
 
-        public List<SccmDeploymentSummary> GetSoftwareUpdateGroupDeployments(string updategrouname)
+        public List<IDeployment> GetSoftwareUpdateGroupDeployments(string updategrouname)
         {
-            List<SccmDeploymentSummary> deployments = new List<SccmDeploymentSummary>();
+            List<IDeployment> deployments = new List<IDeployment>();
 
             try
             {
                 // This query selects all relationships of the specified app ID
-                string query = "select * from SMS_DeploymentSummary WHERE SoftwareName='" + updategrouname + "' AND FeatureType='" + SccmDeploymentSummary.CIType.SoftwareUpdateGroup + "'";
+                int type = (int)SccmItemType.SoftwareUpdateGroup;
+                string query = "select * from SMS_DeploymentSummary WHERE SoftwareName='" + updategrouname + "' AND FeatureType='" + type.ToString() + "'";
 
                 // Run query
                 using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
@@ -387,7 +389,7 @@ namespace viewmodel
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
                     {
-                        SccmDeploymentSummary dep = new SccmDeploymentSummary(resource);
+                        SMS_DeploymentSummary dep = new SMS_DeploymentSummary(resource);
                         deployments.Add(dep);
                     }
                 }
@@ -397,9 +399,9 @@ namespace viewmodel
 
         }
 
-        public List<SccmDeploymentSummary> GetCollectionDeployments(string collectionid)
+        public List<IDeployment> GetCollectionDeployments(string collectionid)
         {
-            List<SccmDeploymentSummary> deployments = new List<SccmDeploymentSummary>();
+            List<IDeployment> deployments = new List<IDeployment>();
 
             //try
             //{
@@ -412,7 +414,7 @@ namespace viewmodel
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
                     {
-                        SccmDeploymentSummary dep = new SccmDeploymentSummary(resource);                        
+                        SMS_DeploymentSummary dep = new SMS_DeploymentSummary(resource);                        
                         deployments.Add(dep);
                     }
                 }
@@ -421,9 +423,9 @@ namespace viewmodel
             return deployments;
         }
 
-        public List<SccmDeploymentSummary> GetDeploymentsFromSearch(string deploymentname)
+        public List<IDeployment> GetDeploymentsFromSearch(string deploymentname)
         {
-            List<SccmDeploymentSummary> deployments = new List<SccmDeploymentSummary>();
+            List<IDeployment> deployments = new List<IDeployment>();
 
             try
             {
@@ -436,7 +438,7 @@ namespace viewmodel
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
                     {
-                        SccmDeploymentSummary dep = new SccmDeploymentSummary(resource);
+                        SMS_DeploymentSummary dep = new SMS_DeploymentSummary(resource);
                         deployments.Add(dep);
                     }
                 }
@@ -460,7 +462,7 @@ namespace viewmodel
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
                     {
-                        SccmDeploymentSummary dep = new SccmDeploymentSummary(resource);
+                        SMS_DeploymentSummary dep = new SMS_DeploymentSummary(resource);
                         deployments.Add(dep);
                     }
                 }
@@ -476,7 +478,7 @@ namespace viewmodel
             try
             {
                 // This query selects all relationships of the specified app ID
-                string query = "select * from SMS_SoftwareUpdate WHERE LocalizedDisplayName LIKE '%" + ciname + "%' ORDER BY LocalizedDisplayName";
+                string query = "select CI_ID,LocalizedDisplayName from SMS_SoftwareUpdate WHERE LocalizedDisplayName LIKE '%" + ciname + "%' ORDER BY LocalizedDisplayName";
 
                 // Run query
                 using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
@@ -484,7 +486,9 @@ namespace viewmodel
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
                     {
-                        SccmDeployableItem dep = new SccmDeployableItem(resource);
+                        SccmDeployableItem dep = new SccmSoftwareUpdate();
+                        dep.Name = ResultObjectHandler.GetString(resource, "LocalizedDisplayName");
+                        dep.ID = ResultObjectHandler.GetString(resource, "CI_ID");
                         CIs.Add(dep);
                     }
                 }
@@ -499,8 +503,9 @@ namespace viewmodel
 
             try
             {
+                int type = (int)SccmItemType.SoftwareUpdateGroup;
                 // This query selects all relationships of the specified app ID
-                string query = "select CI_ID,SoftwareName from SMS_DeploymentSummary WHERE SoftwareName LIKE '%" + ciname + "%' AND FeatureType='5'";
+                string query = "select DISTINCT CI_ID,SoftwareName from SMS_DeploymentSummary WHERE SoftwareName LIKE '%" + ciname + "%' AND FeatureType='" + type.ToString() + "'";
 
                 // Run query
                 using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
@@ -508,7 +513,7 @@ namespace viewmodel
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
                     {
-                        SccmDeployableItem dep = new SccmDeployableItem();
+                        SccmDeployableItem dep = new SccmSoftwareUpdateGroup();
                         dep.ID = ResultObjectHandler.GetString(resource, "CI_ID");
                         dep.Name = ResultObjectHandler.GetString(resource, "SoftwareName");
                         CIs.Add(dep);

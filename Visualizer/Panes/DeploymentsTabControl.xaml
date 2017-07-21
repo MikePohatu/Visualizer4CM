@@ -18,7 +18,11 @@
 
         <Grid Grid.Column="0">
             <Grid Grid.Row="1" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition MinHeight="130" Height="*"/>
                     <RowDefinition Height="Auto"/>
@@ -27,20 +31,22 @@
                 <!-- Tree build area-->
                 <Grid Grid.Row="0">
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="80"/>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    
+
                     <Label x:Name="searchlbl" Grid.Row="0" Grid.Column="0" Content="Search" Width="Auto" Style="{StaticResource LabelStyle}"/>
-                    <TextBox x:Name="searchtb" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" Width="170"
+                    <TextBox x:Name="searchtb" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" HorizontalAlignment="Stretch"
                              TextWrapping="NoWrap" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource BaseControlStyle}"/>
+                </Grid>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="80"/>
+                        <ColumnDefinition Width="65"/>
+                        <ColumnDefinition Width="65"/>
+                        <ColumnDefinition Width="65"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
                     <ComboBox Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3"  x:Name="modecombo" Width="110" HorizontalAlignment="left" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Padding="5,2,2,2" 
                               Style="{DynamicResource BaseControlStyle}">
                         <ComboBoxItem>Application</ComboBoxItem>
@@ -49,24 +55,18 @@
                         <ComboBoxItem>Update</ComboBoxItem>
                         <ComboBoxItem>Update Group</ComboBoxItem>
                     </ComboBox>
-                    
-                    <Button x:Name="searchbtn" Grid.Row="1" Grid.Column="2" Content="Search" HorizontalAlignment="Center" Style="{DynamicResource ButtonStyle}"/>
-                    <Button Grid.Column="3" Grid.Row="1" x:Name="buildbtn" Content="Build" HorizontalAlignment="Right" Style="{DynamicResource ButtonStyle}" />
-                </Grid>
-                <StackPanel Grid.Row="0" Orientation="Vertical" VerticalAlignment="Top">
-                    
-                    <!--<Button x:Name="abortbtn" Width="50" Content="Abort"  Style="{StaticResource BaseControlStyle}" Margin="3"/>-->
-                </StackPanel>
 
-                <ListBox Grid.Row="1" x:Name="searchresultslb" MinHeight="130"
+                    <Button x:Name="searchbtn" Grid.Row="1" Grid.Column="2" Content="Search" HorizontalAlignment="Center" Style="{DynamicResource ButtonStyle}"/>
+                    <Button Grid.Column="3" Grid.Row="1" x:Name="buildbtn" Content="Build" HorizontalAlignment="Center" Style="{DynamicResource ButtonStyle}" />
+                    <!--<Button x:Name="abortbtn" Width="50" Content="Abort"  Style="{StaticResource BaseControlStyle}" Margin="3"/>-->
+                </Grid>
+
+                <ListBox Grid.Row="2" x:Name="searchresultslb" MinHeight="130"
                          ItemsSource="{Binding SearchResults}" SelectedItem="{Binding SelectedResult, Mode=TwoWay}"
-                        SelectedValuePath="ID"
-                         Style="{DynamicResource ListBoxStyle}" >
+                        SelectedValuePath="ID" Style="{DynamicResource ListBoxStyle}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <Grid>
-                                <TextBlock TextWrapping="NoWrap" HorizontalAlignment="Stretch" Text="{Binding Name}"/>
-                            </Grid>
+                            <TextBlock TextWrapping="NoWrap" HorizontalAlignment="Stretch" Text="{Binding Name}" ToolTip="{Binding Name}"/>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
 
@@ -74,32 +74,20 @@
                 </ListBox>
 
                 <!-- Device search area-->
+                <Label Grid.Row="3" x:Name="notifylbl" Content="{Binding NotificationText}"  Style="{DynamicResource LabelStyle}" Foreground="Blue"/>
 
-                <Grid Grid.Row="2" Margin="0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-
-                    <Label Grid.ColumnSpan="3" Grid.Row="2" x:Name="notifylbl" Content="{Binding NotificationText}"  Style="{DynamicResource LabelStyle}" Foreground="Blue"/>
-                </Grid>
             </Grid>
         </Grid>
+        
         <GridSplitter VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                   Grid.Column="1" ResizeBehavior="PreviousAndNext"
                   Width="3"/>
 
-            <!-- Display column -->
-            <Grid Grid.Column="2" Background="LightGray">
-                <WindowsFormsHost x:Name="gviewerhost" Grid.Row="0" Margin="0,0,0,0">
-                    <gv:GViewer x:Name="gviewer"></gv:GViewer>
-                </WindowsFormsHost>
-            </Grid>
+        <!-- Display column -->
+        <Grid Grid.Column="2" Background="LightGray">
+            <WindowsFormsHost x:Name="gviewerhost" Grid.Row="0" Margin="0,0,0,0">
+                <gv:GViewer x:Name="gviewer"></gv:GViewer>
+            </WindowsFormsHost>
         </Grid>
+    </Grid>
 </UserControl>

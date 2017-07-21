@@ -49,11 +49,15 @@
   <ItemGroup>
     <Compile Include="CollectionLibrary.cs" />
     <Compile Include="Factory.cs" />
+    <Compile Include="IDeployment.cs" />
     <Compile Include="ISccmObject.cs" />
     <Compile Include="LoginViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResultObjectHandler.cs" />
-    <Compile Include="SccmDeploymentInfo.cs" />
+    <Compile Include="SMS_DeploymentInfo.cs" />
+    <Compile Include="SccmConfigurationBaseline.cs" />
+    <Compile Include="SccmEnums.cs" />
+    <Compile Include="SccmPackage.cs" />
     <Compile Include="SccmSoftwareUpdateGroup.cs" />
     <Compile Include="SccmTaskSequence.cs" />
     <Compile Include="SccmSoftwareUpdate.cs" />
@@ -62,7 +66,7 @@
     <Compile Include="SccmCollectionRelationship.cs" />
     <Compile Include="SccmConnector.cs" />
     <Compile Include="SccmDeployableItem.cs" />
-    <Compile Include="SccmDeploymentSummary.cs" />
+    <Compile Include="SMS_DeploymentSummary.cs" />
     <Compile Include="SccmDevice.cs" />
     <Compile Include="SccmApplication.cs" />
     <Compile Include="SccmResource.cs" />

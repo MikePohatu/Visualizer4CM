@@ -10,10 +10,8 @@ namespace viewmodel
     /// <summary>
     /// Class represents the SMS_DeploymentSummary WMI class
     /// </summary>
-    public class SccmDeploymentInfo: ViewModelBase, ISccmObject
+    public class SMS_DeploymentInfo: ViewModelBase, IDeployment
     {
-        public enum FeatureTypeValue { Package=2, Application=1, SoftwareUpdate=37, TaskSequence=7 }
-
         protected string _collectionid;
         public string CollectionID
         {
@@ -95,8 +93,8 @@ namespace viewmodel
             }
         }
 
-        protected FeatureTypeValue _featuretype;
-        public FeatureTypeValue FeatureType
+        protected SccmItemType _featuretype;
+        public SccmItemType FeatureType
         {
             get { return this._featuretype; }
             set
@@ -150,8 +148,8 @@ namespace viewmodel
             }
         }
 
-        public SccmDeploymentInfo() { }
-        public SccmDeploymentInfo(IResultObject resource)
+        public SMS_DeploymentInfo() { }
+        public SMS_DeploymentInfo(IResultObject resource)
         {
             this.CollectionID = ResultObjectHandler.GetString(resource,"CollectionID");
             this.CollectionName = ResultObjectHandler.GetString(resource, "CollectionName");
@@ -160,7 +158,7 @@ namespace viewmodel
             this.DeploymentName = ResultObjectHandler.GetString(resource, "DeploymentName");
             this.DeploymentType = ResultObjectHandler.GetInt(resource, "DeploymentType");
             this.DeploymentTypeID = ResultObjectHandler.GetInt(resource, "DeploymentTypeID");
-            this.FeatureType = (FeatureTypeValue)ResultObjectHandler.GetInt(resource, "FeatureType");
+            this.FeatureType = (SccmItemType)ResultObjectHandler.GetInt(resource, "FeatureType");
             this.TargetID = ResultObjectHandler.GetString(resource, "TargetID");
             this.TargetSecurityTypeID = ResultObjectHandler.GetInt(resource, "TargetSecurityTypeID");
             this.TargetSubName = ResultObjectHandler.GetString(resource, "TargetSubName");

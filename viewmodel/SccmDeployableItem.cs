@@ -7,10 +7,8 @@ using Microsoft.ConfigurationManagement.ManagementProvider;
 
 namespace viewmodel
 {
-    public class SccmDeployableItem : ViewModelBase, ISccmObject
+    public abstract class SccmDeployableItem : ViewModelBase, ISccmObject
     {
-        public enum CIType { Package=2, Application=31, SoftwareUpdate=37, TaskSequence=7, SoftwareUpdateGroup = 5 }
-
         protected string _id;
         public string ID
         {
@@ -33,7 +31,7 @@ namespace viewmodel
             }
         }
 
-        private bool _ishighlighted;
+        protected bool _ishighlighted;
         public bool IsHighlighted
         {
             get { return this._ishighlighted; }
@@ -43,6 +41,8 @@ namespace viewmodel
                 this.OnPropertyChanged(this, "IsHighlighted");
             }
         }
+
+        public abstract SccmItemType Type { get; }
 
         public SccmDeployableItem() { }
         public SccmDeployableItem(IResultObject resource)

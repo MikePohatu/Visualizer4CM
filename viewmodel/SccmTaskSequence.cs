@@ -7,39 +7,9 @@ using Microsoft.ConfigurationManagement.ManagementProvider;
 
 namespace viewmodel
 {
-    public class SccmTaskSequence : ViewModelBase, ISccmObject
+    public class SccmTaskSequence : SccmDeployableItem
     {
-        private string _id;
-        public string ID
-        {
-            get { return this._id; }
-            set
-            {
-                this._id = value;
-                this.OnPropertyChanged(this, "ID");
-            }
-        }
-        private string _name;
-        public string Name
-        {
-            get { return this._name; }
-            set
-            {
-                this._name = value;
-                this.OnPropertyChanged(this, "Name");
-            }
-        }
-        private bool _ishighlighted;
-        public bool IsHighlighted
-        {
-            get { return this._ishighlighted; }
-            set
-            {
-                this._ishighlighted = value;
-                this.OnPropertyChanged(this, "IsHighlighted");
-            }
-        }
-
+        public override SccmItemType Type { get { return SccmItemType.TaskSequence; } }
         public SccmTaskSequence() { }
         public SccmTaskSequence(IResultObject resource)
         {

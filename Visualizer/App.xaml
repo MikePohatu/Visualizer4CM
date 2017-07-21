@@ -20,7 +20,9 @@
                 <Setter Property="IsEnabled" Value="{Binding ControlsEnabled}"/>
                 <Setter Property="HorizontalAlignment" Value="Stretch"/>
                 <Setter Property="VerticalAlignment" Value="Stretch"/>
-                <Setter Property="ScrollViewer.CanContentScroll" Value="True"/>
+                <!--<Setter Property="ScrollViewer.CanContentScroll" Value="True"/>
+                <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>-->
+                <Setter Property="Width" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ScrollContentPresenter}, Path=ActualWidth}" />
             </Style>
             
             <Style x:Key="ComboBoxStyle" TargetType="{x:Type Control}" BasedOn="{StaticResource BaseControlStyle}">

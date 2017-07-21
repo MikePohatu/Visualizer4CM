@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace viewmodel
 {
-    public class SccmDevice: SccmResource
+    public interface IDeployment: ISccmObject
     {
-        public override SccmItemType Type { get { return SccmItemType.Device; } }
+        string CollectionID { get; }
+        string CollectionName { get; }
     }
 }
