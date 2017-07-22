@@ -109,8 +109,8 @@
     <Compile Include="Panes\DeploymentsTabControl.xaml.cs">
       <DependentUpon>DeploymentsTabControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Panes\ResourceTabControl.xaml.cs">
-      <DependentUpon>ResourceTabControl.xaml</DependentUpon>
+    <Compile Include="Panes\CollectionTabControl.xaml.cs">
+      <DependentUpon>CollectionTabControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Panes\ApplicationPane.cs" />
     <Compile Include="Panes\UserPane.cs" />
@@ -127,7 +127,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Panes\ResourceTabControl.xaml">
+    <Page Include="Panes\CollectionTabControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

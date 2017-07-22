@@ -87,27 +87,31 @@ namespace Visualizer.Panes
             }
         }
 
-        protected List<ISccmObject> _searchresults;
-        public List<ISccmObject> SearchResults
-        {
-            get { return this._searchresults; }
-            set
-            {
-                this._searchresults = value;
-                this.OnPropertyChanged(this, "SearchResults");
-            }
-        }
 
-        protected ISccmObject _selectedresult;
-        public ISccmObject SelectedResult
-        {
-            get { return this._selectedresult; }
-            set
-            {
-                this._selectedresult = value;
-                this.OnPropertyChanged(this, "SelectedResult");
-            }
-        }
+        //public abstract List<ISccmObject> SearchResults { get; set; }
+        //public abstract ISccmObject SelectedResult { get; set; }
+
+        //protected List<ISccmObject> _searchresults;
+        //public List<ISccmObject> SearchResults
+        //{
+        //    get { return this._searchresults; }
+        //    set
+        //    {
+        //        this._searchresults = value;
+        //        this.OnPropertyChanged(this, "SearchResults");
+        //    }
+        //}
+
+        //protected ISccmObject _selectedresult;
+        //public ISccmObject SelectedResult
+        //{
+        //    get { return this._selectedresult; }
+        //    set
+        //    {
+        //        this._selectedresult = value;
+        //        this.OnPropertyChanged(this, "SelectedResult");
+        //    }
+        //}
 
         // Constructor
         public BasePane(SccmConnector connector)
@@ -148,6 +152,55 @@ namespace Visualizer.Panes
                 Thread.Sleep(500);
             }
             this.NotificationText = string.Empty;
+        }
+
+        protected void UpdateProgressMessage_ForAsync(string newmessage)
+        {
+            this.NotificationText = newmessage;
+            this._progresscount = 0;
+        }
+
+        protected void NotifyFinishSearchWithCount(int count)
+        {
+            //show the results to the user
+            string s;
+            s = "Found " + count + " item";
+            if (count != 1) { s = s + "s"; }
+
+            this.UpdateProgressMessage_FinishAsync(s);
+        }
+
+        protected void NotifyFinishBuildWithCount(int count)
+        {
+            //show the results to the user
+            string s;
+            s = "Found " + count + " connection";
+            if (count != 1) { s = s + "s"; }
+
+            this.UpdateProgressMessage_FinishAsync(s);
+        }
+
+        /// <summary>
+        /// Update the progress message so that it stays after the async NotifyProgress 
+        /// thread finishes
+        /// </summary>
+        /// <param name="newmessage"></param>
+        protected void UpdateProgressMessage_FinishAsync(string newmessage)
+        {
+            Thread.Sleep(550);
+            this.NotificationText = newmessage;
+        }
+
+        protected void StartProcessing()
+        {
+            this.ControlsEnabled = false;
+            this._processing = true;
+        }
+
+        protected void FinishProcessing()
+        {
+            this.ControlsEnabled = true;
+            this._processing = false;
         }
 
         protected abstract void BuildGraph();
@@ -196,12 +249,6 @@ namespace Visualizer.Panes
             else { this.NotificationText = string.Empty; }
         }
 
-        protected void UpdateProgressMessage(string newmessage)
-        {
-            this.NotificationText = newmessage;
-            this._progresscount = 0;
-        }
-
         protected virtual void OnGViewerMouseRightClick() { }
 
         //protected void OnAbortButtonClick(object sender, RoutedEventArgs e)
@@ -211,7 +258,5 @@ namespace Visualizer.Panes
         //    this._progresscount = 0;
         //    this.NotificationText = null;
         //}
-
-        
     }
 }

@@ -18,6 +18,28 @@ namespace Visualizer.Panes
 
         protected CollectionType CollectionsType { get; set; }
 
+        protected List<ISccmObject> _searchresults;
+        public List<ISccmObject> SearchResults
+        {
+            get { return this._searchresults; }
+            set
+            {
+                this._searchresults = value;
+                this.OnPropertyChanged(this, "SearchResults");
+            }
+        }
+
+        protected ISccmObject _selectedresult;
+        public ISccmObject SelectedResult
+        {
+            get { return this._selectedresult; }
+            set
+            {
+                this._selectedresult = value;
+                this.OnPropertyChanged(this, "SelectedResult");
+            }
+        }
+
         public DeploymentsPane(SccmConnector connector):base(connector)
         {
             this._pane = new DeploymentsTabControl();
@@ -88,8 +110,7 @@ namespace Visualizer.Panes
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Await.Warning", "CS4014:Await.Warning")]
         protected async void UpdateSearchResults()
         {
-            this.ControlsEnabled = false;
-            this._processing = true;
+            this.StartProcessing();
 
             Task.Run(() => this.NotifyProgress("Searching"));
             if (this._pane.modecombo.Text == "Collection")
@@ -110,8 +131,8 @@ namespace Visualizer.Panes
             else if (this._pane.modecombo.Text == "Task Sequence")
             { await Task.Run(() => this.SearchResults = this._connector.GetTaskSequenceSccmObjectsFromSearch(this._searchtext)); }
 
-            this._processing = false;
-            this.ControlsEnabled = true;
+            this.FinishProcessing();
+            this.NotifyFinishSearchWithCount(this.SearchResults.Count);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Await.Warning", "CS4014:Await.Warning")]
@@ -119,53 +140,43 @@ namespace Visualizer.Panes
         {
             if (this._selectedresult != null)
             {
+                this.StartProcessing();
                 string mode = this._pane.modecombo.Text;
-                //string id = this._selectedresult?.ID;
+                this.ClearHighlightedCollections();
 
-                if (this._selectedresult != null)
+                Task.Run(() => this.NotifyProgress("Querying server"));
+                List<IDeployment> deployments = null;
+                if (this._selectedresult is SccmCollection)
                 {
-                    this.ControlsEnabled = false;
-                    this._processing = true;
-                    this.ClearHighlightedCollections();
-
-                    Task.Run(() => this.NotifyProgress("Querying server"));
-                    List<IDeployment> deployments = null;
-                    if (this._selectedresult is SccmCollection)
-                    {
-                        await Task.Run(() => deployments = this._connector.GetCollectionDeployments(this._selectedresult.ID));
-                    }
-                    else if (this._selectedresult is SccmSoftwareUpdate)
-                    {
-                        await Task.Run(() => deployments = this._connector.GetSoftwareUpdateDeployments(this._selectedresult.Name));
-                    }
-                    else if (this._selectedresult is SccmDeployableItem)
-                    {
-                        await Task.Run(() => deployments = this._connector.GetSoftwareItemDeployments(this._selectedresult.Name));
-                    }
-
-                    this.UpdateProgressMessage("Building tree");
-                    await Task.Run(() => 
-                    {
-                        if (this._selectedresult != null)
-                        {
-                            if (this._selectedresult is SccmCollection) { this._graph = TreeBuilder.BuildCollectionDeploymentsTree(this._connector, (SccmCollection)this._selectedresult, deployments); }
-                            else { this._graph = TreeBuilder.BuildCIDeploymentsTree(this._connector, this._selectedresult, deployments); }
-
-                            this._selectedresult.IsHighlighted = true;
-                        }
-                    });
-
-                    this.UpdateProgressMessage("Building graph");
-                    await Task.Run(() => this.UpdatePaneToTabControl());
-                    this._processing = false;
-                    this.ControlsEnabled = true;
+                    await Task.Run(() => deployments = this._connector.GetCollectionDeployments(this._selectedresult.ID));
                 }
-                else { this.NotificationText = "Nothing selected"; }
+                else if (this._selectedresult is SccmSoftwareUpdate)
+                {
+                    await Task.Run(() => deployments = this._connector.GetSoftwareUpdateDeployments(this._selectedresult.Name));
+                }
+                else if (this._selectedresult is SccmDeployableItem)
+                {
+                    await Task.Run(() => deployments = this._connector.GetSoftwareItemDeployments(this._selectedresult.Name));
+                }
+
+                this.UpdateProgressMessage_ForAsync("Building tree");
+                await Task.Run(() => 
+                {
+                    if (this._selectedresult != null)
+                    {
+                        if (this._selectedresult is SccmCollection) { this._graph = TreeBuilder.BuildCollectionDeploymentsTree(this._connector, (SccmCollection)this._selectedresult, deployments); }
+                        else { this._graph = TreeBuilder.BuildCIDeploymentsTree(this._connector, this._selectedresult, deployments); }
+
+                        this._selectedresult.IsHighlighted = true;
+                    }
+                });
+
+                this.UpdateProgressMessage_ForAsync("Building graph");
+                await Task.Run(() => this.UpdatePaneToTabControl());
+                this.FinishProcessing();
+                //this._pane.gviewer.
             }
-            else
-            {
-                this.NotificationText = "Please select a search result";
-            }
+            else { this.NotificationText = "Nothing selected"; }
         }
     }
 }

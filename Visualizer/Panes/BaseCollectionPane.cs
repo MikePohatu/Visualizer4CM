@@ -15,8 +15,8 @@ namespace Visualizer.Panes
         protected List<SccmCollection> _highlightedcollections = new List<SccmCollection>();
         protected bool _filteredview = true;
 
-        protected ResourceTabControl _pane;
-        public ResourceTabControl Pane { get { return this._pane; } }
+        protected CollectionTabControl _pane;
+        public CollectionTabControl Pane { get { return this._pane; } }
 
         protected new List<SccmCollection> _searchresults;
         public new List<SccmCollection> SearchResults
@@ -44,7 +44,7 @@ namespace Visualizer.Panes
 
         public BaseCollectionPane(SccmConnector connector):base(connector)
         {
-            this._pane = new ResourceTabControl();
+            this._pane = new CollectionTabControl();
             MsaglHelpers.ConfigureCollectionsGViewer(this._pane.gviewer);
             this._pane.DataContext = this;
             this._pane.buildbtn.Click += this.OnBuildButtonPressed;
@@ -99,21 +99,19 @@ namespace Visualizer.Panes
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Await.Warning", "CS4014:Await.Warning")]
         private async void UpdateSearchResults()
         {
-            this.ControlsEnabled = false;
-            this._processing = true;
+            this.StartProcessing();
 
             Task.Run(() => this.NotifyProgress("Searching"));
             await Task.Run(() => this.SearchResults = this._connector.GetCollectionsFromSearch(this._searchtext,this.CollectionsType));
 
-            this._processing = false;
-            this.ControlsEnabled = true;
+            this.FinishProcessing();
+            this.NotifyFinishSearchWithCount(this.SearchResults.Count);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Await.Warning", "CS4014:Await.Warning")]
         protected override async void BuildGraph()
         {
-            this.ControlsEnabled = false;
-            this._processing = true;
+            this.StartProcessing();
             this.ClearHighlightedCollections();
             string mode = this._pane.modecombo.Text;
             Task.Run(() => this.NotifyProgress("Building"));
@@ -122,8 +120,7 @@ namespace Visualizer.Panes
 
             await Task.Run(() => this._graph = this.BuildGraphTree(collectionid, mode));
             await Task.Run(() => this.UpdatePaneToTabControl());
-            this._processing = false;
-            this.ControlsEnabled = true;
+            this.FinishProcessing();
         }
 
         public Graph BuildGraphTree(string rootcollectionid, string mode)

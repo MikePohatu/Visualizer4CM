@@ -18,9 +18,9 @@ namespace Visualizer.Panes
     /// <summary>
     /// Interaction logic for ResourceTabControl.xaml
     /// </summary>
-    public partial class ResourceTabControl : UserControl
+    public partial class CollectionTabControl : UserControl
     {
-        public ResourceTabControl()
+        public CollectionTabControl()
         {
             InitializeComponent();
         }

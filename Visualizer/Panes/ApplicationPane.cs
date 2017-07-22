@@ -14,8 +14,8 @@ namespace Visualizer.Panes
         protected ApplicationTabControl _pane;
         public ApplicationTabControl Pane { get { return this._pane; } }
 
-        protected new List<SccmApplication> _searchresults;
-        public new List<SccmApplication> SearchResults
+        protected List<SccmApplication> _searchresults;
+        public List<SccmApplication> SearchResults
         {
             get { return this._searchresults; }
             set
@@ -25,8 +25,8 @@ namespace Visualizer.Panes
             }
         }
 
-        protected new SccmApplication _selectedresult;
-        public new SccmApplication SelectedResult
+        protected SccmApplication _selectedresult;
+        public SccmApplication SelectedResult
         {
             get { return this._selectedresult; }
             set
@@ -78,14 +78,11 @@ namespace Visualizer.Panes
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Await.Warning", "CS4014:Await.Warning")]
         private async void UpdateSearchResults()
         {
-            this.ControlsEnabled = false;
-            this._processing = true;
-
+            this.StartProcessing();
             Task.Run(() => this.NotifyProgress("Searching"));
             await Task.Run(() => this.SearchResults = this._connector.GetApplicationsListFromSearch(this._searchtext));
-
-            this._processing = false;
-            this.ControlsEnabled = true;
+            this.FinishProcessing();
+            this.NotifyFinishSearchWithCount(this.SearchResults.Count);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Await.Warning", "CS4014:Await.Warning")]
@@ -100,7 +97,7 @@ namespace Visualizer.Panes
                 Task.Run(() => this.NotifyProgress("Building"));
                 await Task.Run(() => this._graph = TreeBuilder.BuildApplicationTree(this._connector, this.SelectedResult));
 
-                this.UpdateProgressMessage("Updating view");
+                this.UpdateProgressMessage_ForAsync("Updating view");
                 await Task.Run(() => this.UpdatePaneToTabControl());
 
                 this._highlightedapplication = this.SelectedResult;
