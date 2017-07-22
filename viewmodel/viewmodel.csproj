@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PackageLibrary.cs" />
     <Compile Include="CollectionLibrary.cs" />
     <Compile Include="Factory.cs" />
     <Compile Include="IDeployment.cs" />
@@ -54,10 +55,11 @@
     <Compile Include="LoginViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResultObjectHandler.cs" />
+    <Compile Include="SccmPackage.cs" />
     <Compile Include="SMS_DeploymentInfo.cs" />
     <Compile Include="SccmConfigurationBaseline.cs" />
     <Compile Include="SccmEnums.cs" />
-    <Compile Include="SccmPackage.cs" />
+    <Compile Include="SccmPackageProgram.cs" />
     <Compile Include="SccmSoftwareUpdateGroup.cs" />
     <Compile Include="SccmTaskSequence.cs" />
     <Compile Include="SccmSoftwareUpdate.cs" />

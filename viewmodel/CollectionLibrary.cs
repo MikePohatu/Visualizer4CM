@@ -53,7 +53,6 @@ namespace viewmodel
             }
         }
 
-        //register a child collection for its limiting collection. store it in pending if limiting isn't added yet
         public SccmCollection GetCollection(string collectionid)
         {
             if (!string.IsNullOrWhiteSpace(collectionid))

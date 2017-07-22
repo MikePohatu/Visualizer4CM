@@ -9,17 +9,18 @@ using Microsoft.ConfigurationManagement.ManagementProvider;
 
 namespace Visualizer.Panes
 {
-    public abstract class BaseCollectionPane: BasePane
+    public class PackagePane: BasePane
     {
-        protected CollectionLibrary _library;
-        protected List<SccmCollection> _highlightedcollections = new List<SccmCollection>();
-        protected bool _filteredview = true;
+        protected PackageLibrary _library;
+        protected List<SccmPackage> _highlightedpackages = new List<SccmPackage>();
 
-        protected CollectionTabControl _pane;
-        public CollectionTabControl Pane { get { return this._pane; } }
+        protected PackageTabControl _pane;
+        public PackageTabControl Pane { get { return this._pane; } }
 
-        protected List<SccmCollection> _searchresults;
-        public List<SccmCollection> SearchResults
+        protected CollectionType CollectionsType { get; set; }
+
+        protected List<SccmPackage> _searchresults;
+        public List<SccmPackage> SearchResults
         {
             get { return this._searchresults; }
             set
@@ -29,8 +30,8 @@ namespace Visualizer.Panes
             }
         }
 
-        protected SccmCollection _selectedresult;
-        public SccmCollection SelectedResult
+        protected SccmPackage _selectedresult;
+        public SccmPackage SelectedResult
         {
             get { return this._selectedresult; }
             set
@@ -40,11 +41,11 @@ namespace Visualizer.Panes
             }
         }
 
-        protected CollectionType CollectionsType { get; set; }
-
-        public BaseCollectionPane(SccmConnector connector):base(connector)
+        public PackagePane(SccmConnector connector):base(connector)
         {
-            this._pane = new CollectionTabControl();
+            this._library = connector.GetPackageLibrary();
+            this._header = "Packages";
+            this._pane = new PackageTabControl();
             MsaglHelpers.ConfigureCollectionsGViewer(this._pane.gviewer);
             this._pane.DataContext = this;
             this._pane.buildbtn.Click += this.OnBuildButtonPressed;
@@ -52,19 +53,19 @@ namespace Visualizer.Panes
             this._pane.gviewer.AsyncLayoutProgress += this.OnProgressUpdate;
             this._pane.gviewer.MouseDoubleClick += this.OnGViewerMouseDoubleClick;
             //this._pane.abortbtn.Click += OnAbortButtonClick;
-            this._pane.findbtn.Click += this.OnFindButtonPressed;
-            this._pane.findresourcetb.KeyUp += this.OnFindKeyUp;
+            //this._pane.findbtn.Click += this.OnFindButtonPressed;
+            //this._pane.findresourcetb.KeyUp += this.OnFindKeyUp;
             this._pane.searchbtn.Click += this.OnSearchButtonPressed;
             this._pane.searchtb.KeyUp += this.OnSearchKeyUp;
         }
 
         protected void ClearHighlightedCollections()
         {
-            foreach (SccmCollection col in this._highlightedcollections)
+            foreach (SccmPackage col in this._highlightedpackages)
             {
                 col.IsHighlighted = false;
             }
-            this._highlightedcollections.Clear();
+            this._highlightedpackages.Clear();
         }
 
         protected void OnSearchButtonPressed(object sender, RoutedEventArgs e) { this.UpdateSearchResults(); }
@@ -73,16 +74,6 @@ namespace Visualizer.Panes
             if (e.Key == Key.Enter)
             {
                 this.UpdateSearchResults();
-            }
-        }
-
-        protected void OnFindButtonPressed(object sender, RoutedEventArgs e) { this.Find(); }
-        protected abstract void Find();
-        protected void OnFindKeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                this.Find();
             }
         }
 
@@ -102,7 +93,7 @@ namespace Visualizer.Panes
             this.StartProcessing();
 
             Task.Run(() => this.NotifyProgress("Searching"));
-            await Task.Run(() => this.SearchResults = this._connector.GetCollectionsFromSearch(this._searchtext,this.CollectionsType));
+            await Task.Run(() => this.SearchResults = this._connector.GetPackagesFromSearch(this._searchtext));
 
             this.FinishProcessing();
             this.NotifyFinishSearchWithCount(this.SearchResults.Count);
@@ -113,48 +104,30 @@ namespace Visualizer.Panes
         {
             this.StartProcessing();
             this.ClearHighlightedCollections();
-            string mode = this._pane.modecombo.Text;
             Task.Run(() => this.NotifyProgress("Building"));
 
             string collectionid = this._selectedresult?.ID;
 
-            await Task.Run(() => this._graph = this.BuildGraphTree(collectionid, mode));
+            await Task.Run(() => this._graph = this.BuildGraphTree(collectionid));
             await Task.Run(() => this.UpdatePaneToTabControl());
             this.FinishProcessing();
         }
 
-        public Graph BuildGraphTree(string rootcollectionid, string mode)
+        public Graph BuildGraphTree(string rootcollectionid)
         {
             Graph graph = null;
             if (string.IsNullOrWhiteSpace(rootcollectionid) == false)
             {
-                SccmCollection col = this._library.GetCollection(rootcollectionid);
-                if (col != null)
+                SccmPackage package = this._library.GetPackage(rootcollectionid);
+                if (package != null)
                 {
-                    if (mode == "Context")
-                    {
-                        if (this._filteredview == true) { graph = TreeBuilder.BuildCollectionTreeAllCollections(this._library); }
-                        else { graph = this._graph; }
-                        this._filteredview = false;
-                        this._highlightedcollections = col.HighlightCollectionPathList();
-                    }
-                    else if (mode == "Mesh")
-                    {
-                        this._filteredview = true;
-                        graph = TreeBuilder.BuildCollectionTreeMeshMode(this._connector, this._library, rootcollectionid);
-                    }
-                    else if (mode == "Limiting")
-                    {
-                        this._filteredview = true;
-                        graph = TreeBuilder.BuildCollectionTreeLimitingMode(this._library, rootcollectionid);
-                    }
-                    col.IsHighlighted = true;
+                    graph = TreeBuilder.BuildPackagesTree(this._library, package);
+                    package.IsHighlighted = true;
                 }
             }
             else
             {
-                this._filteredview = false;
-                graph = TreeBuilder.BuildCollectionTreeAllCollections(this._library);
+                this.NotificationText = "Please select something";
             }
             return graph;
         }

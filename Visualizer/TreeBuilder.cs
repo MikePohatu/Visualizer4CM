@@ -230,21 +230,58 @@ namespace Visualizer
 
             //build the graph
             graph.AddNode(new SccmNode(ci.ID, ci));
-            BuildCIDeploymentLinks(connector, graph, ci.ID, deployments);
-            ci.IsHighlighted = true;
-            return graph;
-        }
-
-        private static void BuildCIDeploymentLinks(SccmConnector connector, Graph graph, string rootid, List<IDeployment> deployments)
-        {
+            //BuildCIDeploymentLinks(connector, graph, ci.ID, deployments);
             foreach (IDeployment deployment in deployments)
             {
                 if (graph.FindNode(deployment.CollectionID) == null)
                 {
-                    graph.AddNode(new CollectionNode(deployment.CollectionID, new SccmCollection(deployment.CollectionID,deployment.CollectionName,string.Empty)));
-                    Edge newedge = graph.AddEdge(rootid, deployment.CollectionID);
+                    graph.AddNode(new CollectionNode(deployment.CollectionID, new SccmCollection(deployment.CollectionID, deployment.CollectionName, string.Empty)));
+                    Edge newedge = graph.AddEdge(ci.ID, deployment.CollectionID);
                 }
             }
+            ci.IsHighlighted = true;
+            return graph;
+        }
+
+        public static Graph BuildPackagesTree(PackageLibrary library, SccmPackage rootpackage)
+        {
+            Graph graph = new Graph();
+
+            //build the graph
+            graph.AddNode(new SccmNode(rootpackage.ID, rootpackage));
+
+            foreach (SccmPackageProgram program in rootpackage.Programs)
+            {
+                if (graph.FindNode(program.ID) == null)
+                {
+                    SccmNode newnode = new SccmNode(program.ID,program);
+                    graph.AddNode(newnode);  
+                }
+
+                Edge newedge = graph.AddEdge(rootpackage.ID, program.ID);
+                if (program.DependentSccmPackageProgram != null) { BuildPackageProgramTree(graph,library, program, program.DependentSccmPackageProgram); }
+            }
+            rootpackage.IsHighlighted = true;
+            return graph;
+        }
+
+        private static void BuildPackageProgramTree(Graph graph, PackageLibrary library, SccmPackageProgram program, SccmPackageProgram dependentprogram)
+        {
+            //Add node for the program
+            if (graph.FindNode(dependentprogram.ID) == null)
+            {
+                graph.AddNode(new SccmNode(dependentprogram.ID, dependentprogram)); 
+            }
+            graph.AddEdge(program.ID, dependentprogram.ID);
+
+            //Add node for the parent package
+            if (graph.FindNode(dependentprogram.ParentPackage.ID) == null)
+            {
+                graph.AddNode(new SccmNode(dependentprogram.ParentPackage.ID, dependentprogram.ParentPackage));
+                graph.AddEdge(dependentprogram.ParentPackage.ID, dependentprogram.ID);
+            }
+
+            if (dependentprogram.DependentSccmPackageProgram != null) { BuildPackageProgramTree(graph, library, dependentprogram, dependentprogram.DependentSccmPackageProgram); }
         }
     }
 }

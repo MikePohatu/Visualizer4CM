@@ -3,7 +3,7 @@
     public enum TaskSequenceType { Generic = 1, OSD = 2 }
     public enum SccmItemType {
         Application = 1,
-        Package = 2,
+        PackageProgram = 2,
         MobileProgram=3,
         Script=4,
         SoftwareUpdateGroup = 5,
@@ -18,6 +18,20 @@
         User,
         Collection,
         SMS_DeploymentInfo,
-        SMS_DeploymentSummary
+        SMS_DeploymentSummary,
+        Package
+    }
+
+    public enum PackageType
+    {
+        RegularSoftwareDistribution=0,  
+        Driver=3,
+        TaskSequence =4,
+        SoftwareUpdate=5,
+        DeviceSetting=6,
+        VirtualApplication =7,
+        Image =257,
+        BootImage =258,
+        OperatingSystemInstall=259
     }
 }

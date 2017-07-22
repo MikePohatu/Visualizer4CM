@@ -10,7 +10,7 @@ namespace Visualizer.Panes
             this.CollectionsType = CollectionType.User;
             this._header = "User Collections";
             this._findlabeltext = "User:";
-            this._library = connector.UserCollectionLibrary;
+            this._library = connector.GetCollectionLibrary(CollectionType.User); ;
         }
 
         protected override void Find()

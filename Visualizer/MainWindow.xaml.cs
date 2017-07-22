@@ -19,6 +19,7 @@ namespace Visualizer
         private DevicePane _devicepane;
         private ApplicationPane _apppane;
         private DeploymentsPane _deploymentpane;
+        private PackagePane _packagespane;
         private List<SccmCollection> _highlightedcollections;
         private SccmConnector _connector;
         private string _site;
@@ -69,7 +70,7 @@ namespace Visualizer
         {
             loginwindow.Close();
             this._site = loginviewmodel.Site;
-            this._connector.QueryAll(this._site);
+            //this._connector.QueryAll(this._site);
 
             this._devicepane = new DevicePane(this._connector);
             TabItem devtabitem = new TabItem();
@@ -90,29 +91,17 @@ namespace Visualizer
             apptabitem.Content = this._apppane.Pane;
             maintabctrl.Items.Add(apptabitem);
 
+            this._packagespane = new PackagePane(this._connector);
+            TabItem packagetabitem = new TabItem();
+            packagetabitem.Header = this._packagespane.Header;
+            packagetabitem.Content = this._packagespane.Pane;
+            maintabctrl.Items.Add(packagetabitem);
+
             this._deploymentpane = new DeploymentsPane(this._connector);
             TabItem deptabitem = new TabItem();
             deptabitem.Header = this._deploymentpane.Header;
             deptabitem.Content = this._deploymentpane.Pane;
             maintabctrl.Items.Add(deptabitem);
-        }
-
-        
-
-        private void HighlightCollectionMembers(Graph[] graphs, List<string> collectionids)
-        {
-            foreach (Graph graph in graphs)
-            {
-                foreach (string colid in collectionids)
-                {
-                    CollectionNode node = graph?.FindNode(colid) as CollectionNode;
-                    if (node != null)
-                    {
-                        this._highlightedcollections.Add(node.Collection);
-                        node.Collection.IsMemberPresent = true;
-                    }
-                }
-            }
         }
     }
 }

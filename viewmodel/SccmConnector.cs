@@ -7,11 +7,6 @@ namespace viewmodel
     public class SccmConnector
     {
         private WqlConnectionManager _connection = new WqlConnectionManager();
-        private CollectionLibrary _devlibrary;
-        private CollectionLibrary _userlibrary;
-
-        public CollectionLibrary DeviceCollectionLibrary { get { return this._devlibrary; } }
-        public CollectionLibrary UserCollectionLibrary { get { return this._userlibrary; } }
 
         public bool Connect(string server)
         {
@@ -25,16 +20,6 @@ namespace viewmodel
             try { this._connection?.Connect(server, authdomain + "\\" + authuser, authpw); }
             catch { return false; }
             return true;
-        }
-
-        public void QueryAll(string site)
-        {
-            try
-            {
-                this._devlibrary = this.GetCollectionLibrary(CollectionType.Device);
-                this._userlibrary = this.GetCollectionLibrary(CollectionType.User);
-            }
-            catch { return; }
         }
 
         public CollectionLibrary GetCollectionLibrary(CollectionType type)
@@ -598,6 +583,59 @@ namespace viewmodel
             catch
             { }
             return null;
+        }
+
+        public PackageLibrary GetPackageLibrary()
+        {
+            try
+            {
+                int type = (int)PackageType.RegularSoftwareDistribution;
+                string query = "select * from SMS_Program WHERE PackageType='" + type + "' ORDER BY PackageName";
+                PackageLibrary library = new PackageLibrary();
+
+                // Run query
+                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
+                {
+                    // Enumerate through the collection of objects returned by the query.
+                    foreach (IResultObject resource in results)
+                    {
+                        SccmPackageProgram item = Factory.GetPackageProgramFromSMS_ProgramResults(resource);
+                        library.AddPackageProgram(item);
+                    }
+                }
+                return library;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public List<SccmPackage> GetPackagesFromSearch(string search)
+        {
+            List<SccmPackage> newlist = new List<SccmPackage>();
+            try
+            {
+                // This query selects all collections
+                int type = (int)PackageType.RegularSoftwareDistribution;
+                //string query = "select * from SMS_Program WHERE Name LIKE '%" + search + "%' AND PackageType='" + type + "' ORDER BY PackageName";
+                string query = "select * from SMS_PackageBaseclass WHERE Name LIKE '%" + search + "%' AND PackageType='" + type + "'";               
+
+                // Run query
+                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
+                {
+                    // Enumerate through the collection of objects returned by the query.
+                    foreach (IResultObject resource in results)
+                    {
+                        SccmPackage item = Factory.GetPackageFromSMS_PackageBaseclassResults(resource);
+                        newlist.Add(item);
+                    }
+                }
+            }
+            catch
+            { }
+
+            return newlist;
         }
     }
 }

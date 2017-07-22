@@ -54,13 +54,6 @@ namespace Visualizer
         protected void SetLayout()
         {
             string prefix = string.Empty;
-            //if (this._sccmobject is SccmApplication) { this.Attr.Color = Color.SandyBrown; prefix = "Application: "; }
-            ////else if (this._sccmobject is SMS_DeploymentSummary) { this.Attr.Color = Color.LightBlue; prefix = "Deployment: "; }
-            //else if (this._sccmobject is SccmCollection) { this.Attr.Color = Color.RoyalBlue; prefix = "Collection: "; }
-            //else if (this._sccmobject is SccmSoftwareUpdateGroup) { this.Attr.Color = Color.Gold; prefix = "SUG: "; }
-            //else if (this._sccmobject is SccmTaskSequence) { this.Attr.Color = Color.Thistle; prefix = "Task Sequence: "; }
-            //else if (this._sccmobject is SccmPackage) { this.Attr.Color = Color.Chocolate; prefix = "Package: "; }
-            //else if (this._sccmobject is SccmConfigurationBaseline) { this.Attr.Color = Color.CornflowerBlue; prefix = "Baseline: "; }
 
             switch (this._sccmobject.Type)
             {
@@ -83,6 +76,10 @@ namespace Visualizer
                 case SccmItemType.Package:
                     //this.Attr.Color = Color.Chocolate;
                     prefix = "Package: ";
+                    break;
+                case SccmItemType.PackageProgram:
+                    //this.Attr.Color = Color.Chocolate;
+                    prefix = "Program: ";
                     break;
                 case SccmItemType.ConfigurationBaseline:
                     //this.Attr.Color = Color.CornflowerBlue;

@@ -38,9 +38,9 @@ namespace viewmodel
                 return newitem;
             }
 
-            else if (deployment.FeatureType == SccmItemType.Package)
+            else if (deployment.FeatureType == SccmItemType.PackageProgram)
             {
-                var newitem = new SccmPackage();
+                var newitem = new SccmPackageProgram();
                 newitem.Name = deployment.SoftwareName;
                 newitem.ID = deployment.PackageID;
                 return newitem;
@@ -92,9 +92,9 @@ namespace viewmodel
                 return newitem;
             }
 
-            else if (featuretype == SccmItemType.Package)
+            else if (featuretype == SccmItemType.PackageProgram)
             {
-                var newitem = new SccmPackage();
+                var newitem = new SccmPackageProgram();
                 newitem.Name = ResultObjectHandler.GetString(resource, "SoftwareName");
                 newitem.ID = ResultObjectHandler.GetString(resource, "PackageID");
                 return newitem;
@@ -195,6 +195,31 @@ namespace viewmodel
             item.Name = ResultObjectHandler.GetString(resource, "Name");
             int tstype = ResultObjectHandler.GetInt(resource, "Type");
             item.TaskSequenceType = (TaskSequenceType)tstype;
+            return item;
+        }
+
+        public static SccmPackageProgram GetPackageProgramFromSMS_ProgramResults(IResultObject resource)
+        {
+            SccmPackageProgram item = new SccmPackageProgram();
+
+            item.ProgramName = ResultObjectHandler.GetString(resource, "ProgramName");
+            item.DependentProgram = ResultObjectHandler.GetString(resource, "DependentProgram");
+            item.Description = ResultObjectHandler.GetString(resource, "Description");
+            item.PackageName = ResultObjectHandler.GetString(resource, "PackageName");
+            item.PackageID = ResultObjectHandler.GetString(resource, "PackageID");
+            item.ID = item.PackageID + ";;" + item.ProgramName;
+            item.Name = item.PackageName + " (" + item.ProgramName + ")";
+            return item;
+        }
+
+        public static SccmPackage GetPackageFromSMS_PackageBaseclassResults(IResultObject resource)
+        {
+            SccmPackage item = new SccmPackage();
+
+            item.Name = ResultObjectHandler.GetString(resource, "Name");
+            item.ID = ResultObjectHandler.GetString(resource, "PackageID");
+            item.Description = ResultObjectHandler.GetString(resource, "Description");
+            item.PackageType = (PackageType)ResultObjectHandler.GetInt(resource, "PackageType");
             return item;
         }
     }
