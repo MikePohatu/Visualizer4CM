@@ -43,7 +43,6 @@ namespace Visualizer.Panes
 
         public PackagePane(SccmConnector connector):base(connector)
         {
-            this._library = connector.GetPackageLibrary();
             this._header = "Packages";
             this._pane = new PackageTabControl();
             MsaglHelpers.ConfigureCollectionsGViewer(this._pane.gviewer);
@@ -104,7 +103,12 @@ namespace Visualizer.Panes
         {
             this.StartProcessing();
             this.ClearHighlightedCollections();
-            Task.Run(() => this.NotifyProgress("Building"));
+            if (this._library == null)
+            {
+                Task.Run(() => this.NotifyProgress("Initializing library"));
+                await Task.Run(() => this._library = this._connector.GetPackageLibrary());
+            }
+            else { Task.Run(() => this.NotifyProgress("Building")); }
 
             string collectionid = this._selectedresult?.ID;
 

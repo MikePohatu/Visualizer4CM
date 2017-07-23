@@ -114,10 +114,17 @@ namespace Visualizer.Panes
             this.StartProcessing();
             this.ClearHighlightedCollections();
             string mode = this._pane.modecombo.Text;
-            Task.Run(() => this.NotifyProgress("Building"));
+            
+            if (this._library == null)
+            {
+                Task.Run(() => this.NotifyProgress("Initializing library"));
+                await Task.Run(() => this._library = this._connector.GetCollectionLibrary(CollectionsType));
+            }
+            else { Task.Run(() => this.NotifyProgress("Building")); }
 
             string collectionid = this._selectedresult?.ID;
 
+            
             await Task.Run(() => this._graph = this.BuildGraphTree(collectionid, mode));
             await Task.Run(() => this.UpdatePaneToTabControl());
             this.FinishProcessing();

@@ -10,7 +10,6 @@ namespace Visualizer.Panes
             this.CollectionsType = CollectionType.Device;
             this._header = "Device Collections";
             this._findlabeltext = "Device:";
-            this._library = connector.GetCollectionLibrary(CollectionType.Device);
         }
 
         protected override void Find()
