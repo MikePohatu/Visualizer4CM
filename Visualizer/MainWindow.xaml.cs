@@ -70,43 +70,21 @@ namespace Visualizer
         {
             loginwindow.Close();
             this._site = loginviewmodel.Site;
-            //this._connector.QueryAll(this._site);
 
             this._devicepane = new DevicePane(this._connector);
             this.devtab.DataContext = this._devicepane;
-            //TabItem devtabitem = new TabItem();
-            //devtabitem.Header = this._devicepane.Header;
-            //devtabitem.Content = this._devicepane.Pane;
-            //maintabctrl.Items.Add(devtabitem);
-
 
             this._userpane = new UserPane(this._connector);
             this.usertab.DataContext = this._userpane;
-            //TabItem usertabitem = new TabItem();
-            //usertabitem.Header = this._userpane.Header;
-            //usertabitem.Content = this._userpane.Pane;
-            //maintabctrl.Items.Add(usertabitem);
 
             this._apppane = new ApplicationPane(this._connector);
             this.apptab.DataContext = this._apppane;
-            //TabItem apptabitem = new TabItem();
-            //apptabitem.Header = this._apppane.Header;
-            //apptabitem.Content = this._apppane.Pane;
-            //maintabctrl.Items.Add(apptabitem);
 
             this._packagespane = new PackagePane(this._connector);
             this.packagetab.DataContext = this._packagespane;
-            //TabItem packagetabitem = new TabItem();
-            //packagetabitem.Header = this._packagespane.Header;
-            //packagetabitem.Content = this._packagespane.Pane;
-            //maintabctrl.Items.Add(packagetabitem);
 
             this._deploymentpane = new DeploymentsPane(this._connector);
             this.deploymenttab.DataContext = this._deploymentpane;
-            //TabItem deptabitem = new TabItem();
-            //deptabitem.Header = this._deploymentpane.Header;
-            //deptabitem.Content = this._deploymentpane.Pane;
-            //maintabctrl.Items.Add(deptabitem);
         }
     }
 }
