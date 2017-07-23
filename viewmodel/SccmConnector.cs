@@ -589,9 +589,17 @@ namespace viewmodel
         {
             try
             {
+                
+                PackageLibrary library = new PackageLibrary();
+
+                foreach (SccmPackage package in this.GetPackagesFromSearch(null))
+                {
+                    library.AddPackage(package);
+                }
+
+                //get programs
                 int type = (int)PackageType.RegularSoftwareDistribution;
                 string query = "select * from SMS_Program WHERE PackageType='" + type + "' ORDER BY PackageName";
-                PackageLibrary library = new PackageLibrary();
 
                 // Run query
                 using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
@@ -618,8 +626,11 @@ namespace viewmodel
             {
                 // This query selects all collections
                 int type = (int)PackageType.RegularSoftwareDistribution;
-                //string query = "select * from SMS_Program WHERE Name LIKE '%" + search + "%' AND PackageType='" + type + "' ORDER BY PackageName";
-                string query = "select * from SMS_PackageBaseclass WHERE Name LIKE '%" + search + "%' AND PackageType='" + type + "'";               
+
+                string query;
+                if (string.IsNullOrWhiteSpace(search)) { query = "select * from SMS_PackageBaseclass WHERE PackageType='" + type + "'"; }
+                else { query = "select * from SMS_PackageBaseclass WHERE Name LIKE '%" + search + "%' AND PackageType='" + type + "'"; }
+                             
 
                 // Run query
                 using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))

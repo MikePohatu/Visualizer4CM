@@ -11,6 +11,17 @@ namespace viewmodel
         Dictionary<string, SccmPackageProgram> _packageprograms = new Dictionary<string, SccmPackageProgram>();
         Dictionary<string, List<SccmPackageProgram>> _pendingregistrations = new Dictionary<string, List<SccmPackageProgram>>();
 
+
+        public void AddPackage(SccmPackage package)
+        {
+            SccmPackage outitem;
+            bool ret = this._packages.TryGetValue(package.ID, out outitem);
+            if (ret == false)
+            {
+                this._packages.Add(package.ID, package);
+            }
+        }
+
         public void AddPackageProgram(SccmPackageProgram packageprogram)
         {
             SccmPackageProgram outval;
