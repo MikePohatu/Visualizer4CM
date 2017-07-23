@@ -10,7 +10,11 @@
 
     <DockPanel  Grid.Row="0">
         <TabControl x:Name="maintabctrl">
-
+            <TabItem x:Name="devtab" Header="{Binding Header}" Content="{Binding Pane}" />
+            <TabItem x:Name="usertab" Header="{Binding Header}" Content="{Binding Pane}"/>
+            <TabItem x:Name="apptab" Header="{Binding Header}" Content="{Binding Pane}"/>
+            <TabItem x:Name="packagetab" Header="{Binding Header}" Content="{Binding Pane}" />
+            <TabItem x:Name="deploymenttab" Header="{Binding Header}" Content="{Binding Pane}"/>
         </TabControl>
     </DockPanel>
 </Window>

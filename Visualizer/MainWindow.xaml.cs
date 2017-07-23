@@ -27,7 +27,7 @@ namespace Visualizer
         public MainWindow()
         {
             InitializeComponent();
-            this.Login();
+            this.Login();          
         }
 
         private void Login()
@@ -73,35 +73,40 @@ namespace Visualizer
             //this._connector.QueryAll(this._site);
 
             this._devicepane = new DevicePane(this._connector);
-            TabItem devtabitem = new TabItem();
-            devtabitem.Header = this._devicepane.Header;
-            devtabitem.Content = this._devicepane.Pane;
-            maintabctrl.Items.Add(devtabitem);
+            this.devtab.DataContext = this._devicepane;
+            //TabItem devtabitem = new TabItem();
+            //devtabitem.Header = this._devicepane.Header;
+            //devtabitem.Content = this._devicepane.Pane;
+            //maintabctrl.Items.Add(devtabitem);
 
 
             this._userpane = new UserPane(this._connector);
-            TabItem usertabitem = new TabItem();
-            usertabitem.Header = this._userpane.Header;
-            usertabitem.Content = this._userpane.Pane;
-            maintabctrl.Items.Add(usertabitem);
+            this.usertab.DataContext = this._userpane;
+            //TabItem usertabitem = new TabItem();
+            //usertabitem.Header = this._userpane.Header;
+            //usertabitem.Content = this._userpane.Pane;
+            //maintabctrl.Items.Add(usertabitem);
 
             this._apppane = new ApplicationPane(this._connector);
-            TabItem apptabitem = new TabItem();
-            apptabitem.Header = this._apppane.Header;
-            apptabitem.Content = this._apppane.Pane;
-            maintabctrl.Items.Add(apptabitem);
+            this.apptab.DataContext = this._apppane;
+            //TabItem apptabitem = new TabItem();
+            //apptabitem.Header = this._apppane.Header;
+            //apptabitem.Content = this._apppane.Pane;
+            //maintabctrl.Items.Add(apptabitem);
 
             this._packagespane = new PackagePane(this._connector);
-            TabItem packagetabitem = new TabItem();
-            packagetabitem.Header = this._packagespane.Header;
-            packagetabitem.Content = this._packagespane.Pane;
-            maintabctrl.Items.Add(packagetabitem);
+            this.packagetab.DataContext = this._packagespane;
+            //TabItem packagetabitem = new TabItem();
+            //packagetabitem.Header = this._packagespane.Header;
+            //packagetabitem.Content = this._packagespane.Pane;
+            //maintabctrl.Items.Add(packagetabitem);
 
             this._deploymentpane = new DeploymentsPane(this._connector);
-            TabItem deptabitem = new TabItem();
-            deptabitem.Header = this._deploymentpane.Header;
-            deptabitem.Content = this._deploymentpane.Pane;
-            maintabctrl.Items.Add(deptabitem);
+            this.deploymenttab.DataContext = this._deploymentpane;
+            //TabItem deptabitem = new TabItem();
+            //deptabitem.Header = this._deploymentpane.Header;
+            //deptabitem.Content = this._deploymentpane.Pane;
+            //maintabctrl.Items.Add(deptabitem);
         }
     }
 }
