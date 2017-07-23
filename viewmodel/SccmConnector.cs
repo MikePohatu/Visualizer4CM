@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
+using System.Collections.Generic;
 using Microsoft.ConfigurationManagement.ManagementProvider;
 using Microsoft.ConfigurationManagement.ManagementProvider.WqlQueryEngine;
 
@@ -24,11 +25,12 @@ namespace viewmodel
 
         public CollectionLibrary GetCollectionLibrary(CollectionType type)
         {
+            CollectionLibrary library = new CollectionLibrary();
+
             try
             {
                 // This query selects all collections
-                string query = "select * from SMS_Collection WHERE CollectionType='" + (int)type + "' ORDER BY Name";
-                CollectionLibrary library = new CollectionLibrary();
+                string query = "select * from SMS_Collection WHERE CollectionType='" + (int)type + "'";
 
                 // Run query
                 using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
@@ -40,21 +42,19 @@ namespace viewmodel
                         library.AddCollection(col);
                     }
                 }
-                return library;
             }
-            catch
-            {
-                return null;
-            }
+            catch { }
+            return library;
         }
 
         public CollectionLibrary GetAllCollectionsLibrary()
         {
+            CollectionLibrary library = new CollectionLibrary();
+
             try
             {
                 // This query selects all collections
-                string query = "select * from SMS_Collection ORDER BY Name";
-                CollectionLibrary library = new CollectionLibrary();
+                string query = "select * from SMS_Collection";
 
                 // Run query
                 using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
@@ -66,21 +66,19 @@ namespace viewmodel
                         library.AddCollection(col);
                     }
                 }
-                return library;
             }
-            catch
-            {
-                return null;
-            }
+            catch { }
+            return library;
         }
 
         public List<SccmCollection> GetCollectionsFromSearch(string search, CollectionType type)
         {
+            List<SccmCollection> items = new List<SccmCollection>();
+
             try
             {
                 // This query selects all collections
-                string query = "select * from SMS_Collection WHERE CollectionType='" + (int)type + "' AND Name LIKE '%" + search + "%' ORDER BY Name";
-                List<SccmCollection> newlist = new List<SccmCollection>();
+                string query = "select * from SMS_Collection WHERE CollectionType='" + (int)type + "' AND Name LIKE '%" + search + "%'";
 
                 // Run query
                 using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
@@ -89,15 +87,14 @@ namespace viewmodel
                     foreach (IResultObject resource in results)
                     {
                         SccmCollection col = Factory.GetCollectionFromSMS_CollectionResults(resource);
-                        newlist.Add(col);
+                        items.Add(col);
                     }
                 }
-                return newlist;
+                items = items.OrderBy(o => o.Name).ToList();
+
             }
-            catch
-            {
-                return null;
-            }
+            catch { }
+            return items;
         }
 
         /// <summary>
@@ -108,11 +105,11 @@ namespace viewmodel
         /// <returns></returns>
         public List<ISccmObject> GetCollectionSccmObjectsFromSearch(string search, CollectionType type)
         {
+            List<ISccmObject> items = new List<ISccmObject>();
             try
             {
                 // This query selects all collections
-                string query = "select * from SMS_Collection WHERE CollectionType='" + (int)type + "' AND Name LIKE '%" + search + "%' ORDER BY Name";
-                List<ISccmObject> newlist = new List<ISccmObject>();
+                string query = "select * from SMS_Collection WHERE CollectionType='" + (int)type + "' AND Name LIKE '%" + search + "%'";
 
                 // Run query
                 using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
@@ -121,15 +118,13 @@ namespace viewmodel
                     foreach (IResultObject resource in results)
                     {
                         SccmCollection col = Factory.GetCollectionFromSMS_CollectionResults(resource);
-                        newlist.Add(col);
+                        items.Add(col);
                     }
                 }
-                return newlist;
+                items = items.OrderBy(o => o.Name).ToList();
             }
-            catch
-            {
-                return null;
-            }
+            catch { }
+            return items;
         }
 
         public List<SccmCollectionRelationship> GetCollectionDependencies(string collectionid)
@@ -206,7 +201,7 @@ namespace viewmodel
 
             try
             {
-                string query = "select * from SMS_Application WHERE IsLatest='TRUE' AND (" + queryapplist + ") ORDER BY LocalizedDisplayName";
+                string query = "select * from SMS_Application WHERE IsLatest='TRUE' AND (" + queryapplist + ")";
 
                 // Run query
                 using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
@@ -226,14 +221,14 @@ namespace viewmodel
 
         public List<SccmApplication> GetApplicationsListFromSearch(string search)
         {
-            List<SccmApplication> applications = new List<SccmApplication>();
+            List<SccmApplication> items = new List<SccmApplication>();
             try
             {
                 // This query selects all collections
 
                 string query;
-                if (string.IsNullOrWhiteSpace(search)) { query = "select * from SMS_Application WHERE IsLatest='TRUE' ORDER BY LocalizedDisplayName"; }
-                else { query = "select * from SMS_Application WHERE LocalizedDisplayName LIKE '%" + search + "%' AND IsLatest='TRUE' ORDER BY LocalizedDisplayName"; }
+                if (string.IsNullOrWhiteSpace(search)) { query = "select * from SMS_Application WHERE IsLatest='TRUE'"; }
+                else { query = "select * from SMS_Application WHERE LocalizedDisplayName LIKE '%" + search + "%' AND IsLatest='TRUE'"; }
 
                 // Run query
                 using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
@@ -242,24 +237,25 @@ namespace viewmodel
                     foreach (IResultObject resource in results)
                     {
                         SccmApplication app = Factory.GetApplicationFromSMS_ApplicationResults(resource);
-                        applications.Add(app);
+                        items.Add(app);
                     }
                 }
+                items = items.OrderBy(o => o.Name).ToList();
             }
             catch { }
-            return applications;
+            return items;
         }
 
         public List<ISccmObject> GetApplicationsSccmObjectsListFromSearch(string search)
         {
-            List<ISccmObject> applications = new List<ISccmObject>();
+            List<ISccmObject> items = new List<ISccmObject>();
             try
             {
                 // This query selects all collections
 
                 string query;
-                if (string.IsNullOrWhiteSpace(search)) { query = "select * from SMS_Application WHERE IsLatest='TRUE' ORDER BY LocalizedDisplayName"; }
-                else { query = "select * from SMS_Application WHERE LocalizedDisplayName LIKE '%" + search + "%' AND IsLatest='TRUE' ORDER BY LocalizedDisplayName"; }
+                if (string.IsNullOrWhiteSpace(search)) { query = "select * from SMS_Application WHERE IsLatest='TRUE'"; }
+                else { query = "select * from SMS_Application WHERE LocalizedDisplayName LIKE '%" + search + "%' AND IsLatest='TRUE'"; }
 
                 // Run query
                 using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
@@ -268,18 +264,18 @@ namespace viewmodel
                     foreach (IResultObject resource in results)
                     {
                         SccmApplication app = Factory.GetApplicationFromSMS_ApplicationResults(resource);
-                        applications.Add(app);
+                        items.Add(app);
                     }
                 }
+                items = items.OrderBy(o => o.Name).ToList();
             }
             catch { }
-            return applications;
+            return items;
         }
 
         public List<SccmApplicationRelationship> GetApplicationRelationships(string applicationciid)
         {
-            List<SccmApplicationRelationship> relationships = new List<SccmApplicationRelationship>();
-
+            List<SccmApplicationRelationship> items = new List<SccmApplicationRelationship>();
             try
             {
                 // This query selects all relationships of the specified app ID
@@ -293,17 +289,17 @@ namespace viewmodel
                     foreach (IResultObject resource in results)
                     {
                         SccmApplicationRelationship apprel = Factory.GetAppRelationshipFromSMS_AppDependenceRelationResults(resource);
-                        relationships.Add(apprel);
+                        items.Add(apprel);
                     }
-                }              
+                }
             }
             catch { }
-            return relationships;
+            return items;
         }
 
         public List<IDeployment> GetSoftwareItemDeployments(string ciname)
         {
-            List<IDeployment> deployments = new List<IDeployment>();
+            List<IDeployment> items = new List<IDeployment>();
             
             try
             {
@@ -317,17 +313,18 @@ namespace viewmodel
                     foreach (IResultObject resource in results)
                     {
                         SMS_DeploymentSummary dep = Factory.GetDeploymentSummaryFromSMS_DeploymentSummaryResults(resource);
-                        deployments.Add(dep);
+                        items.Add(dep);
                     }
                 }
+                //items = items.OrderBy(o => o.Name).ToList();
             }
             catch { }
-            return deployments;
+            return items;
         }
 
         public List<IDeployment> GetSoftwareUpdateDeployments(string updatename)
         {
-            List<IDeployment> deployments = new List<IDeployment>();
+            List<IDeployment> items = new List<IDeployment>();
 
             try
             {
@@ -342,19 +339,20 @@ namespace viewmodel
                     foreach (IResultObject resource in results)
                     {
                         SMS_DeploymentInfo dep = Factory.GetDeploymentInfoFromSMS_DeploymentInfoResults(resource);
-                        deployments.Add(dep);
+                        items.Add(dep);
                     }
                 }
+                //items = items.OrderBy(o => o.Name).ToList();
             }
             catch { }
-            return deployments;
+            return items;
 
         }
 
 
         public List<IDeployment> GetSoftwareUpdateGroupDeployments(string updategrouname)
         {
-            List<IDeployment> deployments = new List<IDeployment>();
+            List<IDeployment> items = new List<IDeployment>();
 
             try
             {
@@ -369,21 +367,22 @@ namespace viewmodel
                     foreach (IResultObject resource in results)
                     {
                         SMS_DeploymentSummary dep = Factory.GetDeploymentSummaryFromSMS_DeploymentSummaryResults(resource);
-                        deployments.Add(dep);
+                        items.Add(dep);
                     }
                 }
+                //items = items.OrderBy(o => o.Name).ToList();
             }
             catch { }
-            return deployments;
+            return items;
 
         }
 
         public List<IDeployment> GetCollectionDeployments(string collectionid)
         {
-            List<IDeployment> deployments = new List<IDeployment>();
+            List<IDeployment> items = new List<IDeployment>();
 
-            //try
-            //{
+            try
+            {
                 // This query selects all relationships of the specified app ID
                 string query = "select * from SMS_DeploymentSummary WHERE CollectionID='" + collectionid + "'";
 
@@ -394,22 +393,23 @@ namespace viewmodel
                     foreach (IResultObject resource in results)
                     {
                     SMS_DeploymentSummary dep = Factory.GetDeploymentSummaryFromSMS_DeploymentSummaryResults(resource);                       
-                        deployments.Add(dep);
+                        items.Add(dep);
                     }
                 }
-            //}
-            //catch { }
-            return deployments;
+                //items = items.OrderBy(o => o.Name).ToList();
+            }
+            catch { }
+            return items;
         }
 
         public List<IDeployment> GetDeploymentsFromSearch(string deploymentname)
         {
-            List<IDeployment> deployments = new List<IDeployment>();
+            List<IDeployment> items = new List<IDeployment>();
 
             try
             {
                 // This query selects all relationships of the specified app ID
-                string query = "select * from SMS_DeploymentInfo WHERE DeploymentName LIKE '%" + deploymentname + "%' ORDER BY DeploymentName";
+                string query = "select * from SMS_DeploymentInfo WHERE DeploymentName LIKE '%" + deploymentname + "%'";
 
                 // Run query
                 using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
@@ -418,22 +418,23 @@ namespace viewmodel
                     foreach (IResultObject resource in results)
                     {
                         SMS_DeploymentInfo dep = Factory.GetDeploymentInfoFromSMS_DeploymentInfoResults(resource);
-                        deployments.Add(dep);
+                        items.Add(dep);
                     }
                 }
+                items = items.OrderBy(o => o.Name).ToList();
             }
             catch { }
-            return deployments;
+            return items;
         }
 
         public List<ISccmObject> GetDeploymentSccmObjectsFromSearch(string deploymentname)
         {
-            List<ISccmObject> deployments = new List<ISccmObject>();
+            List<ISccmObject> items = new List<ISccmObject>();
 
             try
             {
                 // This query selects all relationships of the specified app ID
-                string query = "select * from SMS_DeploymentInfo WHERE DeploymentName LIKE '%" + deploymentname + "%' ORDER BY DeploymentName";
+                string query = "select * from SMS_DeploymentInfo WHERE DeploymentName LIKE '%" + deploymentname + "%'";
 
                 // Run query
                 using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
@@ -442,22 +443,23 @@ namespace viewmodel
                     foreach (IResultObject resource in results)
                     {
                         SMS_DeploymentInfo dep = Factory.GetDeploymentInfoFromSMS_DeploymentInfoResults(resource);
-                        deployments.Add(dep);
+                        items.Add(dep);
                     }
                 }
+                items = items.OrderBy(o => o.Name).ToList();
             }
             catch { }
-            return deployments;
+            return items;
         }
 
         public List<ISccmObject> GetSoftwareUpdateSccmObjectsFromSearch(string ciname)
         {
-            List<ISccmObject> CIs = new List<ISccmObject>();
+            List<ISccmObject> items = new List<ISccmObject>();
 
             try
             {
                 // This query selects all relationships of the specified app ID
-                string query = "select CI_ID,LocalizedDisplayName from SMS_SoftwareUpdate WHERE LocalizedDisplayName LIKE '%" + ciname + "%' ORDER BY LocalizedDisplayName";
+                string query = "select CI_ID,LocalizedDisplayName from SMS_SoftwareUpdate WHERE LocalizedDisplayName LIKE '%" + ciname + "%'";
 
                 // Run query
                 using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
@@ -468,17 +470,18 @@ namespace viewmodel
                         SccmDeployableItem dep = new SccmSoftwareUpdate();
                         dep.Name = ResultObjectHandler.GetString(resource, "LocalizedDisplayName");
                         dep.ID = ResultObjectHandler.GetString(resource, "CI_ID");
-                        CIs.Add(dep);
+                        items.Add(dep);
                     }
                 }
+                items = items.OrderBy(o => o.Name).ToList();
             }
             catch { }
-            return CIs;
+            return items;
         }
 
         public List<ISccmObject> GetSoftwareUpdateGroupSccmObjectsFromSearch(string ciname)
         {
-            List<ISccmObject> CIs = new List<ISccmObject>();
+            List<ISccmObject> items = new List<ISccmObject>();
 
             try
             {
@@ -495,12 +498,13 @@ namespace viewmodel
                         SccmDeployableItem dep = new SccmSoftwareUpdateGroup();
                         dep.ID = ResultObjectHandler.GetString(resource, "CI_ID");
                         dep.Name = ResultObjectHandler.GetString(resource, "SoftwareName");
-                        CIs.Add(dep);
+                        items.Add(dep);
                     }
                 }
+                items = items.OrderBy(o => o.Name).ToList();
             }
             catch { }
-            return CIs;
+            return items;
         }
 
         public List<ISccmObject> GetTaskSequenceSccmObjectsFromSearch(string search)
@@ -509,8 +513,8 @@ namespace viewmodel
             try
             {
                 string query;
-                if (string.IsNullOrWhiteSpace(search)) { query = "select * from SMS_TaskSequencePackage ORDER BY Name"; }
-                else { query = "select * from SMS_TaskSequencePackage WHERE Name LIKE '%" + search + "%' ORDER BY Name"; }
+                if (string.IsNullOrWhiteSpace(search)) { query = "select * from SMS_TaskSequencePackage"; }
+                else { query = "select * from SMS_TaskSequencePackage WHERE Name LIKE '%" + search + "%'"; }
 
                 // Run query
                 using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
@@ -522,6 +526,7 @@ namespace viewmodel
                         items.Add(app);
                     }
                 }
+                items = items.OrderBy(o => o.Name).ToList();
             }
             catch { }
             return items;
@@ -587,19 +592,15 @@ namespace viewmodel
 
         public PackageLibrary GetPackageLibrary()
         {
+            PackageLibrary library = new PackageLibrary();
             try
             {
-                
-                PackageLibrary library = new PackageLibrary();
-
                 foreach (SccmPackage package in this.GetPackagesFromSearch(null))
-                {
-                    library.AddPackage(package);
-                }
+                { library.AddPackage(package); }
 
                 //get programs
                 int type = (int)PackageType.RegularSoftwareDistribution;
-                string query = "select * from SMS_Program WHERE PackageType='" + type + "' ORDER BY PackageName";
+                string query = "select * from SMS_Program WHERE PackageType='" + type + "'";
 
                 // Run query
                 using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
@@ -611,17 +612,14 @@ namespace viewmodel
                         library.AddPackageProgram(item);
                     }
                 }
-                return library;
             }
-            catch
-            {
-                return null;
-            }
+            catch { }
+            return library;
         }
 
         public List<SccmPackage> GetPackagesFromSearch(string search)
         {
-            List<SccmPackage> newlist = new List<SccmPackage>();
+            List<SccmPackage> items = new List<SccmPackage>();
             try
             {
                 // This query selects all collections
@@ -639,14 +637,13 @@ namespace viewmodel
                     foreach (IResultObject resource in results)
                     {
                         SccmPackage item = Factory.GetPackageFromSMS_PackageBaseclassResults(resource);
-                        newlist.Add(item);
+                        items.Add(item);
                     }
                 }
+                items = items.OrderBy(o => o.Name).ToList();
             }
-            catch
-            { }
-
-            return newlist;
+            catch { }
+            return items;
         }
     }
 }
