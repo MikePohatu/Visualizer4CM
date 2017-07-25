@@ -82,15 +82,18 @@ namespace Visualizer
 
             foreach (SccmCollectionRelationship colrel in relationships)
             {
+                if (colrel == null) { continue; }
                 if (graph.FindNode(colrel.DependentCollectionID) == null)
                 {
                     SccmCollection col = library.GetCollection(colrel.DependentCollectionID);
+                    if (col == null) { continue; }
                     graph.AddNode(new CollectionNode(col.ID, col));
                 }
 
                 if (graph.FindNode(colrel.SourceCollectionID) == null)
                 {
                     SccmCollection col = library.GetCollection(colrel.SourceCollectionID);
+                    if (col == null) { continue; }
                     graph.AddNode(new CollectionNode(col.ID, col));
                     BuildCollectionMeshLinks(connector,graph, library, col); //recursive build
                 }

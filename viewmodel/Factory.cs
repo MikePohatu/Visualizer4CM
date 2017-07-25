@@ -222,5 +222,23 @@ namespace viewmodel
             item.PackageType = (PackageType)ResultObjectHandler.GetInt(resource, "PackageType");
             return item;
         }
+
+        public static SccmConfigurationBaseline GetConfigurationBaselineFromSMS_ConfigurationBaselineInfo(IResultObject resource)
+        {
+            SccmConfigurationBaseline item = new SccmConfigurationBaseline();
+
+            item.Name = ResultObjectHandler.GetString(resource, "LocalizedDisplayName");
+            item.ID = ResultObjectHandler.GetString(resource, "CI_ID");
+            return item;
+        }
+
+        public static SccmConfigurationItem GetConfigurationItemFromSMS_ConfigurationItemSettingReference(IResultObject resource)
+        {
+            SccmConfigurationItem item = new SccmConfigurationItem();
+
+            item.Name = ResultObjectHandler.GetString(resource, "SettingName");
+            item.ID = ResultObjectHandler.GetString(resource, "CI_ID");
+            return item;
+        }
     }
 }

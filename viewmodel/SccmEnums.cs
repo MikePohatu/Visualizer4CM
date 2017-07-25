@@ -19,7 +19,8 @@
         Collection,
         SMS_DeploymentInfo,
         SMS_DeploymentSummary,
-        Package
+        Package,
+        ConfigurationItem
     }
 
     public enum PackageType

@@ -645,5 +645,59 @@ namespace viewmodel
             catch { }
             return items;
         }
+
+        public List<SccmConfigurationBaseline> GetConfigurationBaselinesListFromSearch(string search)
+        {
+            List<SccmConfigurationBaseline> items = new List<SccmConfigurationBaseline>();
+            try
+            {
+                // This query selects all collections
+
+                string query;
+                if (string.IsNullOrWhiteSpace(search)) { query = "select * from SMS_ConfigurationBaselineInfo WHERE IsLatest='TRUE'"; }
+                else { query = "select * from SMS_ConfigurationBaselineInfo WHERE LocalizedDisplayName LIKE '%" + search + "%'"; }
+
+                // Run query
+                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
+                {
+                    // Enumerate through the collection of objects returned by the query.
+                    foreach (IResultObject resource in results)
+                    {
+                        //SccmConfigurationBaseline item = Factory.GetApplicationFromSMS_ApplicationResults(resource);
+                        //items.Add(item);
+                    }
+                }
+                items = items.OrderBy(o => o.Name).ToList();
+            }
+            catch { }
+            return items;
+        }
+
+        public List<SccmConfigurationItem> GetConfigurationItemsListFromSearch(string search)
+        {
+            List<SccmConfigurationItem> items = new List<SccmConfigurationItem>();
+            try
+            {
+                // This query selects all collections
+
+                string query;
+                if (string.IsNullOrWhiteSpace(search)) { query = "select * from SMS_ConfigurationItemSettingReference WHERE IsLatest='TRUE'"; }
+                else { query = "select * from SMS_ConfigurationItemSettingReference WHERE SettingName LIKE '%" + search + "%'"; }
+
+                // Run query
+                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
+                {
+                    // Enumerate through the collection of objects returned by the query.
+                    foreach (IResultObject resource in results)
+                    {
+                        //SccmConfigurationItem item = Factory.GetApplicationFromSMS_ApplicationResults(resource);
+                        //items.Add(item);
+                    }
+                }
+                items = items.OrderBy(o => o.Name).ToList();
+            }
+            catch { }
+            return items;
+        }
     }
 }

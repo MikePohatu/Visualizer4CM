@@ -55,6 +55,7 @@
     <Compile Include="LoginViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResultObjectHandler.cs" />
+    <Compile Include="SccmConfigurationItem.cs" />
     <Compile Include="SccmPackage.cs" />
     <Compile Include="SMS_DeploymentInfo.cs" />
     <Compile Include="SccmConfigurationBaseline.cs" />
