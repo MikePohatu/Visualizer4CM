@@ -208,7 +208,8 @@ namespace viewmodel
             item.PackageName = ResultObjectHandler.GetString(resource, "PackageName");
             item.PackageID = ResultObjectHandler.GetString(resource, "PackageID");
             item.ID = item.PackageID + ";;" + item.ProgramName;
-            item.Name = item.PackageName + " (" + item.ProgramName + ")";
+            //item.Name = item.PackageName + " (" + item.ProgramName + ")";
+            item.Name = item.ProgramName;
             return item;
         }
 

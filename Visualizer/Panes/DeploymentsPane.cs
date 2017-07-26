@@ -92,6 +92,8 @@ namespace Visualizer.Panes
                         else if (this.SelectedNode.SccmObject is SMS_DeploymentSummary) { this._pane.modecombo.Text = "Deployment"; }
                         else if (this.SelectedNode.SccmObject is SccmSoftwareUpdate) { this._pane.modecombo.Text = "Update"; }
                         else if (this.SelectedNode.SccmObject is SccmTaskSequence) { this._pane.modecombo.Text = "Task Sequence"; }
+                        else if (this.SelectedNode.SccmObject is SccmPackage) { this._pane.modecombo.Text = "Package"; }
+                        else if (this.SelectedNode.SccmObject is SccmPackageProgram) { this._pane.modecombo.Text = "Package"; }
                     }
                 }               
             }
