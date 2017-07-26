@@ -183,7 +183,7 @@ namespace viewmodel
             item.TargetID = ResultObjectHandler.GetString(resource, "TargetID");
             item.TargetSecurityTypeID = ResultObjectHandler.GetInt(resource, "TargetSecurityTypeID");
             item.TargetSubName = ResultObjectHandler.GetString(resource, "TargetSubName");
-
+            item.TargetName = ResultObjectHandler.GetString(resource, "TargetName");
             return item;
         }
 

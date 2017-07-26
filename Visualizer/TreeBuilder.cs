@@ -255,10 +255,11 @@ namespace Visualizer
 
             foreach (SccmPackageProgram program in package.Programs)
             {
-                if (graph.FindNode(program.Name) == null)
+                string targetid = program.Name.ToUpper();
+                if (graph.FindNode(targetid) == null)
                 {
-                    graph.AddNode(new SccmNode(package.ID, program));
-                    Edge newedge = graph.AddEdge(package.ID, program.Name);
+                    graph.AddNode(new SccmNode(targetid.ToUpper(), program));
+                    Edge newedge = graph.AddEdge(package.ID, targetid);
                 }
             }
 
@@ -271,7 +272,8 @@ namespace Visualizer
                     graph.AddNode(new CollectionNode(deployment.CollectionID, new SccmCollection(deployment.CollectionID, deployment.CollectionName, string.Empty)));
                     //Edge newedge = graph.AddEdge(package.ID, deployment.CollectionID);
                 }
-                Edge newedge = graph.AddEdge(depinfo.TargetSubName, deployment.CollectionID);
+                string targetid = depinfo.TargetName + " (" + depinfo.TargetSubName + ")";
+                Edge newedge = graph.AddEdge(targetid.ToUpper(), deployment.CollectionID);
             }
             package.IsHighlighted = true;
             return graph;

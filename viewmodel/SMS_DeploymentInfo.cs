@@ -6,6 +6,19 @@
     public class SMS_DeploymentInfo: ViewModelBase, IDeployment
     {
         public SccmItemType Type { get { return SccmItemType.SMS_DeploymentInfo; } }
+
+        protected string _targetname;
+        public string TargetName
+        {
+            get { return this._targetname; }
+            set
+            {
+                this._targetname = value;
+                this.OnPropertyChanged(this, "TargetName");
+            }
+        }
+
+
         protected string _collectionid;
         public string CollectionID
         {
