@@ -51,7 +51,7 @@
                               Style="{DynamicResource BaseControlStyle}">
                         <ComboBoxItem>Application</ComboBoxItem>
                         <ComboBoxItem IsSelected="True">Collection</ComboBoxItem>
-                        <!--<ComboBoxItem>Deployment</ComboBoxItem>-->
+                        <ComboBoxItem>Package</ComboBoxItem>
                         <ComboBoxItem>Task Sequence</ComboBoxItem>
                         <ComboBoxItem>Update</ComboBoxItem>
                         <ComboBoxItem>Update Group</ComboBoxItem>

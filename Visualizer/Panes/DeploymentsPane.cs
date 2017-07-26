@@ -131,52 +131,75 @@ namespace Visualizer.Panes
             else if (this._pane.modecombo.Text == "Task Sequence")
             { await Task.Run(() => this.SearchResults = this._connector.GetTaskSequenceSccmObjectsFromSearch(this._searchtext)); }
 
+            else if (this._pane.modecombo.Text == "Package")
+            { await Task.Run(() => this.SearchResults = this._connector.GetPackageSccmObjectsFromSearch(this._searchtext)); }
+
             this.FinishProcessing();
             this.NotifyFinishSearchWithCount(this.SearchResults.Count);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Await.Warning", "CS4014:Await.Warning")]
-        protected override async void BuildGraph()
+        protected async override void BuildGraph()
         {
             if (this._selectedresult != null)
             {
                 this.StartProcessing();
-                string mode = this._pane.modecombo.Text;
+                //string mode = this._pane.modecombo.Text;
                 this.ClearHighlightedCollections();
-
                 Task.Run(() => this.NotifyProgress("Querying server"));
-                List<IDeployment> deployments = null;
-                if (this._selectedresult is SccmCollection)
-                {
-                    await Task.Run(() => deployments = this._connector.GetCollectionDeployments(this._selectedresult.ID));
-                }
-                else if (this._selectedresult is SccmSoftwareUpdate)
-                {
-                    await Task.Run(() => deployments = this._connector.GetSoftwareUpdateDeployments(this._selectedresult.Name));
-                }
-                else if (this._selectedresult is SccmDeployableItem)
-                {
-                    await Task.Run(() => deployments = this._connector.GetSoftwareItemDeployments(this._selectedresult.Name));
-                }
 
-                this.UpdateProgressMessage_ForAsync("Building tree");
-                await Task.Run(() => 
+                await Task.Run(() =>
                 {
                     if (this._selectedresult != null)
                     {
-                        if (this._selectedresult is SccmCollection) { this._graph = TreeBuilder.BuildCollectionDeploymentsTree(this._connector, (SccmCollection)this._selectedresult, deployments); }
-                        else { this._graph = TreeBuilder.BuildCIDeploymentsTree(this._connector, this._selectedresult, deployments); }
-
-                        this._selectedresult.IsHighlighted = true;
+                        if (this._selectedresult.Type == SccmItemType.Package) { this.ProcessBuildPackage((SccmPackage)this._selectedresult); }
+                        else if (this._selectedresult.Type == SccmItemType.Collection) { this.ProcessBuildCollection((SccmCollection)this._selectedresult); }
+                        else if (this._selectedresult.Type == SccmItemType.SoftwareUpdate) { this.ProcessBuildSoftwareUpdate((SccmSoftwareUpdate)this._selectedresult); }
+                        else { this.ProcessDeployableItem(this._selectedresult); }
                     }
                 });
 
                 this.UpdateProgressMessage_ForAsync("Building graph");
                 await Task.Run(() => this.UpdatePaneToTabControl());
                 this.FinishProcessing();
-                //this._pane.gviewer.
             }
             else { this.NotificationText = "Nothing selected"; }
+        }
+
+        private void ProcessBuildPackage(SccmPackage package)
+        {
+            List<IDeployment> deployments = null;
+            this._connector.PopulatePackageChildren(package);
+            deployments = this._connector.GetSMS_DeploymentInfoDeployments(this._selectedresult.Name, SccmItemType.PackageProgram);
+
+            this.UpdateProgressMessage_ForAsync("Building tree");
+            this._graph = TreeBuilder.BuildPackageDeploymentsTree(this._connector, package, deployments);
+        }
+
+        private void ProcessBuildCollection(SccmCollection collection)
+        {
+            List<IDeployment> deployments = null;
+            deployments = this._connector.GetCollectionDeployments(this._selectedresult.ID);
+            this.UpdateProgressMessage_ForAsync("Building tree");
+            this._graph = TreeBuilder.BuildCollectionDeploymentsTree(this._connector, collection, deployments);
+        }
+
+        private void ProcessBuildSoftwareUpdate(SccmSoftwareUpdate update)
+        {
+            List<IDeployment> deployments = null;
+            deployments = this._connector.GetSMS_DeploymentInfoDeployments(update.Name, this._selectedresult.Type);
+
+            this.UpdateProgressMessage_ForAsync("Building tree");
+            this._graph = TreeBuilder.BuildCIDeploymentsTree(this._connector, update, deployments);
+        }
+
+        private void ProcessDeployableItem(ISccmObject sccmobject)
+        {
+            List<IDeployment> deployments = null;
+            deployments = this._connector.GetSoftwareItemDeployments(sccmobject.Name);
+
+            this.UpdateProgressMessage_ForAsync("Building tree");
+            this._graph = TreeBuilder.BuildCIDeploymentsTree(this._connector, sccmobject, deployments);
         }
     }
 }

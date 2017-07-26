@@ -246,6 +246,38 @@ namespace Visualizer
             return graph;
         }
 
+        public static Graph BuildPackageDeploymentsTree(SccmConnector connector, SccmPackage package, List<IDeployment> deployments)
+        {
+            Graph graph = new Graph();
+
+            //build the graph
+            graph.AddNode(new SccmNode(package.ID, package));
+
+            foreach (SccmPackageProgram program in package.Programs)
+            {
+                if (graph.FindNode(program.Name) == null)
+                {
+                    graph.AddNode(new SccmNode(package.ID, program));
+                    Edge newedge = graph.AddEdge(package.ID, program.Name);
+                }
+            }
+
+
+            foreach (IDeployment deployment in deployments)
+            {
+                SMS_DeploymentInfo depinfo = (SMS_DeploymentInfo)deployment;
+                if (graph.FindNode(deployment.CollectionID) == null)
+                {
+                    graph.AddNode(new CollectionNode(deployment.CollectionID, new SccmCollection(deployment.CollectionID, deployment.CollectionName, string.Empty)));
+                    //Edge newedge = graph.AddEdge(package.ID, deployment.CollectionID);
+                }
+                Edge newedge = graph.AddEdge(depinfo.TargetSubName, deployment.CollectionID);
+            }
+            package.IsHighlighted = true;
+            return graph;
+        }
+
+
         public static Graph BuildPackagesTree(PackageLibrary library, SccmPackage rootpackage)
         {
             Graph graph = new Graph();

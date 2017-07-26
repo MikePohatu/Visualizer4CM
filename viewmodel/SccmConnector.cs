@@ -322,32 +322,31 @@ namespace viewmodel
             return items;
         }
 
-        public List<IDeployment> GetSoftwareUpdateDeployments(string updatename)
-        {
-            List<IDeployment> items = new List<IDeployment>();
+        //public List<IDeployment> GetSoftwareUpdateDeployments(string updatename)
+        //{
+        //    List<IDeployment> items = new List<IDeployment>();
 
-            try
-            {
-                // This query selects all relationships of the specified app ID
-                int type = (int)SccmItemType.SoftwareUpdate;
-                string query = "select * from SMS_DeploymentInfo WHERE TargetName='" + updatename + "' AND DeploymentType='" + type.ToString() + "'";
+        //    try
+        //    {
+        //        // This query selects all relationships of the specified app ID
+        //        int type = (int)SccmItemType.SoftwareUpdate;
+        //        string query = "select * from SMS_DeploymentInfo WHERE TargetName='" + updatename + "' AND DeploymentType='" + type.ToString() + "'";
 
-                // Run query
-                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
-                {
-                    // Enumerate through the collection of objects returned by the query.
-                    foreach (IResultObject resource in results)
-                    {
-                        SMS_DeploymentInfo dep = Factory.GetDeploymentInfoFromSMS_DeploymentInfoResults(resource);
-                        items.Add(dep);
-                    }
-                }
-                //items = items.OrderBy(o => o.Name).ToList();
-            }
-            catch { }
-            return items;
-
-        }
+        //        // Run query
+        //        using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
+        //        {
+        //            // Enumerate through the collection of objects returned by the query.
+        //            foreach (IResultObject resource in results)
+        //            {
+        //                SMS_DeploymentInfo dep = Factory.GetDeploymentInfoFromSMS_DeploymentInfoResults(resource);
+        //                items.Add(dep);
+        //            }
+        //        }
+        //        //items = items.OrderBy(o => o.Name).ToList();
+        //    }
+        //    catch { }
+        //    return items;
+        //}
 
 
         public List<IDeployment> GetSoftwareUpdateGroupDeployments(string updategrouname)
@@ -617,6 +616,29 @@ namespace viewmodel
             return library;
         }
 
+        public void PopulatePackageChildren(SccmPackage package)
+        {
+            package.Programs.Clear();
+            try
+            {
+                //get programs
+                int type = (int)PackageType.RegularSoftwareDistribution;
+                string query = "select * from SMS_Program WHERE PackageType='" + type + "' AND PackageID='" + package.ID + "'";
+
+                // Run query
+                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
+                {
+                    // Enumerate through the collection of objects returned by the query.
+                    foreach (IResultObject resource in results)
+                    {
+                        SccmPackageProgram item = Factory.GetPackageProgramFromSMS_ProgramResults(resource);
+                        package.Programs.Add(item);
+                    }
+                }
+            }
+            catch { }
+        }
+
         public List<SccmPackage> GetPackagesFromSearch(string search)
         {
             List<SccmPackage> items = new List<SccmPackage>();
@@ -641,6 +663,61 @@ namespace viewmodel
                     }
                 }
                 items = items.OrderBy(o => o.Name).ToList();
+            }
+            catch { }
+            return items;
+        }
+
+        public List<ISccmObject> GetPackageSccmObjectsFromSearch(string search)
+        {
+            List<ISccmObject> items = new List<ISccmObject>();
+
+            try
+            {
+                int type = (int)PackageType.RegularSoftwareDistribution;
+
+                // This query selects all relationships of the specified app ID
+                string query;
+                if (string.IsNullOrWhiteSpace(search)) { query = "select * from SMS_PackageBaseclass WHERE PackageType='" + type + "'"; }
+                else { query = "select * from SMS_PackageBaseclass WHERE Name LIKE '%" + search + "%' AND PackageType='" + type + "'"; }
+
+                // Run query
+                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
+                {
+                    // Enumerate through the collection of objects returned by the query.
+                    foreach (IResultObject resource in results)
+                    {
+                        SccmPackage dep = Factory.GetPackageFromSMS_PackageBaseclassResults(resource);
+                        items.Add(dep);
+                    }
+                }
+                items = items.OrderBy(o => o.Name).ToList();
+            }
+            catch { }
+            return items;
+        }
+
+        public List<IDeployment> GetSMS_DeploymentInfoDeployments(string targettame, SccmItemType itemtype)
+        {
+            List<IDeployment> items = new List<IDeployment>();
+
+            try
+            {
+                // This query selects all relationships of the specified app ID
+                int type = (int)itemtype;
+                string query = "select * from SMS_DeploymentInfo WHERE TargetName='" + targettame + "' AND DeploymentType='" + type.ToString() + "'";
+
+                // Run query
+                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
+                {
+                    // Enumerate through the collection of objects returned by the query.
+                    foreach (IResultObject resource in results)
+                    {
+                        SMS_DeploymentInfo dep = Factory.GetDeploymentInfoFromSMS_DeploymentInfoResults(resource);
+                        items.Add(dep);
+                    }
+                }
+                //items = items.OrderBy(o => o.Name).ToList();
             }
             catch { }
             return items;
