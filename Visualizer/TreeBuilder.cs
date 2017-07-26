@@ -268,7 +268,9 @@ namespace Visualizer
                 string targetid = program.Name.ToUpper();
                 if (graph.FindNode(targetid) == null)
                 {
-                    graph.AddNode(new SccmNode(targetid.ToUpper(), program));
+                    SccmNode prognode = new SccmNode(targetid.ToUpper(), program);
+                    prognode.Attr.Color = Color.LightBlue;
+                    graph.AddNode(prognode);
                     Edge newedge = graph.AddEdge(package.ID, targetid);
                 }
             }
