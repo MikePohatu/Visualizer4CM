@@ -12,6 +12,11 @@ namespace Visualizer
             Graph graph = new Graph();
             foreach (SccmCollection col in collections)
             {
+                if (col == null)
+                {
+                    //log and continue
+                    continue;
+                }
                 Node colnode = graph.FindNode(col.ID);
                 if (colnode == null)
                 {
@@ -25,6 +30,11 @@ namespace Visualizer
                     if (limitingnode == null)
                     {
                         SccmCollection limcol = library.GetCollection(col.LimitingCollectionID);
+                        if (limcol == null)
+                        {
+                            //log and continue
+                            continue;
+                        }
                         limitingnode = new CollectionNode(limcol.ID, limcol);
                         graph.AddNode(limitingnode);
                     }
