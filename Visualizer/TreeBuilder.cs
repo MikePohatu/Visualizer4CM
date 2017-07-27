@@ -243,7 +243,6 @@ namespace Visualizer
 
             //build the graph
             graph.AddNode(new SccmNode(ci.ID, ci));
-            //BuildCIDeploymentLinks(connector, graph, ci.ID, deployments);
             foreach (IDeployment deployment in deployments)
             {
                 if (graph.FindNode(deployment.CollectionID) == null)
@@ -269,7 +268,6 @@ namespace Visualizer
                 if (graph.FindNode(targetid) == null)
                 {
                     SccmNode prognode = new SccmNode(targetid, program);
-                    prognode.Attr.Color = Color.RosyBrown;
                     graph.AddNode(prognode);
                     Edge newedge = graph.AddEdge(package.ID, targetid);
                 }
