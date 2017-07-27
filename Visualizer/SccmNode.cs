@@ -78,7 +78,7 @@ namespace Visualizer
                     prefix = "Package: ";
                     break;
                 case SccmItemType.PackageProgram:
-                    //this.Attr.Color = Color.Chocolate;
+                    this.Attr.Color = Color.RosyBrown;
                     prefix = "Program: ";
                     break;
                 case SccmItemType.ConfigurationBaseline:

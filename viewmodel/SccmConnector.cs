@@ -632,7 +632,7 @@ namespace viewmodel
                     foreach (IResultObject resource in results)
                     {
                         SccmPackageProgram item = Factory.GetPackageProgramFromSMS_ProgramResults(resource);
-                        package.Programs.Add(item);
+                        if (item != null) { package.Programs.Add(item); }
                     }
                 }
             }
@@ -659,7 +659,7 @@ namespace viewmodel
                     foreach (IResultObject resource in results)
                     {
                         SccmPackage item = Factory.GetPackageFromSMS_PackageBaseclassResults(resource);
-                        items.Add(item);
+                        if (item != null) { items.Add(item); }
                     }
                 }
                 items = items.OrderBy(o => o.Name).ToList();
@@ -688,7 +688,7 @@ namespace viewmodel
                     foreach (IResultObject resource in results)
                     {
                         SccmPackage dep = Factory.GetPackageFromSMS_PackageBaseclassResults(resource);
-                        items.Add(dep);
+                        if (dep != null) { items.Add(dep); }
                     }
                 }
                 items = items.OrderBy(o => o.Name).ToList();
