@@ -7,7 +7,7 @@ namespace Visualizer
 {
     public static class TreeBuilder
     {
-        public static Graph BuildCollectionLimitingPath(List<SccmCollection> collections, CollectionLibrary library)
+        public static Graph BuildCollectionsLimitingPath(List<SccmCollection> collections, CollectionLibrary library)
         {
             Graph graph = new Graph();
             foreach (SccmCollection col in collections)
@@ -32,10 +32,13 @@ namespace Visualizer
                         SccmCollection limcol = library.GetCollection(col.LimitingCollectionID);
                         if (limcol == null)
                         {
-                            //log and continue
-                            continue;
+                            limitingnode = new NullNode(col.LimitingCollectionID);
                         }
-                        limitingnode = new CollectionNode(limcol.ID, limcol);
+                        else
+                        {
+                            limitingnode = new CollectionNode(limcol.ID, limcol);
+                        }
+                        
                         graph.AddNode(limitingnode);
                     }
 
@@ -96,16 +99,30 @@ namespace Visualizer
                 if (graph.FindNode(colrel.DependentCollectionID) == null)
                 {
                     SccmCollection col = library.GetCollection(colrel.DependentCollectionID);
-                    if (col == null) { continue; }
-                    graph.AddNode(new CollectionNode(col.ID, col));
+                    if (col == null)
+                    {
+                        graph.AddNode(new NullNode(colrel.DependentCollectionID));
+                        //continue;
+                    }
+                    else
+                    {
+                        graph.AddNode(new CollectionNode(col.ID, col));
+                    }                   
                 }
 
                 if (graph.FindNode(colrel.SourceCollectionID) == null)
                 {
                     SccmCollection col = library.GetCollection(colrel.SourceCollectionID);
-                    if (col == null) { continue; }
-                    graph.AddNode(new CollectionNode(col.ID, col));
-                    BuildCollectionMeshLinks(connector,graph, library, col); //recursive build
+                    if (col == null)
+                    {
+                        graph.AddNode(new NullNode(colrel.SourceCollectionID));
+                        //continue;
+                    }
+                    else
+                    {
+                        graph.AddNode(new CollectionNode(col.ID, col));
+                        BuildCollectionMeshLinks(connector, graph, library, col); //recursive build
+                    }
                 }
 
                 Edge newedge = graph.AddEdge(colrel.DependentCollectionID, colrel.Type.ToString(), colrel.SourceCollectionID);
@@ -127,7 +144,7 @@ namespace Visualizer
             SccmCollection searchcol = library.GetCollection(collectionid);
             if (searchcol != null)
             {
-                graph = BuildCollectionLimitingPath(searchcol.GetCollectionPathList(), library);
+                graph = BuildCollectionsLimitingPath(searchcol.GetCollectionPathList(), library);
                 searchcol.IsHighlighted = true;
             }
 
@@ -139,7 +156,7 @@ namespace Visualizer
             Graph graph = null;
 
             //build the graph
-            graph = BuildCollectionLimitingPath(library.GetAllCollections(), library);
+            graph = BuildCollectionsLimitingPath(library.GetAllCollections(), library);
 
             return graph;
         }

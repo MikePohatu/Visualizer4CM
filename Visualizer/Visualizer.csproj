@@ -96,6 +96,7 @@
     <Compile Include="Auth\LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="NullNode.cs" />
     <Compile Include="Panes\PackageTabControl.xaml.cs">
       <DependentUpon>PackageTabControl.xaml</DependentUpon>
     </Compile>
