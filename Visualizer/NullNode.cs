@@ -9,12 +9,13 @@ namespace Visualizer
     {
         public NullNode(string id) :base(id)
         {
-            double radius = 20;
-            this.Attr.Shape = Shape.Circle;
+            this.Attr.Shape = Shape.Box;
             this.Attr.Color = Color.Red;
             this.Attr.FillColor = Color.Red;
-            this.Attr.XRadius = radius;
-            this.Attr.YRadius = radius;
+            this.Attr.LabelMargin = 3;
+            this.Attr.Padding = 20;
+            this.Label.FontColor = Color.White;
+            this.Label.FontSize = 8;
         }
     }
 }

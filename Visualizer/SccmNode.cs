@@ -22,12 +22,8 @@ namespace Visualizer
             this._sccmobject = sccmobject;
             this._sccmobject.PropertyChanged += this.OnPropertyChanged;
             this.Attr.Shape = Shape.Box;
-            this.Attr.XRadius = 3;
-            this.Attr.YRadius = 3;
-            this.Attr.Padding = 3;
-            this.Attr.LabelMargin = 5;
+            this.Attr.LabelMargin = 4;
             this.Attr.LineWidth = this._normallinewidth;
-
             this.SetLayout();
         }
 
@@ -40,13 +36,11 @@ namespace Visualizer
                 {
                     this.Attr.LineWidth = this._highlightedlinewidth;
                     this.Attr.Color = Color.Green;
-                    //this.Attr.FillColor = Color.LightGreen;
                 }
                 else
                 {
                     this.Attr.LineWidth = this._normallinewidth;
                     this.Attr.Color = Color.Black;
-                    //this.Attr.Color = Color.White;
                 }
             }
         }

@@ -51,8 +51,6 @@ namespace Visualizer
                     this.Attr.Color = Color.Black;
                 }
             }
-
-            else { base.OnPropertyChanged(sender, e); }
         }
     }
 }
