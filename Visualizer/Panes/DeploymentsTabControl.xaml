@@ -47,10 +47,11 @@
                         <ColumnDefinition Width="65"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <ComboBox Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3"  x:Name="modecombo" Width="110" HorizontalAlignment="left" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Padding="5,2,2,2" 
+                    <ComboBox Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3"  x:Name="modecombo" Width="130" HorizontalAlignment="left" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Padding="5,2,2,2" 
                               Style="{DynamicResource BaseControlStyle}">
                         <ComboBoxItem>Application</ComboBoxItem>
                         <ComboBoxItem IsSelected="True">Collection</ComboBoxItem>
+                        <ComboBoxItem>Configuration Item</ComboBoxItem>
                         <ComboBoxItem>Package</ComboBoxItem>
                         <ComboBoxItem>Task Sequence</ComboBoxItem>
                         <ComboBoxItem>Update</ComboBoxItem>

@@ -118,6 +118,9 @@ namespace Visualizer.Panes
             if (this._pane.modecombo.Text == "Collection")
             { await Task.Run(() => this.SearchResults = this._connector.GetCollectionSccmObjectsFromSearch(this._searchtext, this.CollectionsType)); }
 
+            else if (this._pane.modecombo.Text == "Configuration Item")
+            { await Task.Run(() => this.SearchResults = this._connector.GetConfigurationBaselineSccmObjectsListFromSearch(this._searchtext)); }
+
             else if (this._pane.modecombo.Text == "Deployment")
             { await Task.Run(() => this.SearchResults = this._connector.GetDeploymentSccmObjectsFromSearch(this._searchtext)); }
 

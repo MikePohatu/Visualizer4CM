@@ -750,6 +750,33 @@ namespace viewmodel
             return items;
         }
 
+        public List<ISccmObject> GetConfigurationBaselineSccmObjectsListFromSearch(string search)
+        {
+            List<ISccmObject> items = new List<ISccmObject>();
+            try
+            {
+                // This query selects all collections
+
+                string query;
+                if (string.IsNullOrWhiteSpace(search)) { query = "select * from SMS_ConfigurationBaselineInfo"; }
+                else { query = "select * from SMS_ConfigurationBaselineInfo WHERE LocalizedDisplayName LIKE '%" + search + "%'"; }
+
+                // Run query
+                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
+                {
+                    // Enumerate through the collection of objects returned by the query.
+                    foreach (IResultObject resource in results)
+                    {
+                        SccmConfigurationBaseline item = Factory.GetConfigurationBaselineFromSMS_ConfigurationBaselineInfo(resource);
+                        items.Add(item);
+                    }
+                }
+                items = items.OrderBy(o => o.Name).ToList();
+            }
+            catch { }
+            return items;
+        }
+
         public List<SccmConfigurationItem> GetConfigurationItemsListFromSearch(string search)
         {
             List<SccmConfigurationItem> items = new List<SccmConfigurationItem>();
