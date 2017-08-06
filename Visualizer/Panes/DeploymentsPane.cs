@@ -160,6 +160,7 @@ namespace Visualizer.Panes
                         if (this._selectedresult.Type == SccmItemType.Package) { this.ProcessBuildPackage((SccmPackage)this._selectedresult); }
                         else if (this._selectedresult.Type == SccmItemType.Collection) { this.ProcessBuildCollection((SccmCollection)this._selectedresult); }
                         else if (this._selectedresult.Type == SccmItemType.SoftwareUpdate) { this.ProcessBuildSoftwareUpdate((SccmSoftwareUpdate)this._selectedresult); }
+                        else if (this._selectedresult.Type == SccmItemType.ConfigurationBaseline) { this.ProcessBuildConfigurationBaseline((SccmConfigurationBaseline)this._selectedresult); }
                         else { this.ProcessDeployableItem(this._selectedresult); }
                     }
                 });
@@ -196,6 +197,15 @@ namespace Visualizer.Panes
 
             this.UpdateProgressMessage_ForAsync("Building tree");
             this._graph = TreeBuilder.BuildCIDeploymentsTree(this._connector, update, deployments);
+        }
+
+        private void ProcessBuildConfigurationBaseline(SccmConfigurationBaseline baseline)
+        {
+            List<IDeployment> deployments = null;
+            deployments = this._connector.GetSMS_DeploymentInfoDeployments(baseline.Name, SccmItemType.ConfigurationPolicy);
+
+            this.UpdateProgressMessage_ForAsync("Building tree");
+            this._graph = TreeBuilder.BuildConfigurationBaselineDeploymentsTree(this._connector, baseline, deployments);
         }
 
         private void ProcessDeployableItem(ISccmObject sccmobject)

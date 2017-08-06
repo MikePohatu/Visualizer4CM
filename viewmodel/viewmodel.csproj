@@ -57,6 +57,7 @@
     <Compile Include="ResultObjectHandler.cs" />
     <Compile Include="SccmConfigurationItem.cs" />
     <Compile Include="SccmPackage.cs" />
+    <Compile Include="SMS_CIRelation.cs" />
     <Compile Include="SMS_DeploymentInfo.cs" />
     <Compile Include="SccmConfigurationBaseline.cs" />
     <Compile Include="SccmEnums.cs" />

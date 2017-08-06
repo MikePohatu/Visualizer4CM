@@ -346,5 +346,39 @@ namespace Visualizer
 
             if (dependentprogram.DependentSccmPackageProgram != null) { BuildPackageProgramTree(graph, library, dependentprogram, dependentprogram.DependentSccmPackageProgram); }
         }
+
+        public static Graph BuildConfigurationBaselineDeploymentsTree(SccmConnector connector, SccmConfigurationBaseline baseline, List<IDeployment> deployments)
+        {
+            Graph graph = new Graph();
+
+            //build the graph
+            SccmNode baselinenode = new SccmNode(baseline.ID, baseline);
+            graph.AddNode(baselinenode);
+
+            foreach (IDeployment deployment in deployments)
+            {
+                SccmCollection newcol = new SccmCollection();
+                newcol.Name = deployment.CollectionName;
+                newcol.ID = deployment.CollectionID;
+                graph.AddNode(new CollectionNode(newcol.ID, newcol));
+                graph.AddEdge(baseline.ID, newcol.ID);
+            }
+
+            BuildBaselineLinks(connector, graph, baseline);
+
+            baseline.IsHighlighted = true;
+            return graph;
+        }
+
+        private static void BuildBaselineLinks(SccmConnector connector, Graph graph, SccmConfigurationBaseline baseline)
+        {
+            List<SMS_CIRelation> relations = connector.GetCIRelations(baseline.ID);
+            foreach (ISccmObject ci in connector.GetISccmObjectsFromCIRelations(relations))
+            {
+                SccmNode newnode = new SccmNode(ci.ID, ci);
+                graph.AddNode(newnode);
+                graph.AddEdge(ci.ID, baseline.ID);
+            }
+        }
     }
 }

@@ -740,8 +740,8 @@ namespace viewmodel
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
                     {
-                        //SccmConfigurationBaseline item = Factory.GetApplicationFromSMS_ApplicationResults(resource);
-                        //items.Add(item);
+                        SccmConfigurationBaseline item = Factory.GetConfigurationBaselineFromSMS_ConfigurationBaselineInfo(resource);
+                        items.Add(item);
                     }
                 }
                 items = items.OrderBy(o => o.Name).ToList();
@@ -777,16 +777,14 @@ namespace viewmodel
             return items;
         }
 
-        public List<SccmConfigurationItem> GetConfigurationItemsListFromSearch(string search)
+        public List<SMS_CIRelation> GetCIRelations(string fromciid)
         {
-            List<SccmConfigurationItem> items = new List<SccmConfigurationItem>();
+            List<SMS_CIRelation> items = new List<SMS_CIRelation>();
             try
             {
                 // This query selects all collections
 
-                string query;
-                if (string.IsNullOrWhiteSpace(search)) { query = "select * from SMS_ConfigurationItemSettingReference WHERE IsLatest='TRUE'"; }
-                else { query = "select * from SMS_ConfigurationItemSettingReference WHERE SettingName LIKE '%" + search + "%'"; }
+                string query = "select * from SMS_CIRelation where FromCIID ='" + fromciid + "'";
 
                 // Run query
                 using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
@@ -794,11 +792,60 @@ namespace viewmodel
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
                     {
-                        //SccmConfigurationItem item = Factory.GetApplicationFromSMS_ApplicationResults(resource);
-                        //items.Add(item);
+                        SMS_CIRelation item = Factory.GetCIRelationFromSMS_CIRelation(resource);
+                        items.Add(item);
                     }
                 }
-                items = items.OrderBy(o => o.Name).ToList();
+            }
+            catch { }
+            return items;
+        }
+
+        public List<ISccmObject> GetISccmObjectsFromCIRelations(List<SMS_CIRelation> relations)
+        {
+            List<ISccmObject> items = new List<ISccmObject>();
+            try
+            {
+                // This query selects all collections
+                string updates = "";
+                string others = "";
+
+                foreach (SMS_CIRelation relation in relations)
+                {
+                    if (relation.RelationType == 2)
+                    {
+                        if (updates == "") { updates = "CI_ID='" + relation.ToCIID + "'"; }
+                        else { updates = updates + " OR CI_ID='" + relation.ToCIID + "'"; }
+                    }
+                    else
+                    {
+                        if (others == "") { others = "CI_ID='" + relation.ToCIID + "'"; }
+                        else { others = others + " OR CI_ID='" + relation.ToCIID + "'"; }
+                    }
+                }
+                string otherquery = "select * from SMS_ConfigurationItemLatestBaseClass where " + others + "";
+                string updatequery = "select * from SMS_SoftwareUpdate where " + updates + "";
+
+                // Run query
+                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(otherquery))
+                {
+                    // Enumerate through the collection of objects returned by the query.
+                    foreach (IResultObject resource in results)
+                    {
+                        SccmSoftwareUpdate item = Factory.GetSccmSoftwareUpdate(resource);
+                        items.Add(item);
+                    }
+                }
+
+                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(updatequery))
+                {
+                    // Enumerate through the collection of objects returned by the query.
+                    foreach (IResultObject resource in results)
+                    {
+                        SccmConfigurationItem item = Factory.GetSccmConfigurationItem(resource);
+                        items.Add(item);
+                    }
+                }
             }
             catch { }
             return items;

@@ -241,5 +241,33 @@ namespace viewmodel
             item.ID = ResultObjectHandler.GetString(resource, "CI_ID");
             return item;
         }
+
+        public static SMS_CIRelation GetCIRelationFromSMS_CIRelation(IResultObject resource)
+        {
+            SMS_CIRelation item = new SMS_CIRelation();
+
+            item.FromCIID = ResultObjectHandler.GetString(resource, "FromCIID");
+            item.ToCIID = ResultObjectHandler.GetString(resource, "ToCIID");
+            item.RelationType = ResultObjectHandler.GetInt(resource, "RelationType");
+            return item;
+        }
+
+        public static SccmConfigurationItem GetSccmConfigurationItem(IResultObject resource)
+        {
+            SccmConfigurationItem item = new SccmConfigurationItem();
+
+            item.ID = ResultObjectHandler.GetString(resource, "CI_ID");
+            item.Name = ResultObjectHandler.GetString(resource, "LocalizedDisplayName");
+            return item;
+        }
+
+        public static SccmSoftwareUpdate GetSccmSoftwareUpdate(IResultObject resource)
+        {
+            SccmSoftwareUpdate item = new SccmSoftwareUpdate();
+
+            item.ID = ResultObjectHandler.GetString(resource, "CI_ID");
+            item.Name = ResultObjectHandler.GetString(resource, "LocalizedDisplayName");
+            return item;
+        }
     }
 }
