@@ -376,6 +376,7 @@ namespace Visualizer
             foreach (ISccmObject ci in connector.GetISccmObjectsFromCIRelations(relations))
             {
                 SccmNode newnode = new SccmNode(ci.ID, ci);
+                newnode.Attr.Color = Color.RoyalBlue;
                 graph.AddNode(newnode);
                 graph.AddEdge(ci.ID, baseline.ID);
             }
