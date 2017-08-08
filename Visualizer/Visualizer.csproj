@@ -97,6 +97,10 @@
       <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="NullNode.cs" />
+    <Compile Include="Panes\IssuesTabControl.xaml.cs">
+      <DependentUpon>IssuesTabControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Panes\IssuesPane.cs" />
     <Compile Include="Panes\PackageTabControl.xaml.cs">
       <DependentUpon>PackageTabControl.xaml</DependentUpon>
     </Compile>
@@ -123,6 +127,10 @@
     <Page Include="Auth\LoginWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Panes\IssuesTabControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Panes\PackageTabControl.xaml">
       <Generator>MSBuild:Compile</Generator>
