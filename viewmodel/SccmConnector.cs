@@ -910,5 +910,27 @@ namespace viewmodel
             catch { }
             return items;
         }
+
+        public List<SccmCollection> GetIncrementalUpdateCollections()
+        {
+            List<SccmCollection> items = new List<SccmCollection>();
+            try
+            {
+                string query = "select * from SMS_Collection WHERE RefreshType='6' AND CollectionID NOT LIKE 'SMS%'";
+
+                // Run query
+                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
+                {
+                    // Enumerate through the collection of objects returned by the query.
+                    foreach (IResultObject resource in results)
+                    {
+                        SccmCollection item = Factory.GetCollectionFromSMS_CollectionResults(resource);
+                        items.Add(item);
+                    }
+                }
+            }
+            catch { }
+            return items;
+        }
     }
 }
