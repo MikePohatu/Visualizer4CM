@@ -925,7 +925,7 @@ namespace viewmodel
             {
                 // This query selects all collections
                 string updates = "";
-                string others = "";
+                string query = "";
 
                 foreach (SMS_CIRelation relation in relations)
                 {
@@ -936,15 +936,15 @@ namespace viewmodel
                     }
                     else
                     {
-                        if (others == "") { others = "CI_ID='" + relation.ToCIID + "'"; }
-                        else { others = others + " OR CI_ID='" + relation.ToCIID + "'"; }
+                        if (query == "") { query = "CI_ID='" + relation.ToCIID + "'"; }
+                        else { query = query + " OR CI_ID='" + relation.ToCIID + "'"; }
                     }
                 }
-                string otherquery = "select * from SMS_ConfigurationItemLatestBaseClass where " + others + "";
+                string ciquery = "select * from SMS_ConfigurationItemLatestBaseClass where " + query + "";
                 string updatequery = "select * from SMS_SoftwareUpdate where " + updates + "";
 
                 // Run query
-                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(otherquery))
+                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(updatequery))
                 {
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
@@ -954,7 +954,7 @@ namespace viewmodel
                     }
                 }
 
-                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(updatequery))
+                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(ciquery))
                 {
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
