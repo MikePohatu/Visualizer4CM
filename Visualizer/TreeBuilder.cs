@@ -375,19 +375,28 @@ namespace Visualizer
             List<SMS_CIRelation> relations = connector.GetCIRelations(baseline.ID);
             foreach (ISccmObject ci in connector.GetISccmObjectsFromCIRelations(relations))
             {
-                SccmNode newnode = new SccmNode(ci.ID, ci);
-                newnode.Attr.Color = Color.RoyalBlue;
-                graph.AddNode(newnode);
+                Node newnode = graph.FindNode(ci.ID);
+                if (newnode == null)
+                {
+                    newnode = new SccmNode(ci.ID, ci);
+                    graph.AddNode(newnode);
+                }
                 graph.AddEdge(ci.ID, baseline.ID);
+                SccmConfigurationBaseline child = connector.GetConfigurationBaseline(ci.ID);
+                if (child != null)
+                {
+                    newnode.Attr.Color = Color.RoyalBlue;
+                    BuildBaselineLinks(connector, graph, child);
+                }
             }
         }
 
-        public static Graph BuildDeviceDeploymentsTree(SccmConnector connector, SccmResource resource, List<SccmCollection> collections)
+        public static Graph BuildResourceDeploymentsTree(SccmConnector connector, SccmResource resource, List<SccmCollection> collections)
         {
             Graph graph = new Graph();
             //build the graph
-            SccmNode devicenode = new SccmNode(resource.ID, resource);
-            graph.AddNode(devicenode);
+            SccmNode resnode = new SccmNode(resource.ID, resource);
+            graph.AddNode(resnode);
 
             foreach (SccmCollection col in collections)
             {

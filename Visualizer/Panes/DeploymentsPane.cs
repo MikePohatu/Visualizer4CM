@@ -18,8 +18,6 @@ namespace Visualizer.Panes
         protected DeploymentsTabControl _pane;
         public DeploymentsTabControl Pane { get { return this._pane; } }
 
-        protected CollectionType CollectionsType { get; set; }
-
         protected List<ISccmObject> _searchresults;
         public List<ISccmObject> SearchResults
         {
@@ -54,7 +52,6 @@ namespace Visualizer.Panes
             this._pane.searchbtn.Click += this.OnSearchButtonPressed;
             this._pane.searchtb.KeyUp += this.OnSearchKeyUp;
 
-            this.CollectionsType = CollectionType.Device;
             this._header = "Deployments";
         }
 
@@ -92,10 +89,13 @@ namespace Visualizer.Panes
                         else if (this.SelectedNode.SccmObject is SccmApplication) { this._pane.modecombo.Text = "Application"; }
                         else if (this.SelectedNode.SccmObject is SccmSoftwareUpdateGroup) { this._pane.modecombo.Text = "Update Group"; }
                         else if (this.SelectedNode.SccmObject is SMS_DeploymentSummary) { this._pane.modecombo.Text = "Deployment"; }
+                        else if (this.SelectedNode.SccmObject is SccmDevice) { this._pane.modecombo.Text = "Device"; }
                         else if (this.SelectedNode.SccmObject is SccmSoftwareUpdate) { this._pane.modecombo.Text = "Update"; }
                         else if (this.SelectedNode.SccmObject is SccmTaskSequence) { this._pane.modecombo.Text = "Task Sequence"; }
                         else if (this.SelectedNode.SccmObject is SccmPackage) { this._pane.modecombo.Text = "Package"; }
                         else if (this.SelectedNode.SccmObject is SccmPackageProgram) { this._pane.modecombo.Text = "Package"; }
+                        else if (this.SelectedNode.SccmObject is SccmUser) { this._pane.modecombo.Text = "User"; }
+                        else if (this.SelectedNode.SccmObject is SccmConfigurationBaseline) { this._pane.modecombo.Text = "Baseline"; }
                     }
                 }               
             }
@@ -118,9 +118,9 @@ namespace Visualizer.Panes
 
             Task.Run(() => this.NotifyProgress("Searching"));
             if (this._pane.modecombo.Text == "Collection")
-            { await Task.Run(() => this.SearchResults = this._connector.GetCollectionSccmObjectsFromSearch(this._searchtext, this.CollectionsType)); }
+            { await Task.Run(() => this.SearchResults = this._connector.GetCollectionSccmObjectsFromSearch(this._searchtext)); }
 
-            else if (this._pane.modecombo.Text == "Configuration Item")
+            else if (this._pane.modecombo.Text == "Baseline")
             { await Task.Run(() => this.SearchResults = this._connector.GetConfigurationBaselineSccmObjectsListFromSearch(this._searchtext)); }
 
             else if (this._pane.modecombo.Text == "Deployment")
@@ -238,7 +238,7 @@ namespace Visualizer.Panes
             {
                 List<SccmCollection> devcols = this._connector.GetCollections(resource.CollectionIDs, CollectionType.Device);
                 this.UpdateProgressMessage_ForAsync("Building tree");
-                this._graph = TreeBuilder.BuildDeviceDeploymentsTree(this._connector, resource, devcols);
+                this._graph = TreeBuilder.BuildResourceDeploymentsTree(this._connector, resource, devcols);
             }
         }
     }

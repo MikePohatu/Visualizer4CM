@@ -283,8 +283,19 @@ namespace viewmodel
         {
             SccmUser item = new SccmUser();
 
-            item.ID = ResultObjectHandler.GetString(resource, "SID");
+            item.ID = ResultObjectHandler.GetString(resource, "ResourceID");
             item.Name = ResultObjectHandler.GetString(resource, "UniqueUserName");
+            item.FullUserName = ResultObjectHandler.GetString(resource, "FullUserName");
+            return item;
+        }
+
+        public static SccmUser GetSccmUserFromSMS_FullCollectionMembership(IResultObject resource)
+        {
+            SccmUser item = new SccmUser();
+
+            item.ID = ResultObjectHandler.GetString(resource, "ResourceID");
+            item.Name = ResultObjectHandler.GetString(resource, "UniqueUserName");
+            item.FullUserName = ResultObjectHandler.GetString(resource, "FullUserName");
             return item;
         }
     }

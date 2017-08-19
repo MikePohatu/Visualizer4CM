@@ -161,6 +161,14 @@ namespace viewmodel
             return items;
         }
 
+        public List<ISccmObject> GetCollectionSccmObjectsFromSearch(string search)
+        {
+            List<ISccmObject> items = GetCollectionSccmObjectsFromSearch(search,CollectionType.Device);
+            items.AddRange(GetCollectionSccmObjectsFromSearch(search, CollectionType.User));
+            items = items.OrderBy(o => o.Name).ToList();
+            return items;
+        }
+
         public List<SccmCollectionRelationship> GetCollectionDependencies(string collectionid)
         {
             List<SccmCollectionRelationship> relationships = new List<SccmCollectionRelationship>();
@@ -601,7 +609,7 @@ namespace viewmodel
             try
             {
                 string query;
-                if (string.IsNullOrWhiteSpace(search)) { query = "select * from SMS_R_System WHERE Name LIKE '%'"; }
+                if (string.IsNullOrWhiteSpace(search)) { query = "select * from SMS_R_System"; }
                 else { query = "select * from SMS_R_System WHERE Name LIKE '%" + search + "%'"; }
 
                 // Run query
@@ -636,7 +644,7 @@ namespace viewmodel
                         if (count == 0)
                         {
                             cmresource.ID = resource["ResourceID"].StringValue;
-                            cmresource.Name = resource["Name"].StringValue;
+                            cmresource.Name = resource["SMSID"].StringValue;
                             count++;
                         }
                         cmresource.CollectionIDs.Add(resource["CollectionID"].StringValue);
@@ -656,8 +664,8 @@ namespace viewmodel
             try
             {
                 string query;
-                if (string.IsNullOrWhiteSpace(search)) { query = "select * from SMS_R_User WHERE Name LIKE '%'"; }
-                else { query = "select * from SMS_R_User WHERE Name LIKE '%" + search + "%'"; }
+                if (string.IsNullOrWhiteSpace(search)) { query = "select * from SMS_R_User"; }
+                else { query = "select * from SMS_R_User WHERE UniqueUserName LIKE '%" + search.Replace(@"\", @"\\") + "%'"; }
 
                 // Run query
                 using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
@@ -665,8 +673,8 @@ namespace viewmodel
                     // Enumerate through the collection of objects returned by the query.
                     foreach (IResultObject resource in results)
                     {
-                        SccmUser dep = Factory.GetSccmUserFromSMS_R_User(resource);
-                        if (dep != null) { items.Add(dep); }
+                        SccmUser user = Factory.GetSccmUserFromSMS_R_User(resource);
+                        if (user != null) { items.Add(user); }
                     }
                 }
                 items = items.OrderBy(o => o.Name).ToList();
@@ -860,6 +868,30 @@ namespace viewmodel
             }
             catch { }
             return items;
+        }
+
+        public SccmConfigurationBaseline GetConfigurationBaseline(string baselineid)
+        {
+            SccmConfigurationBaseline item = null;
+            try
+            {
+                // This query selects all collections
+
+                string query = "select * from SMS_ConfigurationBaselineInfo WHERE CI_ID='" + baselineid + "'";
+   
+
+                // Run query
+                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
+                {
+                    // Enumerate through the collection of objects returned by the query.
+                    foreach (IResultObject resource in results)
+                    {
+                        item = Factory.GetConfigurationBaselineFromSMS_ConfigurationBaselineInfo(resource);
+                    }
+                }
+            }
+            catch { }
+            return item;
         }
 
         public List<SMS_CIRelation> GetCIRelations(string fromciid)
