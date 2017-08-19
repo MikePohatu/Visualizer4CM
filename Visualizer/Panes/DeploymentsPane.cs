@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Msagl.GraphViewerGdi;
 using viewmodel;
 using Microsoft.ConfigurationManagement.ManagementProvider;
+using Microsoft.Msagl.Drawing;
 
 namespace Visualizer.Panes
 {
@@ -124,6 +125,9 @@ namespace Visualizer.Panes
             else if (this._pane.modecombo.Text == "Deployment")
             { await Task.Run(() => this.SearchResults = this._connector.GetDeploymentSccmObjectsFromSearch(this._searchtext)); }
 
+            else if (this._pane.modecombo.Text == "Device")
+            { await Task.Run(() => this.SearchResults = this._connector.GetDevicesFromSearch(this._searchtext)); }
+
             else if (this._pane.modecombo.Text == "Application")
             { await Task.Run(() => this.SearchResults = this._connector.GetApplicationsSccmObjectsListFromSearch(this._searchtext)); }
 
@@ -161,6 +165,7 @@ namespace Visualizer.Panes
                         else if (this._selectedresult.Type == SccmItemType.Collection) { this.ProcessBuildCollection((SccmCollection)this._selectedresult); }
                         else if (this._selectedresult.Type == SccmItemType.SoftwareUpdate) { this.ProcessBuildSoftwareUpdate((SccmSoftwareUpdate)this._selectedresult); }
                         else if (this._selectedresult.Type == SccmItemType.ConfigurationBaseline) { this.ProcessBuildConfigurationBaseline((SccmConfigurationBaseline)this._selectedresult); }
+                        else if (this._selectedresult.Type == SccmItemType.Device) { this.ProcessDevice(this._selectedresult); }
                         else { this.ProcessDeployableItem(this._selectedresult); }
                     }
                 });
@@ -215,6 +220,15 @@ namespace Visualizer.Panes
 
             this.UpdateProgressMessage_ForAsync("Building tree");
             this._graph = TreeBuilder.BuildCIDeploymentsTree(this._connector, sccmobject, deployments);
+        }
+
+        private void ProcessDevice(ISccmObject sccmobject)
+        {
+            SccmDevice device = this._connector.GetDevice(sccmobject.Name);
+            List<SccmCollection> devcols = this._connector.GetCollections(device.CollectionIDs, CollectionType.Device);
+            this.UpdateProgressMessage_ForAsync("Building tree");
+            this._graph = new Graph();
+            TreeBuilder.BuildDeviceDeploymentsTree(this._graph,this._connector, device, devcols);
         }
     }
 }

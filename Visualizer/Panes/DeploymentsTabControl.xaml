@@ -52,10 +52,12 @@
                         <ComboBoxItem>Application</ComboBoxItem>
                         <ComboBoxItem IsSelected="True">Collection</ComboBoxItem>
                         <ComboBoxItem>Configuration Item</ComboBoxItem>
+                        <ComboBoxItem>Device</ComboBoxItem>
                         <ComboBoxItem>Package</ComboBoxItem>
                         <ComboBoxItem>Task Sequence</ComboBoxItem>
                         <ComboBoxItem>Update</ComboBoxItem>
                         <ComboBoxItem>Update Group</ComboBoxItem>
+                        <ComboBoxItem>User</ComboBoxItem>
                     </ComboBox>
 
                     <Button x:Name="searchbtn" Grid.Row="1" Grid.Column="2" Content="Search" HorizontalAlignment="Center" Style="{DynamicResource ButtonStyle}"/>

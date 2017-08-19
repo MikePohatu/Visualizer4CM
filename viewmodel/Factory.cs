@@ -269,5 +269,14 @@ namespace viewmodel
             item.Name = ResultObjectHandler.GetString(resource, "LocalizedDisplayName");
             return item;
         }
+
+        public static SccmDevice GetSccmDeviceFromSMS_R_System(IResultObject resource)
+        {
+            SccmDevice item = new SccmDevice();
+
+            item.ID = ResultObjectHandler.GetString(resource, "SMBIOSGUID");
+            item.Name = ResultObjectHandler.GetString(resource, "Name");
+            return item;
+        }
     }
 }

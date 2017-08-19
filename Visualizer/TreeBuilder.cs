@@ -247,7 +247,7 @@ namespace Visualizer
                     SccmDeployableItem item = Factory.GetSccmDeployableItemFromDeploymentSummary(deployment);
                     if (item != null)
                     {
-                        graph.AddNode(new SccmNode(deployment.SoftwareName, item));
+                        if (graph.FindNode(deployment.SoftwareName) == null) { graph.AddNode(new SccmNode(deployment.SoftwareName, item)); }
                         Edge newedge = graph.AddEdge(deployment.SoftwareName, rootcollectionid);
                     }
                 }
@@ -380,6 +380,26 @@ namespace Visualizer
                 graph.AddNode(newnode);
                 graph.AddEdge(ci.ID, baseline.ID);
             }
+        }
+
+        public static void BuildDeviceDeploymentsTree(Graph graph, SccmConnector connector, SccmDevice device, List<SccmCollection> collections)
+        {
+            //build the graph
+            SccmNode devicenode = new SccmNode(device.ID, device);
+            graph.AddNode(devicenode);
+
+            foreach (SccmCollection col in collections)
+            {
+                CollectionNode colnode = new CollectionNode(col.ID, col);
+                colnode.Attr.Color = Color.RoyalBlue;
+                graph.AddNode(colnode);
+                graph.AddEdge(device.ID, col.ID);
+
+                //build the collection deployments tree
+                BuildCollectionDeploymentLinks(connector, graph, col.ID, connector.GetCollectionDeployments(col.ID));
+            }
+
+            device.IsHighlighted = true;
         }
     }
 }

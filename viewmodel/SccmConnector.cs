@@ -97,6 +97,40 @@ namespace viewmodel
             return items;
         }
 
+        public List<SccmCollection> GetCollections(List<string> collectionids, CollectionType type)
+        {
+            List<SccmCollection> items = new List<SccmCollection>();
+            string expandedsearch = "";
+
+            if (collectionids.Count == 0) { return new List<SccmCollection>(); }
+
+            foreach (string id in collectionids)
+            {
+                if (string.IsNullOrWhiteSpace(expandedsearch)) { expandedsearch = "CollectionID='" + id + "'"; }
+                else { expandedsearch = "CollectionID='" + id + "' OR " + expandedsearch; }
+            }
+            
+            try
+            {
+                // This query selects all collections
+                string query = "select * from SMS_Collection WHERE " + expandedsearch;
+
+                // Run query
+                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
+                {
+                    // Enumerate through the collection of objects returned by the query.
+                    foreach (IResultObject resource in results)
+                    {
+                        SccmCollection col = Factory.GetCollectionFromSMS_CollectionResults(resource);
+                        items.Add(col);
+                    }
+                }
+                items = items.OrderBy(o => o.Name).ToList();
+
+            }
+            catch { }
+            return items;
+        }
         /// <summary>
         /// Does a collection search, but returns a list of ISccmObjects
         /// </summary>
@@ -535,7 +569,7 @@ namespace viewmodel
         {
             try
             {
-                string query = "select * from SMS_FullCollectionMembership WHERE Name LIKE '" +  name + "'";
+                string query = "select * from SMS_FullCollectionMembership WHERE Name='" +  name + "'";
                 SccmDevice cmresource = new SccmDevice();
                 int count = 0;
                 // Run query
@@ -558,6 +592,32 @@ namespace viewmodel
             catch
             { }
             return null;
+        }
+
+        public List<ISccmObject> GetDevicesFromSearch(string search)
+        {
+            List<ISccmObject> items = new List<ISccmObject>();
+
+            try
+            {
+                string query;
+                if (string.IsNullOrWhiteSpace(search)) { query = "select * from SMS_R_System WHERE Name LIKE '%'"; }
+                else { query = "select * from SMS_R_System WHERE Name LIKE '%" + search + "%'"; }
+
+                // Run query
+                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
+                {
+                    // Enumerate through the collection of objects returned by the query.
+                    foreach (IResultObject resource in results)
+                    {
+                        SccmDevice dep = Factory.GetSccmDeviceFromSMS_R_System(resource);
+                        if (dep != null) { items.Add(dep); }
+                    }
+                }
+                items = items.OrderBy(o => o.Name).ToList();
+            }
+            catch { }
+            return items;
         }
 
         public SccmUser GetUser(string name)
