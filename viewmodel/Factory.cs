@@ -278,5 +278,14 @@ namespace viewmodel
             item.Name = ResultObjectHandler.GetString(resource, "Name");
             return item;
         }
+
+        public static SccmUser GetSccmUserFromSMS_R_User(IResultObject resource)
+        {
+            SccmUser item = new SccmUser();
+
+            item.ID = ResultObjectHandler.GetString(resource, "SID");
+            item.Name = ResultObjectHandler.GetString(resource, "UniqueUserName");
+            return item;
+        }
     }
 }

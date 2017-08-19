@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
 using System.Threading.Tasks;
@@ -126,7 +127,7 @@ namespace Visualizer.Panes
             { await Task.Run(() => this.SearchResults = this._connector.GetDeploymentSccmObjectsFromSearch(this._searchtext)); }
 
             else if (this._pane.modecombo.Text == "Device")
-            { await Task.Run(() => this.SearchResults = this._connector.GetDevicesFromSearch(this._searchtext)); }
+            { await Task.Run(() => this.SearchResults = this._connector.GetDeviceSccmObjectsFromSearch(this._searchtext)); }
 
             else if (this._pane.modecombo.Text == "Application")
             { await Task.Run(() => this.SearchResults = this._connector.GetApplicationsSccmObjectsListFromSearch(this._searchtext)); }
@@ -142,6 +143,9 @@ namespace Visualizer.Panes
 
             else if (this._pane.modecombo.Text == "Package")
             { await Task.Run(() => this.SearchResults = this._connector.GetPackageSccmObjectsFromSearch(this._searchtext)); }
+
+            else if (this._pane.modecombo.Text == "User")
+            { await Task.Run(() => this.SearchResults = this._connector.GetUserSccmObjectsFromSearch(this._searchtext)); }
 
             this.FinishProcessing();
             this.NotifyFinishSearchWithCount(this.SearchResults.Count);
@@ -165,7 +169,8 @@ namespace Visualizer.Panes
                         else if (this._selectedresult.Type == SccmItemType.Collection) { this.ProcessBuildCollection((SccmCollection)this._selectedresult); }
                         else if (this._selectedresult.Type == SccmItemType.SoftwareUpdate) { this.ProcessBuildSoftwareUpdate((SccmSoftwareUpdate)this._selectedresult); }
                         else if (this._selectedresult.Type == SccmItemType.ConfigurationBaseline) { this.ProcessBuildConfigurationBaseline((SccmConfigurationBaseline)this._selectedresult); }
-                        else if (this._selectedresult.Type == SccmItemType.Device) { this.ProcessDevice(this._selectedresult); }
+                        else if (this._selectedresult.Type == SccmItemType.Device) { this.ProcessResource(this._selectedresult); }
+                        else if (this._selectedresult.Type == SccmItemType.User) { this.ProcessResource(this._selectedresult); }
                         else { this.ProcessDeployableItem(this._selectedresult); }
                     }
                 });
@@ -222,13 +227,19 @@ namespace Visualizer.Panes
             this._graph = TreeBuilder.BuildCIDeploymentsTree(this._connector, sccmobject, deployments);
         }
 
-        private void ProcessDevice(ISccmObject sccmobject)
+        private void ProcessResource(ISccmObject sccmobject)
         {
-            SccmDevice device = this._connector.GetDevice(sccmobject.Name);
-            List<SccmCollection> devcols = this._connector.GetCollections(device.CollectionIDs, CollectionType.Device);
-            this.UpdateProgressMessage_ForAsync("Building tree");
-            this._graph = new Graph();
-            TreeBuilder.BuildDeviceDeploymentsTree(this._graph,this._connector, device, devcols);
+            SccmResource resource = null;
+            if (sccmobject.Type == SccmItemType.Device) { resource = this._connector.GetDevice(sccmobject.Name); }
+            else if (sccmobject.Type == SccmItemType.User) { resource = this._connector.GetUser(sccmobject.Name); }
+            else { throw new InvalidOperationException("Invalid type passed to ProcessResource: " + sccmobject.Type.ToString()); }
+
+            if (resource != null)
+            {
+                List<SccmCollection> devcols = this._connector.GetCollections(resource.CollectionIDs, CollectionType.Device);
+                this.UpdateProgressMessage_ForAsync("Building tree");
+                this._graph = TreeBuilder.BuildDeviceDeploymentsTree(this._connector, resource, devcols);
+            }
         }
     }
 }

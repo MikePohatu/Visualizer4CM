@@ -594,7 +594,7 @@ namespace viewmodel
             return null;
         }
 
-        public List<ISccmObject> GetDevicesFromSearch(string search)
+        public List<ISccmObject> GetDeviceSccmObjectsFromSearch(string search)
         {
             List<ISccmObject> items = new List<ISccmObject>();
 
@@ -649,6 +649,31 @@ namespace viewmodel
             return null;
         }
 
+        public List<ISccmObject> GetUserSccmObjectsFromSearch(string search)
+        {
+            List<ISccmObject> items = new List<ISccmObject>();
+
+            try
+            {
+                string query;
+                if (string.IsNullOrWhiteSpace(search)) { query = "select * from SMS_R_User WHERE Name LIKE '%'"; }
+                else { query = "select * from SMS_R_User WHERE Name LIKE '%" + search + "%'"; }
+
+                // Run query
+                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(query))
+                {
+                    // Enumerate through the collection of objects returned by the query.
+                    foreach (IResultObject resource in results)
+                    {
+                        SccmUser dep = Factory.GetSccmUserFromSMS_R_User(resource);
+                        if (dep != null) { items.Add(dep); }
+                    }
+                }
+                items = items.OrderBy(o => o.Name).ToList();
+            }
+            catch { }
+            return items;
+        }
         public PackageLibrary GetPackageLibrary()
         {
             PackageLibrary library = new PackageLibrary();

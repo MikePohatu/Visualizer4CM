@@ -382,10 +382,11 @@ namespace Visualizer
             }
         }
 
-        public static void BuildDeviceDeploymentsTree(Graph graph, SccmConnector connector, SccmDevice device, List<SccmCollection> collections)
+        public static Graph BuildDeviceDeploymentsTree(SccmConnector connector, SccmResource resource, List<SccmCollection> collections)
         {
+            Graph graph = new Graph();
             //build the graph
-            SccmNode devicenode = new SccmNode(device.ID, device);
+            SccmNode devicenode = new SccmNode(resource.ID, resource);
             graph.AddNode(devicenode);
 
             foreach (SccmCollection col in collections)
@@ -393,13 +394,14 @@ namespace Visualizer
                 CollectionNode colnode = new CollectionNode(col.ID, col);
                 colnode.Attr.Color = Color.RoyalBlue;
                 graph.AddNode(colnode);
-                graph.AddEdge(device.ID, col.ID);
+                graph.AddEdge(resource.ID, col.ID);
 
                 //build the collection deployments tree
                 BuildCollectionDeploymentLinks(connector, graph, col.ID, connector.GetCollectionDeployments(col.ID));
             }
 
-            device.IsHighlighted = true;
+            resource.IsHighlighted = true;
+            return graph;
         }
     }
 }
