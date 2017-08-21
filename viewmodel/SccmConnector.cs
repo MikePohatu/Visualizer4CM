@@ -944,23 +944,30 @@ namespace viewmodel
                 string updatequery = "select * from SMS_SoftwareUpdate where " + updates + "";
 
                 // Run query
-                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(updatequery))
+                if (string.IsNullOrEmpty(updates) == false)
                 {
-                    // Enumerate through the collection of objects returned by the query.
-                    foreach (IResultObject resource in results)
+                    using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(updatequery))
                     {
-                        SccmSoftwareUpdate item = Factory.GetSccmSoftwareUpdate(resource);
-                        items.Add(item);
+                        // Enumerate through the collection of objects returned by the query.
+                        foreach (IResultObject resource in results)
+                        {
+                            SccmSoftwareUpdate item = Factory.GetSccmSoftwareUpdate(resource);
+                            items.Add(item);
+                        }
                     }
+
                 }
 
-                using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(ciquery))
+                if (string.IsNullOrEmpty(query) == false)
                 {
-                    // Enumerate through the collection of objects returned by the query.
-                    foreach (IResultObject resource in results)
+                    using (IResultObject results = this._connection.QueryProcessor.ExecuteQuery(ciquery))
                     {
-                        SccmConfigurationItem item = Factory.GetSccmConfigurationItem(resource);
-                        items.Add(item);
+                        // Enumerate through the collection of objects returned by the query.
+                        foreach (IResultObject resource in results)
+                        {
+                            SccmConfigurationItem item = Factory.GetSccmConfigurationItem(resource);
+                            items.Add(item);
+                        }
                     }
                 }
             }
